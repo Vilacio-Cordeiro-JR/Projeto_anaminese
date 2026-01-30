@@ -2,6 +2,9 @@
 flask>=3.0.0
 flask-cors>=4.0.0
 
+# Banco de dados PostgreSQL
+psycopg2-binary>=2.9.0
+
 # Caso queira adicionar funcionalidades extras no futuro:
 
 # Para visualizações de gráficos
