@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidas Fit - Sistema de Análise Corporal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">💪 Medidas Fit</h1>
+            <div class="user-menu">
+                <!-- Theme Toggle Switch -->
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider">
+                        <span class="icon sun">☀️</span>
+                        <span class="icon moon">🌙</span>
+                    </span>
+                </label>
+                <button id="userBtn" class="user-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- SEÇÃO SUPERIOR: FORMULÁRIO E MAPA LADO A LADO -->
+        <div class="top-section">
+            <!-- FORMULÁRIOS À ESQUERDA -->
+            <div class="form-section">
+                <div class="form-card">
+                    <h2 class="section-title">Nova Avaliação</h2>
+                    
+                    <div class="measures-form-list">
+                        <!-- Grid de Circunferências em 2 Colunas -->
+                        <div class="measures-grid">
+                            <div class="form-group">
+                                <label for="pescoco">Pescoço (cm)</label>
+                                <input type="number" id="pescoco" step="0.1" placeholder="Ex: 38" data-body-part="pescoco">
+                            </div>
+                            <div class="form-group">
+                                <label for="ombros">Ombros (cm)</label>
+                                <input type="number" id="ombros" step="0.1" placeholder="Ex: 120" data-body-part="ombros">
+                            </div>
+                            <div class="form-group">
+                                <label for="peitoral">Peitoral (cm)</label>
+                                <input type="number" id="peitoral" step="0.1" placeholder="Ex: 105" data-body-part="peitoral">
+                            </div>
+                            <div class="form-group">
+                                <label for="cintura">Cintura (cm) *</label>
+                                <input type="number" id="cintura" step="0.1" placeholder="Ex: 85" required data-body-part="cintura">
+                            </div>
+                            <div class="form-group">
+                                <label for="abdomen">Abdômen (cm)</label>
+                                <input type="number" id="abdomen" step="0.1" placeholder="Ex: 88" data-body-part="abdomen">
+                            </div>
+                            <div class="form-group">
+                                <label for="quadril">Quadril (cm) *</label>
+                                <input type="number" id="quadril" step="0.1" placeholder="Ex: 100" required data-body-part="quadril">
+                            </div>
+                            <div class="form-group">
+                                <label for="braco_relaxado">Braço Relaxado (cm)</label>
+                                <input type="number" id="braco_relaxado" step="0.1" placeholder="Ex: 35" data-body-part="braco">
+                            </div>
+                            <div class="form-group">
+                                <label for="braco_contraido">Braço Contraído (cm)</label>
+                                <input type="number" id="braco_contraido" step="0.1" placeholder="Ex: 38" data-body-part="braco">
+                            </div>
+                            <div class="form-group">
+                                <label for="antebraco">Antebraço (cm)</label>
+                                <input type="number" id="antebraco" step="0.1" placeholder="Ex: 30" data-body-part="antebraco">
+                            </div>
+                            <div class="form-group">
+                                <label for="coxa">Coxa (cm)</label>
+                                <input type="number" id="coxa" step="0.1" placeholder="Ex: 58" data-body-part="coxa">
+                            </div>
+                            <div class="form-group">
+                                <label for="panturrilha">Panturrilha (cm)</label>
+                                <input type="number" id="panturrilha" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
+                            </div>
+                        </div>
+
+                        <!-- Peso e Objetivo Abaixo -->
+                        <div class="form-group">
+                            <label for="peso">Peso (kg) *</label>
+                            <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="objetivo">Objetivo (opcional)</label>
+                            <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
+                        </div>
+
+                        <button id="saveBtn" class="save-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Salvar Avaliação
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAPA À DIREITA -->
+            <div class="map-section">
+                <div class="form-card">
+                    <h2 class="section-title">Mapa Anatômico</h2>
+                    <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
+                    <div class="anatomic-map-wrapper">
+                        <div class="map-container">
+                            <img src="{{ url_for('static', filename='img/Map.png') }}" alt="Mapa Anatômico" class="body-map-base">
+                            <img data-highlight="pescoco" src="{{ url_for('static', filename='img/pescoco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="ombros" src="{{ url_for('static', filename='img/ombros.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="peitoral" src="{{ url_for('static', filename='img/peitoral.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="cintura" src="{{ url_for('static', filename='img/cintura.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="abdomen" src="{{ url_for('static', filename='img/abdomen.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="quadril" src="{{ url_for('static', filename='img/quadril.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="braco" src="{{ url_for('static', filename='img/braco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="antebraco" src="{{ url_for('static', filename='img/antebraco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="coxa" src="{{ url_for('static', filename='img/coxa.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="panturrilha" src="{{ url_for('static', filename='img/panturrilha.png') }}" class="body-highlight-overlay">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO INFERIOR: AVALIAÇÕES -->
+        <div class="bottom-section">
+            <div class="form-card">
+                <h2 class="section-title">Suas Avaliações</h2>
+                <div id="avaliacoesContainer" class="avaliacoes-container">
+                    <div class="empty-state">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="9"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <h3>Nenhuma avaliação ainda</h3>
+                        <p>Faça a sua primeira avaliação preenchendo os dados acima</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2026 Medidas Fit - Sistema de Análise Corporal | Desenvolvido com ❤️</p>
+    </footer>
+
+    <!-- POPUP DE USUÁRIO -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configurações de Usuário</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="userForm" class="user-form">
+                <div class="form-group">
+                    <label for="userName">Nome Completo *</label>
+                    <input type="text" id="userName" required placeholder="Seu nome">
+                </div>
+
+                <div class="form-group">
+                    <label for="userBirthdate">Data de Nascimento *</label>
+                    <input type="date" id="userBirthdate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userAge">Idade</label>
+                    <input type="text" id="userAge" readonly placeholder="Calculada automaticamente">
+                </div>
+
+                <div class="form-group">
+                    <label for="userSex">Sexo *</label>
+                    <select id="userSex" required>
+                        <option value="">Selecione</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" placeholder="seu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="userHeight">Altura (cm) *</label>
+                    <input type="number" id="userHeight" step="0.1" required placeholder="Ex: 175">
+                </div>
+
+                <div class="form-group">
+                    <label for="userTheme">Tema</label>
+                    <select id="userTheme">
+                        <option value="light">Claro</option>
+                        <option value="dark">Escuro</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="save-btn">Salvar Configurações</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

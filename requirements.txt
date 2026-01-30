@@ -1,0 +1,23 @@
+# Dependências para o sistema web
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Caso queira adicionar funcionalidades extras no futuro:
+
+# Para visualizações de gráficos
+# matplotlib>=3.5.0
+# plotly>=5.0.0
+
+# Para exportação de relatórios em PDF
+# reportlab>=3.6.0
+
+# Para API avançada
+# fastapi>=0.95.0
+
+# Para banco de dados
+# sqlalchemy>=1.4.0
+# pymongo>=4.0.0
+
+# Para testes
+# pytest>=7.0.0
+# pytest-cov>=3.0.0
