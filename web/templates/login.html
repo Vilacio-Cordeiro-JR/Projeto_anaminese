@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Medidas Corporais</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Sistema de Medidas Corporais</h1>
+            
+            <!-- Formulário de Login -->
+            <div id="login-form" class="auth-form">
+                <h2>Entrar</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label for="login-nome">Nome</label>
+                        <input type="text" id="login-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-senha">Senha</label>
+                        <input type="password" id="login-senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                <p class="auth-toggle">
+                    Não tem uma conta? <a href="#" onclick="mostrarRegistro()">Criar conta</a>
+                </p>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div id="register-form" class="auth-form" style="display: none;">
+                <h2>Criar Conta</h2>
+                <form onsubmit="registro(event)">
+                    <div class="form-group">
+                        <label for="reg-nome">Nome</label>
+                        <input type="text" id="reg-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-senha">Senha</label>
+                        <input type="password" id="reg-senha" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-senha-confirma">Confirmar Senha</label>
+                        <input type="password" id="reg-senha-confirma" required minlength="4">
+                    </div>
+                    <button type="submit" class="btn-primary">Criar Conta</button>
+                </form>
+                <p class="auth-toggle">
+                    Já tem uma conta? <a href="#" onclick="mostrarLogin()">Fazer login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        function mostrarRegistro() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        function mostrarLogin() {
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+
+        async function login(event) {
+            event.preventDefault();
+            const nome = document.getElementById('login-nome').value;
+            const senha = document.getElementById('login-senha').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, senha })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarToast('Login realizado com sucesso!', 'success');
+                    setTimeout(() => window.location.href = '/', 1000);
+                } else {
+                    mostrarToast(data.erro || 'Erro ao fazer login', 'error');
+                }
+            } catch (error) {
+                mostrarToast('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function registro(event) {
+            event.preventDefault();
+            const nome = document.getElementById('reg-nome').value;
+            const senha = document.getElementById('reg-senha').value;
+            const senhaConfirma = document.getElementById('reg-senha-confirma').value;
+
+            if (senha !== senhaConfirma) {
+                mostrarToast('As senhas não coincidem', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/registro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, senha })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarToast('Conta criada com sucesso! Faça login.', 'success');
+                    setTimeout(mostrarLogin, 1500);
+                } else {
+                    mostrarToast(data.erro || 'Erro ao criar conta', 'error');
+                }
+            } catch (error) {
+                mostrarToast('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        function mostrarToast(mensagem, tipo) {
+            const toast = document.getElementById('toast');
+            toast.textContent = mensagem;
+            toast.className = `toast ${tipo} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
