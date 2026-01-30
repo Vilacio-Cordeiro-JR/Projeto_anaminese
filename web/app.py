@@ -5,7 +5,6 @@ Fornece API REST e serve a interface web
 
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_cors import CORS
-from flask_session import Session
 from datetime import date, datetime
 import os
 import sys
@@ -18,15 +17,23 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 USE_DATABASE = os.environ.get('POSTGRES_URL') or os.environ.get('DATABASE_URL')
 
 if USE_DATABASE:
-    from web import db
+    try:
+        from web import db
+    except:
+        USE_DATABASE = False
+        import json
+        DATA_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'usuarios.json')
 else:
     import json
     DATA_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'usuarios.json')
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'chave-secreta-dev-12345')
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+# Usar cookie-based sessions para Vercel (sem filesystem)
+app.config['SESSION_TYPE'] = 'null'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 CORS(app)
 
 
