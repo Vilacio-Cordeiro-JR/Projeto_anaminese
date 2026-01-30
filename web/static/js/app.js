@@ -78,7 +78,6 @@ function preencherFormularioUsuario() {
     document.getElementById('userSex').value = app.usuario.sexo || '';
     document.getElementById('userEmail').value = app.usuario.email || '';
     document.getElementById('userHeight').value = app.usuario.altura || '';
-    document.getElementById('userTheme').value = app.usuario.tema || 'light';
 }
 
 function calcularIdade(dataNascimento) {
@@ -340,7 +339,7 @@ function limparFormulario() {
 // ========================================
 
 function aplicarTema() {
-    const tema = app.usuario?.tema || 'dark';
+    const tema = localStorage.getItem('tema') || app.usuario?.tema || 'dark';
     document.body.className = `${tema}-theme`;
     
     // Atualizar estado do switch
@@ -356,10 +355,8 @@ function alternarTema() {
     
     document.body.className = `${novoTema}-theme`;
     
-    if (app.usuario) {
-        app.usuario.tema = novoTema;
-        salvarUsuario(app.usuario);
-    }
+    // Salvar tema no localStorage
+    localStorage.setItem('tema', novoTema);
 }
 
 // ========================================
@@ -435,8 +432,7 @@ function inicializarEventos() {
             data_nascimento: document.getElementById('userBirthdate').value,
             sexo: document.getElementById('userSex').value,
             email: document.getElementById('userEmail').value,
-            altura: parseFloat(document.getElementById('userHeight').value),
-            tema: document.getElementById('userTheme').value
+            altura: parseFloat(document.getElementById('userHeight').value)
         };
         
         await salvarUsuario(dados);
@@ -552,4 +548,25 @@ function toggleAllHighlights() {
     
     // Atualizar texto do botão
     btn.textContent = isAnyVisible ? 'Mostrar grupamentos' : 'Ocultar grupamentos';
+}
+
+// ========================================
+// LOGOUT
+// ========================================
+
+async function fazerLogout() {
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST'
+        });
+        
+        if (response.ok) {
+            window.location.href = '/login';
+        } else {
+            mostrarToast('Erro ao fazer logout', 'error');
+        }
+    } catch (error) {
+        console.error('Erro ao fazer logout:', error);
+        mostrarToast('Erro ao fazer logout', 'error');
+    }
 }
