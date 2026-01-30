@@ -490,6 +490,13 @@ body {
     max-width: 100%;
 }
 
+/* Modal de usuário - todos os campos com largura total */
+.modal-content .form-group input,
+.modal-content .form-group select {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
@@ -785,8 +792,10 @@ body {
 }
 
 @media (max-width: 900px) {
+    /* Mantém 2 colunas no mobile para o formulário de medidas */
     .measures-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1rem;
     }
 }
 
@@ -808,8 +817,10 @@ body {
         padding: 1.5rem;
     }
     
+    /* Mantém 2 colunas no mobile para o formulário de medidas */
     .measures-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1rem;
     }
     
     .form-row {
@@ -981,7 +992,8 @@ body {
 }
 
 .auth-form input {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     padding: 0.75rem 1rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
