@@ -854,35 +854,70 @@ function renderScoreEstetico(score) {
                 <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
                     <div class="criterio-icon" style="font-size: 2.5rem;">🎯</div>
                     <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">% Gordura</div>
-                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="${(breakdown.gordura || 0) / 20 * 188.4} 188.4" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition: stroke-dasharray 1s ease;"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.3rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura || 0}</div>
+                    </div>
+                    <div class="criterio-pontos" style="font-size: 0.85rem; color: var(--text-secondary);">de 20 pontos</div>
                     <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.gordura || '30%'}</div>
                 </div>
                 
                 <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
                     <div class="criterio-icon" style="font-size: 2.5rem;">💪</div>
                     <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Ombro/Cintura</div>
-                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.ombro_cintura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="${(breakdown.ombro_cintura || 0) / 20 * 188.4} 188.4" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition: stroke-dasharray 1s ease;"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.3rem; font-weight: 800; color: var(--primary-color);">${breakdown.ombro_cintura || 0}</div>
+                    </div>
+                    <div class="criterio-pontos" style="font-size: 0.85rem; color: var(--text-secondary);">de 20 pontos</div>
                     <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.ombro_cintura || '25%'}</div>
                 </div>
                 
                 <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
                     <div class="criterio-icon" style="font-size: 2.5rem;">🏋️</div>
                     <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Peitoral/Cintura</div>
-                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.peitoral_cintura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="${(breakdown.peitoral_cintura || 0) / 20 * 188.4} 188.4" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition: stroke-dasharray 1s ease;"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.3rem; font-weight: 800; color: var(--primary-color);">${breakdown.peitoral_cintura || 0}</div>
+                    </div>
+                    <div class="criterio-pontos" style="font-size: 0.85rem; color: var(--text-secondary);">de 20 pontos</div>
                     <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.peitoral_cintura || '20%'}</div>
                 </div>
                 
                 <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
                     <div class="criterio-icon" style="font-size: 2.5rem;">⚖️</div>
                     <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Simetria</div>
-                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.simetria || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="${(breakdown.simetria || 0) / 20 * 188.4} 188.4" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition: stroke-dasharray 1s ease;"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.3rem; font-weight: 800; color: var(--primary-color);">${breakdown.simetria || 0}</div>
+                    </div>
+                    <div class="criterio-pontos" style="font-size: 0.85rem; color: var(--text-secondary);">de 20 pontos</div>
                     <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.simetria || '15%'}</div>
                 </div>
                 
                 <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
                     <div class="criterio-icon" style="font-size: 2.5rem;">📊</div>
                     <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Gordura Central</div>
-                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura_central || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--primary-color)" stroke-width="8" stroke-dasharray="${(breakdown.gordura_central || 0) / 20 * 188.4} 188.4" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition: stroke-dasharray 1s ease;"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.3rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura_central || 0}</div>
+                    </div>
+                    <div class="criterio-pontos" style="font-size: 0.85rem; color: var(--text-secondary);">de 20 pontos</div>
                     <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.gordura_central || '10%'}</div>
                 </div>
             </div>
