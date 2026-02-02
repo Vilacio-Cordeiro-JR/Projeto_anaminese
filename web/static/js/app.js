@@ -843,6 +843,7 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
             mostrarToast('Carregando biblioteca...', 'info');
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.crossOrigin = 'anonymous';
             document.head.appendChild(script);
             
             await new Promise((resolve, reject) => {
@@ -860,19 +861,33 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
         
         console.log('Iniciando captura da avaliação...');
         
+        // Clonar elemento para evitar problemas com CSS inline
+        const clone = avaliacaoElement.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.top = '0';
+        document.body.appendChild(clone);
+        
         // Definir background baseado no tema
         const isDark = document.body.classList.contains('dark-theme');
         const bgColor = isDark ? '#1a1a1a' : '#ffffff';
         
-        // Capturar o elemento como imagem
-        const canvas = await html2canvas(avaliacaoElement, {
+        // Capturar o elemento clonado como imagem
+        const canvas = await html2canvas(clone, {
             backgroundColor: bgColor,
             scale: 2,
             logging: false,
             useCORS: true,
             allowTaint: true,
-            foreignObjectRendering: false
+            foreignObjectRendering: false,
+            ignoreElements: (element) => {
+                // Ignorar elementos que podem causar problemas
+                return element.tagName === 'SCRIPT' || element.tagName === 'STYLE';
+            }
         });
+        
+        // Remover clone
+        document.body.removeChild(clone);
         
         console.log('Canvas gerado, criando download...');
         
