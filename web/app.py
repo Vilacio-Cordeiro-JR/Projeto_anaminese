@@ -271,22 +271,29 @@ def avaliacoes_api():
                     data_nascimento=datetime.strptime(usuario_data['data_nascimento'], '%Y-%m-%d').date()
                 )
             
-            # Criar objeto Medidas
+            # Criar objeto Medidas (converter valores para float)
             medidas_dict = data['medidas']
+            
+            def to_float(value):
+                """Converte valor para float, retorna None se vazio"""
+                if value is None or value == '':
+                    return None
+                return float(value)
+            
             medidas = Medidas(
-                altura=medidas_dict['altura'],
-                peso=medidas_dict['peso'],
-                pescoco=medidas_dict.get('pescoco'),
-                ombros=medidas_dict.get('ombros'),
-                peitoral=medidas_dict.get('peitoral'),
-                cintura=medidas_dict.get('cintura'),
-                abdomen=medidas_dict.get('abdomen'),
-                quadril=medidas_dict.get('quadril'),
-                braco_relaxado=medidas_dict.get('braco_relaxado'),
-                braco_contraido=medidas_dict.get('braco_contraido'),
-                antebraco=medidas_dict.get('antebraco'),
-                coxa=medidas_dict.get('coxa'),
-                panturrilha=medidas_dict.get('panturrilha')
+                altura=float(medidas_dict['altura']),
+                peso=float(medidas_dict['peso']),
+                pescoco=to_float(medidas_dict.get('pescoco')),
+                ombros=to_float(medidas_dict.get('ombros')),
+                peitoral=to_float(medidas_dict.get('peitoral')),
+                cintura=to_float(medidas_dict.get('cintura')),
+                abdomen=to_float(medidas_dict.get('abdomen')),
+                quadril=to_float(medidas_dict.get('quadril')),
+                braco_relaxado=to_float(medidas_dict.get('braco_relaxado')),
+                braco_contraido=to_float(medidas_dict.get('braco_contraido')),
+                antebraco=to_float(medidas_dict.get('antebraco')),
+                coxa=to_float(medidas_dict.get('coxa')),
+                panturrilha=to_float(medidas_dict.get('panturrilha'))
             )
             
             # Criar avaliação
