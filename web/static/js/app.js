@@ -820,18 +820,8 @@ function renderScoreEstetico(score) {
             <div class="score-primeira-linha" style="display: grid !important; grid-template-columns: auto 1fr !important; gap: 2rem !important; align-items: center !important; margin-bottom: 2rem !important; background: var(--surface); padding: 2rem; border-radius: 16px;">
                 <div class="score-grafico-box" style="position: relative; width: 200px; height: 200px;">
                     <svg width="200" height="200" viewBox="0 0 200 200">
-                        <path d="M 30 170 A 90 90 0 0 1 170 170" 
-                              fill="none" 
-                              stroke="#e9ecef" 
-                              stroke-width="25"
-                              stroke-linecap="round"/>
-                        <path d="M 30 170 A 90 90 0 0 1 170 170" 
-                              fill="none" 
-                              stroke="${score.cor}" 
-                              stroke-width="25"
-                              stroke-linecap="round"
-                              stroke-dasharray="${(score.score_total / 100) * 283} 283"
-                              style="transition: stroke-dasharray 1s ease;"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="${score.cor}" stroke-width="20" stroke-dasharray="${(score.score_total / 100) * 534.07} 534.07" stroke-linecap="round" transform="rotate(-90 100 100)" style="transition: stroke-dasharray 1s ease;"/>
                     </svg>
                     <div class="score-centro-box" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
                         <div class="score-numero-box" style="font-size: 3rem; font-weight: 900; color: ${score.cor};">${score.score_total}</div>
