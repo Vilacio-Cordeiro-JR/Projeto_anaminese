@@ -9,48 +9,59 @@
 <body>
     <div class="auth-container">
         <div class="auth-card">
+            <!-- Seletor de Idioma -->
+            <div style="position: absolute; top: 1rem; right: 1rem;">
+                <select id="languageSelector" onchange="i18n.setLanguage(this.value)" style="padding: 0.5rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; font-size: 0.9rem;">
+                    <option value="pt">🇧🇷 Português</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                </select>
+            </div>
+            
             <img src="{{ url_for('static', filename='img/logo.png') }}" alt="BodyXP" style="height: 80px; margin: 0 auto 1rem; display: block; border-radius: 50%;">
-            <h1 class="auth-title">BodyXP</h1>
+            <h1 class="auth-title" data-i18n="app.title">BodyXP</h1>
             
             <!-- Formulário de Login -->
             <div id="login-form" class="auth-form">
-                <h2>Entrar</h2>
+                <h2 data-i18n="login.title">Entrar</h2>
                 <form onsubmit="login(event)">
                     <div class="form-group">
-                        <label for="login-nome">Nome</label>
+                        <label for="login-nome" data-i18n="login.name">Nome</label>
                         <input type="text" id="login-nome" required>
                     </div>
                     <div class="form-group">
-                        <label for="login-senha">Senha</label>
+                        <label for="login-senha" data-i18n="login.password">Senha</label>
                         <input type="password" id="login-senha" required>
                     </div>
-                    <button type="submit" class="btn-primary">Entrar</button>
+                    <button type="submit" class="btn-primary" data-i18n="login.button">Entrar</button>
                 </form>
                 <p class="auth-toggle">
-                    Não tem uma conta? <a href="#" onclick="mostrarRegistro()">Criar conta</a>
+                    <span data-i18n="login.noAccount">Não tem uma conta?</span> <a href="#" onclick="mostrarRegistro()" data-i18n="login.createAccount">Criar conta</a>
                 </p>
             </div>
 
             <!-- Formulário de Registro -->
             <div id="register-form" class="auth-form" style="display: none;">
-                <h2>Criar Conta</h2>
+                <h2 data-i18n="register.title">Criar Conta</h2>
                 <form onsubmit="registro(event)">
                     <div class="form-group">
-                        <label for="reg-nome">Nome</label>
+                        <label for="reg-nome" data-i18n="register.name">Nome</label>
                         <input type="text" id="reg-nome" required>
                     </div>
                     <div class="form-group">
-                        <label for="reg-senha">Senha</label>
+                        <label for="reg-senha" data-i18n="register.password">Senha</label>
                         <input type="password" id="reg-senha" required minlength="4">
                     </div>
                     <div class="form-group">
-                        <label for="reg-senha-confirma">Confirmar Senha</label>
+                        <label for="reg-senha-confirma" data-i18n="register.confirmPassword">Confirmar Senha</label>
                         <input type="password" id="reg-senha-confirma" required minlength="4">
                     </div>
-                    <button type="submit" class="btn-primary">Criar Conta</button>
+                    <button type="submit" class="btn-primary" data-i18n="register.button">Criar Conta</button>
                 </form>
                 <p class="auth-toggle">
-                    Já tem uma conta? <a href="#" onclick="mostrarLogin()">Fazer login</a>
+                    <span data-i18n="register.hasAccount">Já tem uma conta?</span> <a href="#" onclick="mostrarLogin()" data-i18n="register.doLogin">Fazer login</a>
                 </p>
             </div>
         </div>
@@ -58,6 +69,7 @@
 
     <div id="toast" class="toast"></div>
 
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
     <script>
         function mostrarRegistro() {
             document.getElementById('login-form').style.display = 'none';
@@ -84,13 +96,13 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    mostrarToast('Login realizado com sucesso!', 'success');
+                    mostrarToast(i18n.t('toast.loginSuccess'), 'success');
                     setTimeout(() => window.location.href = '/', 1000);
                 } else {
-                    mostrarToast(data.erro || 'Erro ao fazer login', 'error');
+                    mostrarToast(data.erro || i18n.t('toast.loginError'), 'error');
                 }
             } catch (error) {
-                mostrarToast('Erro ao conectar com o servidor', 'error');
+                mostrarToast(i18n.t('toast.serverError'), 'error');
             }
         }
 
@@ -101,7 +113,7 @@
             const senhaConfirma = document.getElementById('reg-senha-confirma').value;
 
             if (senha !== senhaConfirma) {
-                mostrarToast('As senhas não coincidem', 'error');
+                mostrarToast(i18n.t('toast.passwordMismatch'), 'error');
                 return;
             }
 
@@ -115,13 +127,13 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    mostrarToast('Conta criada com sucesso! Faça login.', 'success');
+                    mostrarToast(i18n.t('toast.registerSuccess'), 'success');
                     setTimeout(mostrarLogin, 1500);
                 } else {
-                    mostrarToast(data.erro || 'Erro ao criar conta', 'error');
+                    mostrarToast(data.erro || i18n.t('toast.registerError'), 'error');
                 }
             } catch (error) {
-                mostrarToast('Erro ao conectar com o servidor', 'error');
+                mostrarToast(i18n.t('toast.serverError'), 'error');
             }
         }
 

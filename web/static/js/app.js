@@ -1162,6 +1162,12 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
 
 function mostrarModal() {
     document.getElementById('userModal').classList.add('active');
+    
+    // Sincronizar seletor de idioma com idioma atual
+    const langSelector = document.getElementById('userLanguage');
+    if (langSelector && i18n) {
+        langSelector.value = i18n.currentLanguage;
+    }
 }
 
 function esconderModal() {
