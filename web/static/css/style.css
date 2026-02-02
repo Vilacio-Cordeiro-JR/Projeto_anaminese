@@ -1521,10 +1521,60 @@ body {
 .status-texto {
     font-size: 1rem;
 }
-    align-items: center;
-    padding: 0.5rem;
+
+/* Gordura Central */
+.gordura-central-card {
+    margin-top: 2rem;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.gordura-header {
+    margin-bottom: 1.5rem;
+}
+
+.gordura-titulo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.gordura-indices {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.indice-item {
     background: var(--bg-secondary);
-    border-radius: 6px;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.indice-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.indice-valor {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.indice-risco {
+    display: block;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 .regiao-info .label {
@@ -1854,13 +1904,13 @@ body {
         grid-template-columns: 1fr;
     }
     
-    .mapa-regioes-grid-3x2 {
-        grid-template-columns: 1fr;
+    .mapa-grid-2col {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .mapa-regioes-grid-3x2 {
+    .mapa-grid-2col {
         grid-template-columns: 1fr;
     }
     
@@ -1872,7 +1922,7 @@ body {
         grid-template-columns: 1fr;
     }
     
-    .regiao-metricas {
+    .regiao-medidas-row {
         grid-template-columns: 1fr;
     }
     
