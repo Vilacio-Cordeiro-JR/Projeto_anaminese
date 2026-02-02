@@ -49,7 +49,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 CORS(app)
 
 # Lista de usuários admin (nomes de conta)
-ADMINS = ['admin', 'Admin', 'ADMIN', 'Vilacio']
+ADMINS = ['admin', 'Admin', 'ADMIN', 'Vilacio', 'vilacio', 'VILACIO']
 
 
 def hash_senha(senha):
