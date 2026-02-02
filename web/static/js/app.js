@@ -563,38 +563,38 @@ function renderMapaCorporal(mapa) {
     const gordura = mapa.gordura_central;
     
     const statusConfig = {
-        'Subdesenvolvido': { emoji: '⚠️', cor: '#ff6b6b', bg: 'linear-gradient(135deg, #ff6b6b15 0%, #ff6b6b05 100%)' },
-        'Equilibrado': { emoji: '✅', cor: '#51cf66', bg: 'linear-gradient(135deg, #51cf6615 0%, #51cf6605 100%)' },
-        'Excesso': { emoji: '🔴', cor: '#ffa94d', bg: 'linear-gradient(135deg, #ffa94d15 0%, #ffa94d05 100%)' }
+        'Subdesenvolvido': { emoji: '⚠️', cor: '#ff6b6b', bg: '#ff6b6b' },
+        'Equilibrado': { emoji: '✅', cor: '#51cf66', bg: '#51cf66' },
+        'Excesso': { emoji: '🔴', cor: '#ffa94d', bg: '#ffa94d' }
     };
     
     let regioesHTML = '';
     
     for (const [nome, dados] of Object.entries(regioes)) {
         if (dados.real) {
-            const config = statusConfig[dados.descricao] || { emoji: '📏', cor: '#868e96', bg: 'var(--bg-secondary)' };
+            const config = statusConfig[dados.descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
             regioesHTML += `
-                <div class="regiao-card-novo" style="border-left: 4px solid ${config.cor}; background: ${config.bg};">
-                    <div class="regiao-header-novo">
-                        <div class="regiao-nome-novo">${nome}</div>
-                        <div class="regiao-status-badge" style="background: ${config.cor};">
-                            <span class="regiao-emoji-novo">${config.emoji}</span>
-                            <span>${dados.descricao}</span>
+                <div class="regiao-item" style="border-color: ${config.cor};">
+                    <div class="regiao-titulo">${nome}</div>
+                    
+                    <div class="regiao-medidas-row">
+                        <div class="medida-col">
+                            <span class="medida-label">Atual</span>
+                            <span class="medida-valor-destaque" style="color: ${config.cor};">${dados.real} cm</span>
+                        </div>
+                        <div class="medida-col">
+                            <span class="medida-label">Ideal</span>
+                            <span class="medida-valor-destaque">${dados.ideal} cm</span>
+                        </div>
+                        <div class="medida-col">
+                            <span class="medida-label">Diferença</span>
+                            <span class="medida-valor-destaque ${dados.diferenca_cm > 0 ? 'positivo' : 'negativo'}">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</span>
                         </div>
                     </div>
-                    <div class="regiao-metricas">
-                        <div class="metrica-box">
-                            <div class="metrica-label">Atual</div>
-                            <div class="metrica-valor" style="color: ${config.cor};">${dados.real} cm</div>
-                        </div>
-                        <div class="metrica-box">
-                            <div class="metrica-label">Ideal</div>
-                            <div class="metrica-valor">${dados.ideal} cm</div>
-                        </div>
-                        <div class="metrica-box">
-                            <div class="metrica-label">Diferença</div>
-                            <div class="metrica-valor ${dados.diferenca_cm > 0 ? 'positivo' : 'negativo'}">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</div>
-                        </div>
+                    
+                    <div class="regiao-status-final" style="background: ${config.bg};">
+                        <span class="status-emoji">${config.emoji}</span>
+                        <span class="status-texto">${dados.descricao}</span>
                     </div>
                 </div>
             `;
@@ -604,7 +604,7 @@ function renderMapaCorporal(mapa) {
     return `
         <div class="grid-item-full">
             <div class="modulo-titulo">🗺️ Mapa de Distribuição Corporal</div>
-            <div class="mapa-regioes-grid-3x2">
+            <div class="mapa-grid-2col">
                 ${regioesHTML}
             </div>
             
