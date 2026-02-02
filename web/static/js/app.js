@@ -305,19 +305,41 @@ function criarCardAvaliacao(avaliacao) {
     
     console.log('Criando card para avaliação:', avaliacao.id, 'Resultados:', Object.keys(resultados));
     
-    // Avaliação básica
-    let avaliacaoBasicaHTML = `
-        <div class="grid-item">
-            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-primary);">📊 Avaliação Básica</h3>
-            <div class="avaliacao-header" style="justify-content: space-between; display: flex; align-items: center; margin-bottom: 1rem;">
-                <span class="avaliacao-date">📅 ${data}</span>
-                <button class="btn-icon" onclick="deletarAvaliacao('${avaliacao.id}')" title="Deletar">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    // Cabeçalho da avaliação
+    const headerHTML = `
+        <div class="avaliacao-header-top" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: var(--surface); border-radius: 16px 16px 0 0; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">📊 Avaliação - ${data}</h2>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <label class="switch-container" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="publico-${avaliacao.id}" style="display: none;">
+                    <div class="switch-toggle" style="position: relative; width: 50px; height: 26px; background: #ccc; border-radius: 13px; transition: background 0.3s;" onclick="togglePublico('${avaliacao.id}', this)">
+                        <div class="switch-slider" style="position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; background: white; border-radius: 50%; transition: transform 0.3s;"></div>
+                    </div>
+                    <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">Público</span>
+                </label>
+                <button class="btn-icon" onclick="downloadAvaliacaoPNG('${avaliacao.id}')" title="Baixar como PNG" style="padding: 0.5rem; background: var(--primary-color); border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+                <button class="btn-icon" onclick="deletarAvaliacao('${avaliacao.id}')" title="Deletar" style="padding: 0.5rem; background: #ff6b6b; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"></polyline>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                     </svg>
                 </button>
             </div>
+        </div>
+    `;
+    
+    // Avaliação básica (sem botão delete)
+    let avaliacaoBasicaHTML = `
+        <div class="grid-item">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-primary);">📊 Avaliação Básica</h3>
             <div style="display: grid; gap: 0.75rem;">
                 ${medidas.peso ? `
                 <div class="result-item">
@@ -369,8 +391,9 @@ function criarCardAvaliacao(avaliacao) {
     `;
     
     return `
-        <div class="avaliacao-card">
-            <div class="avaliacoes-grid">
+        <div class="avaliacao-card" id="avaliacao-${avaliacao.id}" style="background: var(--surface); border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            ${headerHTML}
+            <div class="avaliacoes-grid" style="padding: 0 1.5rem 1.5rem 1.5rem;">
                 ${avaliacaoBasicaHTML}
                 ${renderModulosAvancados(avaliacao)}
             </div>
@@ -775,6 +798,80 @@ function alternarTema() {
     
     // Salvar tema no localStorage
     localStorage.setItem('tema', novoTema);
+}
+
+// ========================================
+// FUNÇÕES DE AVALIAÇÃO - HEADER
+// ========================================
+
+function togglePublico(avaliacaoId, toggleElement) {
+    const checkbox = document.getElementById(`publico-${avaliacaoId}`);
+    const slider = toggleElement.querySelector('.switch-slider');
+    const isPublic = !checkbox.checked;
+    
+    checkbox.checked = isPublic;
+    
+    if (isPublic) {
+        toggleElement.style.background = 'var(--primary-color)';
+        slider.style.transform = 'translateX(24px)';
+        mostrarToast('Avaliação marcada como pública', 'success');
+    } else {
+        toggleElement.style.background = '#ccc';
+        slider.style.transform = 'translateX(0)';
+        mostrarToast('Avaliação marcada como privada', 'info');
+    }
+    
+    // TODO: Salvar estado no backend quando a funcionalidade de rede social for implementada
+    console.log(`Avaliação ${avaliacaoId} definida como ${isPublic ? 'pública' : 'privada'}`);
+}
+
+async function downloadAvaliacaoPNG(avaliacaoId) {
+    mostrarToast('Preparando download...', 'info');
+    
+    try {
+        // Importar html2canvas dinamicamente
+        if (typeof html2canvas === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            document.head.appendChild(script);
+            
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+            });
+        }
+        
+        const avaliacaoElement = document.getElementById(`avaliacao-${avaliacaoId}`);
+        
+        if (!avaliacaoElement) {
+            mostrarToast('Erro: Avaliação não encontrada', 'error');
+            return;
+        }
+        
+        // Capturar o elemento como imagem
+        const canvas = await html2canvas(avaliacaoElement, {
+            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-primary'),
+            scale: 2,
+            logging: false,
+            useCORS: true
+        });
+        
+        // Converter para blob e baixar
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const data = new Date().toISOString().split('T')[0];
+            link.download = `avaliacao-${data}.png`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            mostrarToast('Download concluído!', 'success');
+        });
+        
+    } catch (error) {
+        console.error('Erro ao gerar PNG:', error);
+        mostrarToast('Erro ao gerar imagem. Tente novamente.', 'error');
+    }
 }
 
 // ========================================
