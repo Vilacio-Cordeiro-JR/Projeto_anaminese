@@ -257,12 +257,67 @@ def avaliacoes_api():
             usuario = db.obter_usuario_por_conta(conta_id)
             if not usuario:
                 return jsonify([])
-            avaliacoes = db.obter_avaliacoes(usuario['id'])
+            avaliacoes_db = db.obter_avaliacoes(usuario['id'])
+            
+            # Recalcular resultados para cada avaliação
+            usuario_obj = Usuario(
+                nome=usuario['nome'],
+                sexo=Sexo(usuario['sexo']),
+                data_nascimento=usuario['data_nascimento']
+            )
+            
+            avaliacoes_completas = []
+            for av in avaliacoes_db:
+                medidas = Medidas(
+                    altura=float(usuario['altura']),
+                    peso=float(av['peso']),
+                    pescoco=float(av['pescoco']) if av.get('pescoco') else None,
+                    ombros=float(av['ombros']) if av.get('ombros') else None,
+                    peitoral=float(av['peitoral']) if av.get('peitoral') else None,
+                    cintura=float(av['cintura']) if av.get('cintura') else None,
+                    abdomen=float(av['abdomen']) if av.get('abdomen') else None,
+                    quadril=float(av['quadril']) if av.get('quadril') else None,
+                    braco_relaxado=float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
+                    braco_contraido=float(av['braco_contraido']) if av.get('braco_contraido') else None,
+                    antebraco=float(av['antebraco']) if av.get('antebraco') else None,
+                    coxa=float(av['coxa_proximal']) if av.get('coxa_proximal') else None,
+                    panturrilha=float(av['panturrilha']) if av.get('panturrilha') else None
+                )
+                
+                avaliacao = Avaliacao(
+                    data=av['data'],
+                    medidas=medidas,
+                    objetivo=''
+                )
+                
+                resultados = AnalisadorAvaliacao.processar_avaliacao(avaliacao, usuario_obj)
+                
+                avaliacoes_completas.append({
+                    'id': str(av['id']),
+                    'data': str(av['data']),
+                    'medidas': {
+                        'altura': float(usuario['altura']),
+                        'peso': float(av['peso']),
+                        'pescoco': float(av['pescoco']) if av.get('pescoco') else None,
+                        'ombros': float(av['ombros']) if av.get('ombros') else None,
+                        'peitoral': float(av['peitoral']) if av.get('peitoral') else None,
+                        'cintura': float(av['cintura']) if av.get('cintura') else None,
+                        'abdomen': float(av['abdomen']) if av.get('abdomen') else None,
+                        'quadril': float(av['quadril']) if av.get('quadril') else None,
+                        'braco_relaxado': float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
+                        'braco_contraido': float(av['braco_contraido']) if av.get('braco_contraido') else None,
+                        'antebraco': float(av['antebraco']) if av.get('antebraco') else None,
+                        'coxa': float(av['coxa_proximal']) if av.get('coxa_proximal') else None,
+                        'panturrilha': float(av['panturrilha']) if av.get('panturrilha') else None
+                    },
+                    'resultados': resultados
+                })
+            
+            return jsonify(avaliacoes_completas)
         else:
             dados = carregar_dados()
             avaliacoes = dados['avaliacoes'].get(str(conta_id), [])
-        
-        return jsonify([dict(a) for a in avaliacoes] if USE_DATABASE else avaliacoes)
+            return jsonify(avaliacoes)
     
     elif request.method == 'POST':
         # Cria nova avaliação
@@ -361,13 +416,19 @@ def deletar_avaliacao(avaliacao_id):
     """Deleta uma avaliação"""
     conta_id = session['conta_id']
     
-    if not USE_DATABASE:
-        dados = carregar_dados()
-        avaliacoes = dados['avaliacoes'].get(str(conta_id), [])
-        dados['avaliacoes'][str(conta_id)] = [a for a in avaliacoes if a['id'] != avaliacao_id]
-        salvar_dados(dados)
-    
-    return jsonify({'sucesso': True})
+    try:
+        if USE_DATABASE:
+            sucesso = db.deletar_avaliacao(int(avaliacao_id))
+            return jsonify({'sucesso': sucesso})
+        else:
+            dados = carregar_dados()
+            avaliacoes = dados['avaliacoes'].get(str(conta_id), [])
+            dados['avaliacoes'][str(conta_id)] = [a for a in avaliacoes if a['id'] != avaliacao_id]
+            salvar_dados(dados)
+            return jsonify({'sucesso': True})
+    except Exception as e:
+        print(f"Erro ao deletar avaliação: {e}")
+        return jsonify({'erro': str(e)}), 500
 
 
 # ===== ROTAS ADMIN =====

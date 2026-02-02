@@ -124,6 +124,16 @@ def obter_avaliacoes(usuario_id, limit=10):
             )
             return cur.fetchall()
 
+def deletar_avaliacao(avaliacao_id):
+    """Deleta uma avaliação pelo ID"""
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM avaliacoes WHERE id = %s",
+                (avaliacao_id,)
+            )
+            return cur.rowcount > 0
+
 def init_db():
     """Inicializa o banco de dados com as tabelas necessárias"""
     with get_db_connection() as conn:
