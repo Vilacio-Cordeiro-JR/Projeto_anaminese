@@ -261,6 +261,7 @@ function renderizarAvaliacoes() {
 function criarCardAvaliacao(avaliacao) {
     const data = new Date(avaliacao.data).toLocaleDateString('pt-BR');
     const resultados = avaliacao.resultados || {};
+    const medidas = avaliacao.medidas || {};
     
     console.log('Criando card para avaliação:', avaliacao.id, 'Resultados:', Object.keys(resultados));
     
@@ -279,10 +280,12 @@ function criarCardAvaliacao(avaliacao) {
             </div>
             
             <div class="avaliacao-content">
+                ${medidas.peso ? `
                 <div class="result-item">
                     <span class="result-label">Peso</span>
-                    <span class="result-value">${avaliacao.medidas.peso} kg</span>
+                    <span class="result-value">${medidas.peso} kg</span>
                 </div>
+                ` : ''}
                 
                 ${resultados && resultados.imc ? `
                 <div class="result-item">
@@ -361,6 +364,12 @@ function criarCardAvaliacao(avaliacao) {
 
 function renderModulosAvancados(avaliacao) {
     const resultados = avaliacao.resultados || {};
+    
+    // Verificar se há dados suficientes para módulos avançados
+    if (!resultados || Object.keys(resultados).length === 0) {
+        return '';
+    }
+    
     let html = '';
     
     // Composição Tecidual
