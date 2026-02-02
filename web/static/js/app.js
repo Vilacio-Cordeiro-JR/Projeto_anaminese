@@ -526,37 +526,37 @@ function renderMapaCorporal(mapa) {
     const gordura = mapa.gordura_central;
     
     const statusConfig = {
-        'Subdesenvolvido': { emoji: '⚠️', cor: '#ff6b6b' },
-        'Equilibrado': { emoji: '✅', cor: '#51cf66' },
-        'Excesso': { emoji: '🔴', cor: '#ffa94d' }
+        'Subdesenvolvido': { emoji: '⚠️', cor: '#ff6b6b', bg: 'linear-gradient(135deg, #ff6b6b15 0%, #ff6b6b05 100%)' },
+        'Equilibrado': { emoji: '✅', cor: '#51cf66', bg: 'linear-gradient(135deg, #51cf6615 0%, #51cf6605 100%)' },
+        'Excesso': { emoji: '🔴', cor: '#ffa94d', bg: 'linear-gradient(135deg, #ffa94d15 0%, #ffa94d05 100%)' }
     };
     
     let regioesHTML = '';
     
     for (const [nome, dados] of Object.entries(regioes)) {
         if (dados.real) {
-            const config = statusConfig[dados.descricao] || { emoji: '📏', cor: '#868e96' };
+            const config = statusConfig[dados.descricao] || { emoji: '📏', cor: '#868e96', bg: 'var(--bg-secondary)' };
             regioesHTML += `
-                <div class="regiao-card" style="border-left: 4px solid ${config.cor}; background: linear-gradient(135deg, ${config.cor}15 0%, transparent 100%);">
-                    <div class="regiao-header">
-                        <span class="regiao-nome">${nome}</span>
-                        <span class="regiao-emoji">${config.emoji}</span>
-                    </div>
-                    <div class="regiao-status" style="color: ${config.cor}; font-weight: 600; font-size: 0.85rem; margin: 0.5rem 0;">
-                        ${dados.descricao}
-                    </div>
-                    <div class="regiao-info">
-                        <div class="regiao-medida">
-                            <span class="label">Medida atual:</span>
-                            <span class="valor" style="color: ${config.cor}; font-weight: 600;">${dados.real} cm</span>
+                <div class="regiao-card-novo" style="border-left: 4px solid ${config.cor}; background: ${config.bg};">
+                    <div class="regiao-header-novo">
+                        <div class="regiao-nome-novo">${nome}</div>
+                        <div class="regiao-status-badge" style="background: ${config.cor};">
+                            <span class="regiao-emoji-novo">${config.emoji}</span>
+                            <span>${dados.descricao}</span>
                         </div>
-                        <div class="regiao-ideal">
-                            <span class="label">Ideal:</span>
-                            <span class="valor">${dados.ideal} cm</span>
+                    </div>
+                    <div class="regiao-metricas">
+                        <div class="metrica-box">
+                            <div class="metrica-label">Atual</div>
+                            <div class="metrica-valor" style="color: ${config.cor};">${dados.real} cm</div>
                         </div>
-                        <div class="regiao-diferenca">
-                            <span class="label">Diferença:</span>
-                            <span class="valor ${dados.diferenca_cm > 0 ? 'positivo' : 'negativo'}">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</span>
+                        <div class="metrica-box">
+                            <div class="metrica-label">Ideal</div>
+                            <div class="metrica-valor">${dados.ideal} cm</div>
+                        </div>
+                        <div class="metrica-box">
+                            <div class="metrica-label">Diferença</div>
+                            <div class="metrica-valor ${dados.diferenca_cm > 0 ? 'positivo' : 'negativo'}">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</div>
                         </div>
                     </div>
                 </div>
@@ -567,7 +567,7 @@ function renderMapaCorporal(mapa) {
     return `
         <div class="grid-item-full">
             <div class="modulo-titulo">🗺️ Mapa de Distribuição Corporal</div>
-            <div class="mapa-regioes-grid">
+            <div class="mapa-regioes-grid-3x2">
                 ${regioesHTML}
             </div>
             
@@ -579,12 +579,12 @@ function renderMapaCorporal(mapa) {
                 <div class="gordura-indices">
                     <div class="indice-item">
                         <span class="indice-label">RCQ (Relação Cintura/Quadril)</span>
-                        <span class="indice-valor ${gordura.rcq_descricao.toLowerCase()}">${gordura.rcq}</span>
+                        <span class="indice-valor">${gordura.rcq}</span>
                         <span class="indice-risco">${gordura.rcq_descricao}</span>
                     </div>
                     <div class="indice-item">
                         <span class="indice-label">RCA (Relação Cintura/Altura)</span>
-                        <span class="indice-valor ${gordura.rca_descricao.toLowerCase()}">${gordura.rca}</span>
+                        <span class="indice-valor">${gordura.rca}</span>
                         <span class="indice-risco">${gordura.rca_descricao}</span>
                     </div>
                 </div>
@@ -601,16 +601,16 @@ function renderScoreEstetico(score) {
     return `
         <div class="grid-item-full">
             <div class="modulo-titulo">⭐ Score Estético Corporal</div>
-            <div class="score-layout-novo">
-                <div class="score-gauge-section">
+            
+            <!-- Primeira linha: Gráfico + Score -->
+            <div class="score-primeira-linha">
+                <div class="score-grafico-box">
                     <svg width="200" height="200" viewBox="0 0 200 200">
-                        <!-- Background arc -->
                         <path d="M 30 170 A 90 90 0 0 1 170 170" 
                               fill="none" 
                               stroke="#e9ecef" 
                               stroke-width="25"
                               stroke-linecap="round"/>
-                        <!-- Progress arc -->
                         <path d="M 30 170 A 90 90 0 0 1 170 170" 
                               fill="none" 
                               stroke="${score.cor}" 
@@ -619,49 +619,57 @@ function renderScoreEstetico(score) {
                               stroke-dasharray="${(score.score_total / 100) * 283} 283"
                               style="transition: stroke-dasharray 1s ease;"/>
                     </svg>
-                    <div class="score-display-centro">
-                        <div class="score-numero-grande" style="color: ${score.cor}">${score.score_total}</div>
-                        <div class="score-classificacao-pequena">${score.classificacao}</div>
+                    <div class="score-centro-box">
+                        <div class="score-numero-box" style="color: ${score.cor}">${score.score_total}</div>
+                        <div class="score-de-100">/100</div>
                     </div>
                 </div>
                 
-                <div class="score-info-direita">
-                    <div class="score-titulo-grande">Pontuação Total</div>
-                    <div class="score-valor-destaque" style="color: ${score.cor}">${score.score_total}/100</div>
-                    <div class="score-classificacao-destaque">${score.classificacao}</div>
+                <div class="score-info-box">
+                    <div class="score-titulo-box">Pontuação Estética</div>
+                    <div class="score-valor-box" style="color: ${score.cor}">${score.score_total}<span class="score-max">/100</span></div>
+                    <div class="score-classificacao-box">${score.classificacao}</div>
+                    <div class="score-descricao-box">
+                        Avaliação baseada em percentual de gordura, proporções corporais, simetria e distribuição de massa.
+                    </div>
                 </div>
             </div>
             
-            <div class="score-breakdown-horizontal">
-                <div class="breakdown-item-h">
-                    <div class="breakdown-icon">🎯</div>
-                    <div class="breakdown-label">% Gordura</div>
-                    <div class="breakdown-valor">${breakdown.gordura || 0}/100</div>
-                    <div class="breakdown-peso">Peso: ${pesos.gordura || '30%'}</div>
+            <!-- Segunda linha: 5 critérios -->
+            <div class="score-criterios-grid">
+                <div class="criterio-card">
+                    <div class="criterio-icon">🎯</div>
+                    <div class="criterio-nome">% Gordura</div>
+                    <div class="criterio-pontos">${breakdown.gordura || 0}<span>/100</span></div>
+                    <div class="criterio-peso">Peso ${pesos.gordura || '30%'}</div>
                 </div>
-                <div class="breakdown-item-h">
-                    <div class="breakdown-icon">💪</div>
-                    <div class="breakdown-label">Ombro/Cintura</div>
-                    <div class="breakdown-valor">${breakdown.ombro_cintura || 0}/100</div>
-                    <div class="breakdown-peso">Peso: ${pesos.ombro_cintura || '25%'}</div>
+                
+                <div class="criterio-card">
+                    <div class="criterio-icon">💪</div>
+                    <div class="criterio-nome">Ombro/Cintura</div>
+                    <div class="criterio-pontos">${breakdown.ombro_cintura || 0}<span>/100</span></div>
+                    <div class="criterio-peso">Peso ${pesos.ombro_cintura || '25%'}</div>
                 </div>
-                <div class="breakdown-item-h">
-                    <div class="breakdown-icon">🏋️</div>
-                    <div class="breakdown-label">Peitoral/Cintura</div>
-                    <div class="breakdown-valor">${breakdown.peitoral_cintura || 0}/100</div>
-                    <div class="breakdown-peso">Peso: ${pesos.peitoral_cintura || '20%'}</div>
+                
+                <div class="criterio-card">
+                    <div class="criterio-icon">🏋️</div>
+                    <div class="criterio-nome">Peitoral/Cintura</div>
+                    <div class="criterio-pontos">${breakdown.peitoral_cintura || 0}<span>/100</span></div>
+                    <div class="criterio-peso">Peso ${pesos.peitoral_cintura || '20%'}</div>
                 </div>
-                <div class="breakdown-item-h">
-                    <div class="breakdown-icon">⚖️</div>
-                    <div class="breakdown-label">Simetria</div>
-                    <div class="breakdown-valor">${breakdown.simetria || 0}/100</div>
-                    <div class="breakdown-peso">Peso: ${pesos.simetria || '15%'}</div>
+                
+                <div class="criterio-card">
+                    <div class="criterio-icon">⚖️</div>
+                    <div class="criterio-nome">Simetria</div>
+                    <div class="criterio-pontos">${breakdown.simetria || 0}<span>/100</span></div>
+                    <div class="criterio-peso">Peso ${pesos.simetria || '15%'}</div>
                 </div>
-                <div class="breakdown-item-h">
-                    <div class="breakdown-icon">📊</div>
-                    <div class="breakdown-label">Gordura Central</div>
-                    <div class="breakdown-valor">${breakdown.gordura_central || 0}/100</div>
-                    <div class="breakdown-peso">Peso: ${pesos.gordura_central || '10%'}</div>
+                
+                <div class="criterio-card">
+                    <div class="criterio-icon">📊</div>
+                    <div class="criterio-nome">Gordura Central</div>
+                    <div class="criterio-pontos">${breakdown.gordura_central || 0}<span>/100</span></div>
+                    <div class="criterio-peso">Peso ${pesos.gordura_central || '10%'}</div>
                 </div>
             </div>
         </div>
