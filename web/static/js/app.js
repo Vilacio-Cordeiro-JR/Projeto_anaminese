@@ -1006,6 +1006,23 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
             return;
         }
         
+        // Guardar estado original da avaliação
+        const card = document.getElementById(`avaliacao-${avaliacaoId}`);
+        const contentMin = document.getElementById(`content-min-${avaliacaoId}`);
+        const contentExp = document.getElementById(`content-exp-${avaliacaoId}`);
+        const wasExpanded = card.dataset.expanded === 'true';
+        
+        // Expandir temporariamente se estiver minimizada
+        if (!wasExpanded) {
+            contentMin.style.display = 'none';
+            contentExp.style.display = 'block';
+            contentExp.style.opacity = '1';
+            card.dataset.expanded = 'true';
+            
+            // Aguardar renderização
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
         // Importar html2canvas se não estiver carregado
         if (typeof html2canvas === 'undefined') {
             mostrarToast('Carregando biblioteca...', 'info');
@@ -1034,6 +1051,13 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
         clone.style.position = 'absolute';
         clone.style.left = '-9999px';
         clone.style.top = '0';
+        
+        // Remover footer do clone (botão de expandir/minimizar)
+        const footer = clone.querySelector('.avaliacao-footer');
+        if (footer) {
+            footer.remove();
+        }
+        
         document.body.appendChild(clone);
         
         // Definir background baseado no tema
@@ -1056,6 +1080,19 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
         
         // Remover clone
         document.body.removeChild(clone);
+        
+        // Restaurar estado original
+        if (!wasExpanded) {
+            contentExp.style.opacity = '0';
+            setTimeout(() => {
+                contentExp.style.display = 'none';
+                contentMin.style.display = 'block';
+                setTimeout(() => {
+                    contentMin.style.opacity = '1';
+                }, 50);
+            }, 300);
+            card.dataset.expanded = 'false';
+        }
         
         console.log('Canvas gerado, criando download...');
         
