@@ -1413,6 +1413,15 @@ body {
 }
 
 /* Mapa Corporal - Grid 2 Colunas */
+.grid-item-full .mapa-grid-2col {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+/* Fallback caso não esteja em .grid-item-full */
 .mapa-grid-2col {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
@@ -1421,7 +1430,8 @@ body {
     width: 100%;
 }
 
-.regiao-item {
+.grid-item-full .regiao-item,
+.mapa-grid-2col .regiao-item {
     background: var(--surface);
     border-radius: 16px;
     padding: 1.5rem;
@@ -1431,6 +1441,8 @@ body {
     flex-direction: column !important;
     gap: 1rem;
     min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .regiao-item:hover {
