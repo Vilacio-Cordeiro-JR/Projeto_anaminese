@@ -51,12 +51,17 @@ def autenticar(nome, senha):
             return result['id'] if result else None
 
 def criar_usuario(conta_id, data_nascimento, sexo, altura):
-    """Cria dados pessoais do usuário vinculado à conta"""
+    """Cria ou atualiza dados pessoais do usuário vinculado à conta"""
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """INSERT INTO usuarios (conta_id, data_nascimento, sexo, altura) 
-                   VALUES (%s, %s, %s, %s) RETURNING id""",
+                   VALUES (%s, %s, %s, %s)
+                   ON CONFLICT (conta_id) DO UPDATE SET
+                       data_nascimento = EXCLUDED.data_nascimento,
+                       sexo = EXCLUDED.sexo,
+                       altura = EXCLUDED.altura
+                   RETURNING id""",
                 (conta_id, data_nascimento, sexo, altura)
             )
             return cur.fetchone()['id']
