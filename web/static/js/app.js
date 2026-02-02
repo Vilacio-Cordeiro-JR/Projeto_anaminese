@@ -5,7 +5,8 @@
 // Estado da aplicação
 const app = {
     usuario: null,
-    avaliacoes: []
+    avaliacoes: [],
+    isAdmin: false
 };
 
 // ========================================
@@ -13,6 +14,7 @@ const app = {
 // ========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await checkAdmin();
     await carregarUsuario();
     await carregarAvaliacoes();
     inicializarEventos();
@@ -23,6 +25,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ========================================
 // GERENCIAMENTO DE USUÁRIO
 // ========================================
+
+async function checkAdmin() {
+    try {
+        const response = await fetch('/api/admin/check');
+        if (response.ok) {
+            const data = await response.json();
+            app.isAdmin = data.is_admin;
+        }
+    } catch (error) {
+        console.error('Erro ao verificar admin:', error);
+    }
+}
 
 async function carregarUsuario() {
     try {
@@ -169,17 +183,33 @@ async function salvarAvaliacao() {
 
         if (response.ok) {
             const avaliacao = await response.json();
+            
+            // Log para debug
+            console.log('Avaliação recebida:', avaliacao);
+            console.log('Resultados:', avaliacao.resultados);
+            
+            // Verificar se os resultados foram calculados
+            if (!avaliacao.resultados || Object.keys(avaliacao.resultados).length === 0) {
+                mostrarToast('Avaliação salva, mas sem resultados calculados', 'warning');
+            } else {
+                mostrarToast('Avaliação salva com sucesso!', 'success');
+            }
+            
+            // Adicionar ao início da lista
             app.avaliacoes.unshift(avaliacao);
+            console.log('Total de avaliações:', app.avaliacoes.length);
+            
+            // Renderizar
             renderizarAvaliacoes();
             limparFormulario();
-            mostrarToast('Avaliação salva com sucesso!', 'success');
         } else {
             const erro = await response.json();
             mostrarToast(erro.erro || 'Erro ao salvar avaliação', 'error');
+            console.error('Erro detalhado:', erro);
         }
     } catch (error) {
         console.error('Erro ao salvar avaliação:', error);
-        mostrarToast('Erro ao salvar avaliação', 'error');
+        mostrarToast('Erro ao salvar avaliação: ' + error.message, 'error');
     }
 }
 
@@ -207,6 +237,8 @@ async function deletarAvaliacao(id) {
 function renderizarAvaliacoes() {
     const container = document.getElementById('avaliacoesContainer');
     
+    console.log('Renderizando avaliações. Total:', app.avaliacoes.length);
+    
     if (app.avaliacoes.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -223,11 +255,14 @@ function renderizarAvaliacoes() {
     }
 
     container.innerHTML = app.avaliacoes.map(av => criarCardAvaliacao(av)).join('');
+    console.log('Avaliações renderizadas com sucesso');
 }
 
 function criarCardAvaliacao(avaliacao) {
     const data = new Date(avaliacao.data).toLocaleDateString('pt-BR');
-    const resultados = avaliacao.resultados;
+    const resultados = avaliacao.resultados || {};
+    
+    console.log('Criando card para avaliação:', avaliacao.id, 'Resultados:', Object.keys(resultados));
     
     return `
         <div class="avaliacao-card">
@@ -249,42 +284,42 @@ function criarCardAvaliacao(avaliacao) {
                     <span class="result-value">${avaliacao.medidas.peso} kg</span>
                 </div>
                 
-                ${resultados.imc ? `
+                ${resultados && resultados.imc ? `
                 <div class="result-item">
                     <span class="result-label">IMC</span>
                     <span class="result-value">${resultados.imc}</span>
-                    <span class="result-desc">${resultados.imc_descricao}</span>
+                    <span class="result-desc">${resultados.imc_descricao || ''}</span>
                 </div>
                 ` : ''}
                 
-                ${resultados.percentual_gordura ? `
+                ${resultados && resultados.percentual_gordura ? `
                 <div class="result-item">
                     <span class="result-label">% Gordura</span>
                     <span class="result-value">${resultados.percentual_gordura}%</span>
-                    <span class="result-desc">${resultados.classificacao_gordura}</span>
+                    <span class="result-desc">${resultados.classificacao_gordura || ''}</span>
                 </div>
                 ` : ''}
                 
-                ${resultados.massa_magra_kg ? `
+                ${resultados && resultados.massa_magra_kg ? `
                 <div class="result-item">
                     <span class="result-label">Massa Magra</span>
                     <span class="result-value">${resultados.massa_magra_kg} kg</span>
                 </div>
                 ` : ''}
                 
-                ${resultados.rcq ? `
+                ${resultados && resultados.rcq ? `
                 <div class="result-item">
                     <span class="result-label">RCQ</span>
                     <span class="result-value">${resultados.rcq}</span>
-                    <span class="result-desc">${resultados.rcq_descricao}</span>
+                    <span class="result-desc">${resultados.rcq_descricao || ''}</span>
                 </div>
                 ` : ''}
                 
-                ${resultados.rca ? `
+                ${resultados && resultados.rca ? `
                 <div class="result-item">
                     <span class="result-label">RCA</span>
                     <span class="result-value">${resultados.rca}</span>
-                    <span class="result-desc">${resultados.rca_descricao}</span>
+                    <span class="result-desc">${resultados.rca_descricao || ''}</span>
                 </div>
                 ` : ''}
                 
@@ -407,6 +442,12 @@ function inicializarEventos() {
     // Botão de usuário
     document.getElementById('userBtn').addEventListener('click', mostrarModal);
     
+    // Botão de admin (se existir)
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) {
+        adminBtn.addEventListener('click', mostrarAdminModal);
+    }
+    
     // Theme toggle switch
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
@@ -416,12 +457,39 @@ function inicializarEventos() {
     // Fechar modal
     document.getElementById('closeModal').addEventListener('click', esconderModal);
     
+    // Fechar modal admin
+    const closeAdminModal = document.getElementById('closeAdminModal');
+    if (closeAdminModal) {
+        closeAdminModal.addEventListener('click', esconderAdminModal);
+    }
+    
     // Clique fora do modal
     document.getElementById('userModal').addEventListener('click', (e) => {
         if (e.target.id === 'userModal') {
             esconderModal();
         }
     });
+    
+    // Clique fora do modal admin
+    const adminModal = document.getElementById('adminModal');
+    if (adminModal) {
+        adminModal.addEventListener('click', (e) => {
+            if (e.target.id === 'adminModal') {
+                esconderAdminModal();
+            }
+        });
+    }
+    
+    // Botão de carregar database
+    const loadDbBtn = document.getElementById('loadDbBtn');
+    if (loadDbBtn) {
+        loadDbBtn.addEventListener('click', carregarDatabase);
+    }
+    
+    // Setup admin tabs
+    if (adminModal) {
+        setupAdminTabs();
+    }
     
     // Formulário de usuário
     document.getElementById('userForm').addEventListener('submit', async (e) => {
@@ -446,13 +514,11 @@ function inicializarEventos() {
         }
     });
     
-    // Alteração de tema
-    document.getElementById('userTheme').addEventListener('change', (e) => {
-        document.body.className = `${e.target.value}-theme`;
-    });
-    
     // Botão de salvar avaliação
     document.getElementById('saveBtn').addEventListener('click', salvarAvaliacao);
+    
+    // Navegação com Enter nos formulários
+    setupEnterNavigation();
     
     // Interação com pontos do mapa anatômico
     document.querySelectorAll('.measure-point').forEach(point => {
@@ -569,4 +635,151 @@ async function fazerLogout() {
         console.error('Erro ao fazer logout:', error);
         mostrarToast('Erro ao fazer logout', 'error');
     }
+}
+
+// ========================================
+// NAVEGAÇÃO COM ENTER
+// ========================================
+
+function setupEnterNavigation() {
+    // Formulário de medidas (avaliação)
+    const medidasInputs = [
+        'pescoco', 'ombros', 'peitoral', 'cintura', 
+        'abdomen', 'quadril', 'braco_relaxado', 'braco_contraido',
+        'antebraco', 'coxa', 'panturrilha', 'peso', 'objetivo'
+    ];
+    
+    medidasInputs.forEach((id, index) => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    // Se for o último campo, salvar
+                    if (index === medidasInputs.length - 1) {
+                        document.getElementById('saveBtn').click();
+                    } else {
+                        // Ir para o próximo campo
+                        let nextIndex = index + 1;
+                        while (nextIndex < medidasInputs.length) {
+                            const nextInput = document.getElementById(medidasInputs[nextIndex]);
+                            if (nextInput) {
+                                nextInput.focus();
+                                break;
+                            }
+                            nextIndex++;
+                        }
+                    }
+                }
+            });
+        }
+    });
+    
+    // Formulário de usuário
+    const userInputs = [
+        'userName', 'userBirthdate', 'userSex', 
+        'userEmail', 'userHeight'
+    ];
+    
+    userInputs.forEach((id, index) => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    // Se for o último campo, submeter formulário
+                    if (index === userInputs.length - 1) {
+                        document.getElementById('userForm').dispatchEvent(new Event('submit'));
+                    } else {
+                        // Ir para o próximo campo
+                        let nextIndex = index + 1;
+                        while (nextIndex < userInputs.length) {
+                            const nextInput = document.getElementById(userInputs[nextIndex]);
+                            if (nextInput) {
+                                nextInput.focus();
+                                // Se for select, abrir o dropdown
+                                if (nextInput.tagName === 'SELECT') {
+                                    nextInput.click();
+                                }
+                                break;
+                            }
+                            nextIndex++;
+                        }
+                    }
+                }
+            });
+        }
+    });
+}
+
+// ========================================
+// ADMIN PANEL
+// ========================================
+
+function mostrarAdminModal() {
+    document.getElementById('adminModal').classList.add('active');
+    carregarEstatisticas();
+}
+
+function esconderAdminModal() {
+    document.getElementById('adminModal').classList.remove('active');
+}
+
+async function carregarEstatisticas() {
+    try {
+        const response = await fetch('/api/admin/stats');
+        if (response.ok) {
+            const stats = await response.json();
+            document.getElementById('statContas').textContent = stats.total_contas;
+            document.getElementById('statAvaliacoes').textContent = stats.total_avaliacoes;
+            document.getElementById('statModo').textContent = stats.modo;
+        } else {
+            mostrarToast('Erro ao carregar estatísticas', 'error');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+        mostrarToast('Erro ao carregar estatísticas', 'error');
+    }
+}
+
+async function carregarDatabase() {
+    const container = document.getElementById('databaseContent');
+    container.textContent = 'Carregando...';
+    
+    try {
+        const response = await fetch('/api/admin/database');
+        if (response.ok) {
+            const data = await response.json();
+            container.textContent = JSON.stringify(data, null, 2);
+        } else {
+            const erro = await response.json();
+            container.textContent = `Erro: ${erro.erro}`;
+            mostrarToast('Erro ao carregar dados', 'error');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar database:', error);
+        container.textContent = `Erro: ${error.message}`;
+        mostrarToast('Erro ao carregar dados', 'error');
+    }
+}
+
+function setupAdminTabs() {
+    const tabs = document.querySelectorAll('.admin-tab');
+    const contents = document.querySelectorAll('.admin-tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            
+            // Remove active from all tabs and contents
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Add active to clicked tab and corresponding content
+            tab.classList.add('active');
+            document.getElementById(targetTab + 'Tab').classList.add('active');
+        });
+    });
 }

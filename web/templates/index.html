@@ -18,6 +18,16 @@
                 BodyXP
             </h1>
             <div class="user-menu">
+                <!-- Admin Button (visible only for admins) -->
+                {% if is_admin %}
+                <button id="adminBtn" class="admin-btn" title="Painel Admin">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                {% endif %}
+                
                 <!-- Theme Toggle Switch -->
                 <label class="theme-switch">
                     <input type="checkbox" id="themeToggle">
@@ -209,6 +219,58 @@
                 <button type="submit" class="save-btn">Salvar Configurações</button>
                 <button type="button" class="logout-btn" onclick="fazerLogout()">Sair da Conta</button>
             </form>
+        </div>
+    </div>
+
+    <!-- POPUP DE ADMIN -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2>🔧 Painel de Administração</h2>
+                <button class="close-btn" id="closeAdminModal">&times;</button>
+            </div>
+            <div class="admin-content">
+                <!-- Tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="stats">Estatísticas</button>
+                    <button class="admin-tab" data-tab="database">Banco de Dados</button>
+                </div>
+
+                <!-- Tab Content: Estatísticas -->
+                <div id="statsTab" class="admin-tab-content active">
+                    <h3>Estatísticas do Sistema</h3>
+                    <div id="statsContainer" class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total de Contas</span>
+                                <span class="stat-value" id="statContas">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total de Avaliações</span>
+                                <span class="stat-value" id="statAvaliacoes">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💾</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Modo de Armazenamento</span>
+                                <span class="stat-value" id="statModo">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Database -->
+                <div id="databaseTab" class="admin-tab-content">
+                    <h3>Visualização do Banco de Dados</h3>
+                    <button id="loadDbBtn" class="save-btn" style="margin-bottom: 1rem;">Carregar Dados</button>
+                    <pre id="databaseContent" style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; max-height: 500px; overflow: auto; font-size: 0.85rem;">Clique em "Carregar Dados" para visualizar</pre>
+                </div>
+            </div>
         </div>
     </div>
 

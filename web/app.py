@@ -9,9 +9,16 @@ from datetime import date, datetime
 import os
 import sys
 import hashlib
+import traceback
 
 # Adiciona o diretório raiz ao path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Importar módulos de cálculo
+from src.models.usuario import Usuario, Sexo
+from src.models.medidas import Medidas
+from src.models.avaliacao import Avaliacao
+from src.services.analisador import AnalisadorAvaliacao
 
 # Verifica se deve usar PostgreSQL ou JSON
 USE_DATABASE = os.environ.get('POSTGRES_URL') or os.environ.get('DATABASE_URL')
@@ -36,10 +43,18 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 CORS(app)
 
+# Lista de usuários admin (nomes de conta)
+ADMINS = ['admin', 'Admin', 'ADMIN', 'Vilacio']
+
 
 def hash_senha(senha):
     """Gera hash SHA256 da senha"""
     return hashlib.sha256(senha.encode()).hexdigest()
+
+
+def is_admin():
+    """Verifica se o usuário atual é admin"""
+    return session.get('nome') in ADMINS
 
 
 # ===== MODO JSON (DESENVOLVIMENTO) =====
@@ -155,7 +170,7 @@ def index():
     """Página principal"""
     if 'conta_id' not in session:
         return redirect(url_for('login_page'))
-    return render_template('index.html')
+    return render_template('index.html', is_admin=is_admin())
 
 
 @app.route('/api/usuario', methods=['GET', 'POST', 'PUT'])
@@ -234,32 +249,84 @@ def avaliacoes_api():
         # Cria nova avaliação
         data = request.json
         
-        if USE_DATABASE:
-            usuario = db.obter_usuario_por_conta(conta_id)
-            if not usuario:
-                return jsonify({'erro': 'Complete seu cadastro primeiro'}), 400
+        try:
+            # Obter dados do usuário
+            if USE_DATABASE:
+                usuario = db.obter_usuario_por_conta(conta_id)
+                if not usuario:
+                    return jsonify({'erro': 'Complete seu cadastro primeiro'}), 400
+                usuario_obj = Usuario(
+                    nome=usuario['nome'],
+                    sexo=Sexo(usuario['sexo']),
+                    data_nascimento=datetime.strptime(str(usuario['data_nascimento']), '%Y-%m-%d').date()
+                )
+            else:
+                dados = carregar_dados()
+                usuario_data = dados['usuarios'].get(str(conta_id))
+                if not usuario_data:
+                    return jsonify({'erro': 'Complete seu cadastro primeiro'}), 400
+                usuario_obj = Usuario(
+                    nome=usuario_data['nome'],
+                    sexo=Sexo(usuario_data['sexo']),
+                    data_nascimento=datetime.strptime(usuario_data['data_nascimento'], '%Y-%m-%d').date()
+                )
             
-            db.salvar_avaliacao(
-                usuario['id'],
-                data.get('data', date.today().isoformat()),
-                data['medidas']['peso'],
-                data['medidas']
+            # Criar objeto Medidas
+            medidas_dict = data['medidas']
+            medidas = Medidas(
+                altura=medidas_dict['altura'],
+                peso=medidas_dict['peso'],
+                pescoco=medidas_dict.get('pescoco'),
+                ombros=medidas_dict.get('ombros'),
+                peitoral=medidas_dict.get('peitoral'),
+                cintura=medidas_dict.get('cintura'),
+                abdomen=medidas_dict.get('abdomen'),
+                quadril=medidas_dict.get('quadril'),
+                braco_relaxado=medidas_dict.get('braco_relaxado'),
+                braco_contraido=medidas_dict.get('braco_contraido'),
+                antebraco=medidas_dict.get('antebraco'),
+                coxa_proximal=medidas_dict.get('coxa'),
+                panturrilha=medidas_dict.get('panturrilha')
             )
-        else:
-            dados = carregar_dados()
-            if str(conta_id) not in dados['avaliacoes']:
-                dados['avaliacoes'][str(conta_id)] = []
             
-            avaliacao = {
+            # Criar avaliação
+            avaliacao = Avaliacao(
+                data=datetime.strptime(data.get('data', date.today().isoformat()), '%Y-%m-%d').date(),
+                medidas=medidas,
+                objetivo=data.get('objetivo')
+            )
+            
+            # PROCESSAR CÁLCULOS
+            resultados = AnalisadorAvaliacao.processar_avaliacao(avaliacao, usuario_obj)
+            
+            # Salvar com resultados
+            avaliacao_completa = {
                 'id': datetime.now().isoformat(),
                 'data': data.get('data', date.today().isoformat()),
-                'peso': data['medidas']['peso'],
-                'medidas': data['medidas']
+                'medidas': medidas_dict,
+                'objetivo': data.get('objetivo', ''),
+                'resultados': resultados
             }
-            dados['avaliacoes'][str(conta_id)].insert(0, avaliacao)
-            salvar_dados(dados)
-        
-        return jsonify({'sucesso': True})
+            
+            if USE_DATABASE:
+                db.salvar_avaliacao(
+                    usuario['id'],
+                    avaliacao_completa['data'],
+                    medidas_dict['peso'],
+                    medidas_dict
+                )
+            else:
+                if str(conta_id) not in dados['avaliacoes']:
+                    dados['avaliacoes'][str(conta_id)] = []
+                dados['avaliacoes'][str(conta_id)].insert(0, avaliacao_completa)
+                salvar_dados(dados)
+            
+            return jsonify(avaliacao_completa)
+            
+        except Exception as e:
+            print(f"Erro ao processar avaliação: {e}")
+            print(traceback.format_exc())
+            return jsonify({'erro': f'Erro ao processar avaliação: {str(e)}'}), 500
 
 
 @app.route('/api/avaliacoes/<avaliacao_id>', methods=['DELETE'])
@@ -275,6 +342,69 @@ def deletar_avaliacao(avaliacao_id):
         salvar_dados(dados)
     
     return jsonify({'sucesso': True})
+
+
+# ===== ROTAS ADMIN =====
+@app.route('/api/admin/check', methods=['GET'])
+@requer_login
+def check_admin():
+    """Verifica se usuário é admin"""
+    return jsonify({'is_admin': is_admin()})
+
+
+@app.route('/api/admin/database', methods=['GET'])
+@requer_login
+def admin_database():
+    """Retorna dados completos do database (apenas admin)"""
+    if not is_admin():
+        return jsonify({'erro': 'Acesso negado'}), 403
+    
+    try:
+        if USE_DATABASE:
+            # TODO: Implementar consulta ao PostgreSQL
+            return jsonify({'erro': 'Visualização de PostgreSQL não implementada ainda'}), 501
+        else:
+            dados = carregar_dados()
+            # Remover senhas para segurança
+            dados_safe = dados.copy()
+            if 'contas' in dados_safe:
+                for nome, conta in dados_safe['contas'].items():
+                    if 'senha_hash' in conta:
+                        conta['senha_hash'] = '***HIDDEN***'
+            
+            return jsonify(dados_safe)
+    except Exception as e:
+        print(f"Erro ao carregar database: {e}")
+        print(traceback.format_exc())
+        return jsonify({'erro': str(e)}), 500
+
+
+@app.route('/api/admin/stats', methods=['GET'])
+@requer_login
+def admin_stats():
+    """Retorna estatísticas do sistema (apenas admin)"""
+    if not is_admin():
+        return jsonify({'erro': 'Acesso negado'}), 403
+    
+    try:
+        if USE_DATABASE:
+            # TODO: Implementar estatísticas do PostgreSQL
+            return jsonify({'erro': 'Estatísticas de PostgreSQL não implementadas ainda'}), 501
+        else:
+            dados = carregar_dados()
+            total_contas = len(dados.get('contas', {}))
+            total_usuarios = len(dados.get('usuarios', {}))
+            total_avaliacoes = sum(len(avs) for avs in dados.get('avaliacoes', {}).values())
+            
+            return jsonify({
+                'total_contas': total_contas,
+                'total_usuarios': total_usuarios,
+                'total_avaliacoes': total_avaliacoes,
+                'modo': 'JSON'
+            })
+    except Exception as e:
+        print(f"Erro ao carregar estatísticas: {e}")
+        return jsonify({'erro': str(e)}), 500
 
 
 if __name__ == '__main__':
