@@ -663,8 +663,8 @@ function renderScoreEstetico(score) {
             <div class="modulo-titulo">⭐ Score Estético Corporal</div>
             
             <!-- Primeira linha: Gráfico + Score -->
-            <div class="score-primeira-linha">
-                <div class="score-grafico-box">
+            <div class="score-primeira-linha" style="display: grid !important; grid-template-columns: auto 1fr !important; gap: 2rem !important; align-items: center !important; margin-bottom: 2rem !important; background: var(--surface); padding: 2rem; border-radius: 16px;">
+                <div class="score-grafico-box" style="position: relative; width: 200px; height: 200px;">
                     <svg width="200" height="200" viewBox="0 0 200 200">
                         <path d="M 30 170 A 90 90 0 0 1 170 170" 
                               fill="none" 
@@ -679,57 +679,57 @@ function renderScoreEstetico(score) {
                               stroke-dasharray="${(score.score_total / 100) * 283} 283"
                               style="transition: stroke-dasharray 1s ease;"/>
                     </svg>
-                    <div class="score-centro-box">
-                        <div class="score-numero-box" style="color: ${score.cor}">${score.score_total}</div>
-                        <div class="score-de-100">/100</div>
+                    <div class="score-centro-box" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                        <div class="score-numero-box" style="font-size: 3rem; font-weight: 900; color: ${score.cor};">${score.score_total}</div>
+                        <div class="score-de-100" style="font-size: 1.2rem; color: var(--text-secondary); margin-top: -0.5rem;">/100</div>
                     </div>
                 </div>
                 
-                <div class="score-info-box">
-                    <div class="score-titulo-box">Pontuação Estética</div>
-                    <div class="score-valor-box" style="color: ${score.cor}">${score.score_total}<span class="score-max">/100</span></div>
-                    <div class="score-classificacao-box">${score.classificacao}</div>
-                    <div class="score-descricao-box">
+                <div class="score-info-box" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="score-titulo-box" style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary);">Pontuação Estética</div>
+                    <div class="score-valor-box" style="font-size: 2.5rem; font-weight: 900; color: ${score.cor};">${score.score_total}<span class="score-max" style="font-size: 1.5rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="score-classificacao-box" style="display: inline-block; padding: 0.5rem 1.5rem; background: ${score.cor}; color: white; border-radius: 20px; font-weight: 600; font-size: 1.1rem; width: fit-content;">${score.classificacao}</div>
+                    <div class="score-descricao-box" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
                         Avaliação baseada em percentual de gordura, proporções corporais, simetria e distribuição de massa.
                     </div>
                 </div>
             </div>
             
             <!-- Segunda linha: 5 critérios -->
-            <div class="score-criterios-grid">
-                <div class="criterio-card">
-                    <div class="criterio-icon">🎯</div>
-                    <div class="criterio-nome">% Gordura</div>
-                    <div class="criterio-pontos">${breakdown.gordura || 0}<span>/100</span></div>
-                    <div class="criterio-peso">Peso ${pesos.gordura || '30%'}</div>
+            <div class="score-criterios-grid" style="display: grid !important; grid-template-columns: repeat(5, 1fr) !important; gap: 1rem !important;">
+                <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
+                    <div class="criterio-icon" style="font-size: 2.5rem;">🎯</div>
+                    <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">% Gordura</div>
+                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.gordura || '30%'}</div>
                 </div>
                 
-                <div class="criterio-card">
-                    <div class="criterio-icon">💪</div>
-                    <div class="criterio-nome">Ombro/Cintura</div>
-                    <div class="criterio-pontos">${breakdown.ombro_cintura || 0}<span>/100</span></div>
-                    <div class="criterio-peso">Peso ${pesos.ombro_cintura || '25%'}</div>
+                <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
+                    <div class="criterio-icon" style="font-size: 2.5rem;">💪</div>
+                    <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Ombro/Cintura</div>
+                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.ombro_cintura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.ombro_cintura || '25%'}</div>
                 </div>
                 
-                <div class="criterio-card">
-                    <div class="criterio-icon">🏋️</div>
-                    <div class="criterio-nome">Peitoral/Cintura</div>
-                    <div class="criterio-pontos">${breakdown.peitoral_cintura || 0}<span>/100</span></div>
-                    <div class="criterio-peso">Peso ${pesos.peitoral_cintura || '20%'}</div>
+                <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
+                    <div class="criterio-icon" style="font-size: 2.5rem;">🏋️</div>
+                    <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Peitoral/Cintura</div>
+                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.peitoral_cintura || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.peitoral_cintura || '20%'}</div>
                 </div>
                 
-                <div class="criterio-card">
-                    <div class="criterio-icon">⚖️</div>
-                    <div class="criterio-nome">Simetria</div>
-                    <div class="criterio-pontos">${breakdown.simetria || 0}<span>/100</span></div>
-                    <div class="criterio-peso">Peso ${pesos.simetria || '15%'}</div>
+                <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
+                    <div class="criterio-icon" style="font-size: 2.5rem;">⚖️</div>
+                    <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Simetria</div>
+                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.simetria || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.simetria || '15%'}</div>
                 </div>
                 
-                <div class="criterio-card">
-                    <div class="criterio-icon">📊</div>
-                    <div class="criterio-nome">Gordura Central</div>
-                    <div class="criterio-pontos">${breakdown.gordura_central || 0}<span>/100</span></div>
-                    <div class="criterio-peso">Peso ${pesos.gordura_central || '10%'}</div>
+                <div class="criterio-card" style="background: var(--surface); padding: 1.5rem; border-radius: 12px; text-align: center; display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.3s ease;">
+                    <div class="criterio-icon" style="font-size: 2.5rem;">📊</div>
+                    <div class="criterio-nome" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Gordura Central</div>
+                    <div class="criterio-pontos" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">${breakdown.gordura_central || 0}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></div>
+                    <div class="criterio-peso" style="font-size: 0.8rem; color: var(--text-secondary);">Peso ${pesos.gordura_central || '10%'}</div>
                 </div>
             </div>
         </div>
