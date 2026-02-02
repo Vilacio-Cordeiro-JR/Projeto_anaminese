@@ -275,6 +275,14 @@ def usuario_api():
         if not data.get('sexo'):
             return jsonify({'erro': 'Sexo é obrigatório'}), 400
         
+        # Validar e converter altura
+        try:
+            altura = float(data.get('altura', 0))
+            if altura <= 0:
+                return jsonify({'erro': 'Altura deve ser maior que zero'}), 400
+        except (ValueError, TypeError):
+            return jsonify({'erro': 'Altura inválida'}), 400
+        
         # Calcula idade
         data_nasc = datetime.strptime(data['data_nascimento'], '%Y-%m-%d').date()
         hoje = date.today()
@@ -282,7 +290,7 @@ def usuario_api():
         
         if USE_DATABASE:
             # Usar PostgreSQL
-            db.criar_usuario(conta_id, data['data_nascimento'], data['sexo'], data.get('altura', 0))
+            db.criar_usuario(conta_id, data['data_nascimento'], data['sexo'], altura)
         else:
             # Usar JSON
             dados = carregar_dados()
@@ -291,7 +299,7 @@ def usuario_api():
                 'nome': session['nome'],
                 'sexo': data['sexo'],
                 'data_nascimento': data['data_nascimento'],
-                'altura': data.get('altura', 0),
+                'altura': altura,
                 'idade': idade,
                 'created_at': datetime.now().isoformat()
             }

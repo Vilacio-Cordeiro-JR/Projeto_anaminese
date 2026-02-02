@@ -1276,12 +1276,20 @@ function inicializarEventos() {
     document.getElementById('userForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const altura = parseFloat(document.getElementById('userHeight').value);
+        
+        // Validar altura
+        if (isNaN(altura) || altura <= 0) {
+            mostrarToast('Por favor, insira uma altura válida', 'erro');
+            return;
+        }
+        
         const dados = {
             nome: document.getElementById('userName').value,
             data_nascimento: document.getElementById('userBirthdate').value,
             sexo: document.getElementById('userSex').value,
             email: document.getElementById('userEmail').value,
-            altura: parseFloat(document.getElementById('userHeight').value)
+            altura: altura
         };
         
         await salvarUsuario(dados);
