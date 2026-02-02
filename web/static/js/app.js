@@ -786,20 +786,20 @@ function renderMapaCorporal(mapa) {
             </div>
             
             ${gordura ? `
-            <div class="gordura-central-card">
-                <div class="gordura-header">
-                    <span class="gordura-titulo">📊 Indicadores de Gordura Central</span>
+            <div class="gordura-central-card" style="background: var(--surface); padding: 2rem; border-radius: 16px; margin-top: 1.5rem;">
+                <div class="gordura-header" style="margin-bottom: 1.5rem;">
+                    <span class="gordura-titulo" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">📊 Indicadores de Gordura Central</span>
                 </div>
-                <div class="gordura-indices">
-                    <div class="indice-item">
-                        <span class="indice-label">RCQ (Relação Cintura/Quadril)</span>
-                        <span class="indice-valor">${gordura.rcq}</span>
-                        <span class="indice-risco">${gordura.rcq_descricao}</span>
+                <div class="gordura-indices" style="display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 1.5rem !important;">
+                    <div class="indice-item" style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <span class="indice-label" style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">RCQ (Relação Cintura/Quadril)</span>
+                        <span class="indice-valor" style="display: block; font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 0.5rem 0;">${gordura.rcq}</span>
+                        <span class="indice-risco" style="display: block; font-size: 0.8rem; color: var(--text-secondary);">${gordura.rcq_descricao}</span>
                     </div>
-                    <div class="indice-item">
-                        <span class="indice-label">RCA (Relação Cintura/Altura)</span>
-                        <span class="indice-valor">${gordura.rca}</span>
-                        <span class="indice-risco">${gordura.rca_descricao}</span>
+                    <div class="indice-item" style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <span class="indice-label" style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">RCA (Relação Cintura/Altura)</span>
+                        <span class="indice-valor" style="display: block; font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 0.5rem 0;">${gordura.rca}</span>
+                        <span class="indice-risco" style="display: block; font-size: 0.8rem; color: var(--text-secondary);">${gordura.rca_descricao}</span>
                     </div>
                 </div>
             </div>
