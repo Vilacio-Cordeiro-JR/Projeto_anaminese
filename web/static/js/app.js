@@ -559,8 +559,16 @@ function inicializarEventosGraficos() {
 }
 
 function renderMapaCorporal(mapa) {
+    console.log('renderMapaCorporal chamado com:', mapa);
+    
     const regioes = mapa.regioes || {};
     const gordura = mapa.gordura_central;
+    
+    // Verificar se regioes está vazio
+    if (Object.keys(regioes).length === 0) {
+        console.warn('Mapa corporal sem regiões. Dados recebidos:', mapa);
+        return '<div class="grid-item-full"><p style="color: var(--text-secondary); text-align: center; padding: 2rem;">Mapa corporal não disponível para esta avaliação.</p></div>';
+    }
     
     const statusConfig = {
         'Subdesenvolvido': { emoji: '⚠️', cor: '#ff6b6b', bg: '#ff6b6b' },
@@ -569,10 +577,18 @@ function renderMapaCorporal(mapa) {
     };
     
     let regioesHTML = '';
+    let regioesRenderizadas = 0;
     
     for (const [nome, dados] of Object.entries(regioes)) {
-        if (dados.real) {
-            const config = statusConfig[dados.descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
+        console.log(`Processando região ${nome}:`, dados);
+        
+        if (dados && (dados.real || dados.atual)) {
+            const valorAtual = dados.real || dados.atual;
+            const valorIdeal = dados.ideal;
+            const diferenca = dados.diferenca_cm || dados.diferenca || (valorAtual - valorIdeal);
+            const descricao = dados.descricao || dados.status || 'Normal';
+            
+            const config = statusConfig[descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
             regioesHTML += `
                 <div class="regiao-item" style="border-color: ${config.cor};">
                     <div class="regiao-titulo">${nome}</div>
@@ -580,25 +596,32 @@ function renderMapaCorporal(mapa) {
                     <div class="regiao-medidas-row">
                         <div class="medida-col">
                             <span class="medida-label">Atual</span>
-                            <span class="medida-valor-destaque" style="color: ${config.cor};">${dados.real} cm</span>
+                            <span class="medida-valor-destaque" style="color: ${config.cor};">${valorAtual} cm</span>
                         </div>
                         <div class="medida-col">
                             <span class="medida-label">Ideal</span>
-                            <span class="medida-valor-destaque">${dados.ideal} cm</span>
+                            <span class="medida-valor-destaque">${valorIdeal} cm</span>
                         </div>
                         <div class="medida-col">
                             <span class="medida-label">Diferença</span>
-                            <span class="medida-valor-destaque ${dados.diferenca_cm > 0 ? 'positivo' : 'negativo'}">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</span>
+                            <span class="medida-valor-destaque ${diferenca > 0 ? 'positivo' : 'negativo'}">${diferenca > 0 ? '+' : ''}${diferenca.toFixed(1)} cm</span>
                         </div>
                     </div>
                     
                     <div class="regiao-status-final" style="background: ${config.bg};">
                         <span class="status-emoji">${config.emoji}</span>
-                        <span class="status-texto">${dados.descricao}</span>
+                        <span class="status-texto">${descricao}</span>
                     </div>
                 </div>
             `;
+            regioesRenderizadas++;
         }
+    }
+    
+    console.log(`${regioesRenderizadas} regiões renderizadas no layout de cards`);
+    
+    if (regioesRenderizadas === 0) {
+        return '<div class="grid-item-full"><p style="color: var(--text-secondary); text-align: center; padding: 2rem;">Nenhuma região válida encontrada no mapa corporal.</p></div>';
     }
     
     return `
