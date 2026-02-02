@@ -590,25 +590,25 @@ function renderMapaCorporal(mapa) {
             
             const config = statusConfig[descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
             regioesHTML += `
-                <div class="regiao-item" style="border-color: ${config.cor};">
-                    <div class="regiao-titulo">${nome}</div>
+                <div class="regiao-item" style="border-color: ${config.cor}; background: var(--surface); border-radius: 16px; padding: 1.5rem; border-width: 2px; border-style: solid; display: flex !important; flex-direction: column !important; gap: 1rem;">
+                    <div class="regiao-titulo" style="font-size: 1.3rem; font-weight: 700; text-align: center; padding-bottom: 0.75rem; border-bottom: 2px solid var(--border-color); margin: 0;">${nome}</div>
                     
-                    <div class="regiao-medidas-row">
-                        <div class="medida-col">
-                            <span class="medida-label">Atual</span>
-                            <span class="medida-valor-destaque" style="color: ${config.cor};">${valorAtual} cm</span>
+                    <div class="regiao-medidas-row" style="display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 1rem !important;">
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Atual</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: ${config.cor};">${valorAtual} cm</span>
                         </div>
-                        <div class="medida-col">
-                            <span class="medida-label">Ideal</span>
-                            <span class="medida-valor-destaque">${valorIdeal} cm</span>
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Ideal</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">${valorIdeal} cm</span>
                         </div>
-                        <div class="medida-col">
-                            <span class="medida-label">Diferença</span>
-                            <span class="medida-valor-destaque ${diferenca > 0 ? 'positivo' : 'negativo'}">${diferenca > 0 ? '+' : ''}${diferenca.toFixed(1)} cm</span>
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Diferença</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: ${diferenca > 0 ? '#51cf66' : '#ff6b6b'};">${diferenca > 0 ? '+' : ''}${diferenca.toFixed(1)} cm</span>
                         </div>
                     </div>
                     
-                    <div class="regiao-status-final" style="background: ${config.bg};">
+                    <div class="regiao-status-final" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem; border-radius: 12px; background: ${config.bg}; color: white; font-weight: 700; font-size: 1.1rem; text-transform: uppercase;">
                         <span class="status-emoji">${config.emoji}</span>
                         <span class="status-texto">${descricao}</span>
                     </div>
@@ -627,7 +627,7 @@ function renderMapaCorporal(mapa) {
     return `
         <div class="grid-item-full">
             <div class="modulo-titulo">🗺️ Mapa de Distribuição Corporal</div>
-            <div class="mapa-grid-2col">
+            <div class="mapa-grid-2col" style="display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 1.5rem !important; width: 100% !important; margin: 1.5rem 0 !important;">
                 ${regioesHTML}
             </div>
             
