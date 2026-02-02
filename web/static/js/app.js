@@ -829,48 +829,75 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
     mostrarToast('Preparando download...', 'info');
     
     try {
-        // Importar html2canvas dinamicamente
+        // Verificar se o elemento existe
+        const avaliacaoElement = document.getElementById(`avaliacao-${avaliacaoId}`);
+        
+        if (!avaliacaoElement) {
+            mostrarToast('Erro: Avaliação não encontrada', 'error');
+            console.error('Elemento não encontrado:', `avaliacao-${avaliacaoId}`);
+            return;
+        }
+        
+        // Importar html2canvas se não estiver carregado
         if (typeof html2canvas === 'undefined') {
+            mostrarToast('Carregando biblioteca...', 'info');
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
             document.head.appendChild(script);
             
             await new Promise((resolve, reject) => {
-                script.onload = resolve;
-                script.onerror = reject;
+                script.onload = () => {
+                    console.log('html2canvas carregado com sucesso');
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error('Erro ao carregar html2canvas');
+                    reject(new Error('Falha ao carregar biblioteca'));
+                };
+                setTimeout(() => reject(new Error('Timeout ao carregar biblioteca')), 10000);
             });
         }
         
-        const avaliacaoElement = document.getElementById(`avaliacao-${avaliacaoId}`);
+        console.log('Iniciando captura da avaliação...');
         
-        if (!avaliacaoElement) {
-            mostrarToast('Erro: Avaliação não encontrada', 'error');
-            return;
-        }
+        // Definir background baseado no tema
+        const isDark = document.body.classList.contains('dark-theme');
+        const bgColor = isDark ? '#1a1a1a' : '#ffffff';
         
         // Capturar o elemento como imagem
         const canvas = await html2canvas(avaliacaoElement, {
-            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-primary'),
+            backgroundColor: bgColor,
             scale: 2,
             logging: false,
-            useCORS: true
+            useCORS: true,
+            allowTaint: true,
+            foreignObjectRendering: false
         });
+        
+        console.log('Canvas gerado, criando download...');
         
         // Converter para blob e baixar
         canvas.toBlob((blob) => {
+            if (!blob) {
+                mostrarToast('Erro ao gerar imagem', 'error');
+                return;
+            }
+            
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             const data = new Date().toISOString().split('T')[0];
-            link.download = `avaliacao-${data}.png`;
+            link.download = `avaliacao-bodyxp-${data}.png`;
             link.href = url;
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
             URL.revokeObjectURL(url);
             mostrarToast('Download concluído!', 'success');
-        });
+        }, 'image/png');
         
     } catch (error) {
-        console.error('Erro ao gerar PNG:', error);
-        mostrarToast('Erro ao gerar imagem. Tente novamente.', 'error');
+        console.error('Erro detalhado ao gerar PNG:', error);
+        mostrarToast(`Erro: ${error.message}`, 'error');
     }
 }
 
