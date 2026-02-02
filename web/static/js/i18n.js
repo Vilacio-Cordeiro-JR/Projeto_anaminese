@@ -1,6 +1,6 @@
 // Sistema de Internacionalização (i18n)
 const translations = {
-    pt: {
+    'pt-BR': {
         // Login Page
         'app.title': 'BodyXP',
         'login.title': 'Entrar',
@@ -44,7 +44,60 @@ const translations = {
         
         // Language
         'language.label': 'Idioma',
-        'language.pt': 'Português',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
+        'language.en': 'English',
+        'language.es': 'Español',
+        'language.de': 'Deutsch',
+        'language.ja': '日本語'
+    },
+    
+    'pt-PT': {
+        // Login Page
+        'app.title': 'BodyXP',
+        'login.title': 'Entrar',
+        'login.name': 'Nome',
+        'login.password': 'Palavra-passe',
+        'login.button': 'Entrar',
+        'login.noAccount': 'Não tem uma conta?',
+        'login.createAccount': 'Criar conta',
+        'register.title': 'Criar Conta',
+        'register.name': 'Nome',
+        'register.password': 'Palavra-passe',
+        'register.confirmPassword': 'Confirmar Palavra-passe',
+        'register.button': 'Criar Conta',
+        'register.hasAccount': 'Já tem uma conta?',
+        'register.doLogin': 'Fazer login',
+        
+        // Toasts
+        'toast.loginSuccess': 'Login realizado com sucesso!',
+        'toast.loginError': 'Erro ao fazer login',
+        'toast.registerSuccess': 'Conta criada com sucesso! Faça login.',
+        'toast.registerError': 'Erro ao criar conta',
+        'toast.passwordMismatch': 'As palavras-passe não coincidem',
+        'toast.serverError': 'Erro ao conectar com o servidor',
+        
+        // Main App
+        'nav.newEvaluation': 'Nova Avaliação',
+        'nav.evaluations': 'Avaliações',
+        'nav.admin': 'Painel Admin',
+        'user.settings': 'Configurações de Utilizador',
+        'user.name': 'Nome Completo',
+        'user.birthdate': 'Data de Nascimento',
+        'user.age': 'Idade',
+        'user.sex': 'Sexo',
+        'user.male': 'Masculino',
+        'user.female': 'Feminino',
+        'user.email': 'E-mail',
+        'user.height': 'Altura (cm)',
+        'user.saveSettings': 'Guardar Configurações',
+        'user.changePassword': 'Mudar Palavra-passe',
+        'user.logout': 'Sair da Conta',
+        
+        // Language
+        'language.label': 'Idioma',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
         'language.en': 'English',
         'language.es': 'Español',
         'language.de': 'Deutsch',
@@ -95,7 +148,8 @@ const translations = {
         
         // Language
         'language.label': 'Language',
-        'language.pt': 'Português',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
         'language.en': 'English',
         'language.es': 'Español',
         'language.de': 'Deutsch',
@@ -146,7 +200,8 @@ const translations = {
         
         // Language
         'language.label': 'Idioma',
-        'language.pt': 'Português',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
         'language.en': 'English',
         'language.es': 'Español',
         'language.de': 'Deutsch',
@@ -197,7 +252,8 @@ const translations = {
         
         // Language
         'language.label': 'Sprache',
-        'language.pt': 'Português',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
         'language.en': 'English',
         'language.es': 'Español',
         'language.de': 'Deutsch',
@@ -248,7 +304,8 @@ const translations = {
         
         // Language
         'language.label': '言語',
-        'language.pt': 'Português',
+        'language.pt-BR': 'Português (BR)',
+        'language.pt-PT': 'Português (PT)',
         'language.en': 'English',
         'language.es': 'Español',
         'language.de': 'Deutsch',
@@ -258,10 +315,10 @@ const translations = {
 
 // Funções de internacionalização
 const i18n = {
-    currentLanguage: localStorage.getItem('language') || 'pt',
+    currentLanguage: localStorage.getItem('language') || 'pt-BR',
     
     t(key) {
-        return translations[this.currentLanguage]?.[key] || translations.pt[key] || key;
+        return translations[this.currentLanguage]?.[key] || translations['pt-BR'][key] || key;
     },
     
     setLanguage(lang) {
