@@ -256,6 +256,9 @@ function renderizarAvaliacoes() {
 
     container.innerHTML = app.avaliacoes.map(av => criarCardAvaliacao(av)).join('');
     console.log('Avaliações renderizadas com sucesso');
+    
+    // Inicializar eventos dos gráficos circulares após renderização
+    setTimeout(() => inicializarEventosGraficos(), 100);
 }
 
 function criarCardAvaliacao(avaliacao) {
@@ -393,7 +396,6 @@ function renderComposicaoTecidual(composicao) {
     
     dados.forEach((item, index) => {
         const angulo = (item.percentual / 100) * 360;
-        const anguloRad = (angulo * Math.PI) / 180;
         const x1 = centro + raio * Math.cos((acumulado * Math.PI) / 180);
         const y1 = centro + raio * Math.sin((acumulado * Math.PI) / 180);
         const x2 = centro + raio * Math.cos(((acumulado + angulo) * Math.PI) / 180);
@@ -402,25 +404,26 @@ function renderComposicaoTecidual(composicao) {
         
         fatiasSVG += `
             <path class="fatia-grafico" 
-                  data-index="${index}" 
+                  data-index="${index}"
+                  data-label="${item.label}"
+                  data-percentual="${item.percentual}"
                   d="M ${centro},${centro} L ${x1},${y1} A ${raio},${raio} 0 ${largeArc},1 ${x2},${y2} Z" 
-                  fill="${item.cor}"
-                  onmouseenter="destacarFatia(${index}, '${item.label}', ${item.percentual})"
-                  onmouseleave="resetarGrafico()"/>
+                  fill="${item.cor}"/>
         `;
         
         acumulado += angulo;
     });
     
+    // ID único para evitar conflitos
+    const chartId = `chart-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
     return `
         <div class="grid-item">
             <div class="modulo-titulo">💪 Composição Tecidual</div>
             <div class="composicao-container">
-                <div class="composicao-legenda">
+                <div class="composicao-legenda" id="legenda-${chartId}">
                     ${dados.map((item, index) => `
-                        <div class="legenda-item" 
-                             onmouseenter="destacarFatia(${index}, '${item.label}', ${item.percentual})"
-                             onmouseleave="resetarGrafico()">
+                        <div class="legenda-item" data-index="${index}" data-chart="${chartId}" data-label="${item.label}" data-percentual="${item.percentual}">
                             <div class="legenda-cor" style="background: ${item.cor}"></div>
                             <div class="legenda-info">
                                 <span class="legenda-label">${item.label}</span>
@@ -430,10 +433,10 @@ function renderComposicaoTecidual(composicao) {
                     `).join('')}
                 </div>
                 <div class="grafico-circular-container">
-                    <svg class="grafico-circular" viewBox="0 0 250 250">
+                    <svg class="grafico-circular" id="svg-${chartId}" viewBox="0 0 250 250">
                         ${fatiasSVG}
                     </svg>
-                    <div class="grafico-centro" id="grafico-centro-${composicao.peso_total}">
+                    <div class="grafico-centro" id="centro-${chartId}" data-peso="${composicao.peso_total}">
                         <div class="centro-percentual">${composicao.peso_total}</div>
                         <div class="centro-label">kg Total</div>
                     </div>
@@ -475,10 +478,34 @@ function resetarGrafico() {
     // Restaurar peso total
     const centros = document.querySelectorAll('.grafico-centro');
     centros.forEach(centro => {
-        const id = centro.id;
-        const pesoTotal = id.split('-')[2];
-        centro.querySelector('.centro-percentual').textContent = pesoTotal;
-        centro.querySelector('.centro-label').textContent = 'kg Total';
+        const pesoTotal = centro.getAttribute('data-peso');
+        if (pesoTotal) {
+            centro.querySelector('.centro-percentual').textContent = pesoTotal;
+            centro.querySelector('.centro-label').textContent = 'kg Total';
+        }
+    });
+}
+
+// Inicializar eventos de hover nos gráficos após renderização
+function inicializarEventosGraficos() {
+    // Eventos para fatias SVG
+    document.querySelectorAll('.fatia-grafico').forEach(fatia => {
+        const index = parseInt(fatia.getAttribute('data-index'));
+        const label = fatia.getAttribute('data-label');
+        const percentual = parseFloat(fatia.getAttribute('data-percentual'));
+        
+        fatia.addEventListener('mouseenter', () => destacarFatia(index, label, percentual));
+        fatia.addEventListener('mouseleave', () => resetarGrafico());
+    });
+    
+    // Eventos para itens da legenda
+    document.querySelectorAll('.legenda-item').forEach(item => {
+        const index = parseInt(item.getAttribute('data-index'));
+        const label = item.getAttribute('data-label');
+        const percentual = parseFloat(item.getAttribute('data-percentual'));
+        
+        item.addEventListener('mouseenter', () => destacarFatia(index, label, percentual));
+        item.addEventListener('mouseleave', () => resetarGrafico());
     });
 }
 
