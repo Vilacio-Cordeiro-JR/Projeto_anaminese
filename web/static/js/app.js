@@ -656,8 +656,15 @@ function destacarFatia(index, label, percentual, kg) {
     // Atualizar centro do gráfico com kg
     const centros = document.querySelectorAll('.grafico-centro');
     centros.forEach(centro => {
-        centro.querySelector('.centro-percentual').textContent = `${kg} kg`;
-        centro.querySelector('.centro-label').textContent = label;
+        const percentualEl = centro.querySelector('.centro-percentual');
+        const labelEl = centro.querySelector('.centro-label');
+        
+        // Separar número e "kg"
+        const kgNum = kg.toString().split('.')[0];
+        const kgDec = kg.toString().split('.')[1] || '0';
+        
+        percentualEl.innerHTML = `${kg}<span style="font-size: 0.5em; font-weight: 400; margin-left: 4px;">kg</span>`;
+        labelEl.textContent = label;
     });
 }
 
