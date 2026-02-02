@@ -600,6 +600,7 @@ function renderComposicaoTecidual(composicao) {
                   data-index="${index}"
                   data-label="${item.label}"
                   data-percentual="${item.percentual}"
+                  data-kg="${item.kg}"
                   d="M ${x1Ext},${y1Ext} A ${raioExterno},${raioExterno} 0 ${largeArc},1 ${x2Ext},${y2Ext} L ${x1Int},${y1Int} A ${raioInterno},${raioInterno} 0 ${largeArc},0 ${x2Int},${y2Int} Z" 
                   fill="${item.cor}"/>
         `;
@@ -616,7 +617,7 @@ function renderComposicaoTecidual(composicao) {
             <div class="composicao-container">
                 <div class="composicao-legenda" id="legenda-${chartId}">
                     ${dados.map((item, index) => `
-                        <div class="legenda-item" data-index="${index}" data-chart="${chartId}" data-label="${item.label}" data-percentual="${item.percentual}">
+                        <div class="legenda-item" data-index="${index}" data-chart="${chartId}" data-label="${item.label}" data-percentual="${item.percentual}" data-kg="${item.kg}">
                             <div class="legenda-cor" style="background: ${item.cor}"></div>
                             <div class="legenda-info">
                                 <span class="legenda-label">${item.label}</span>
@@ -640,7 +641,7 @@ function renderComposicaoTecidual(composicao) {
 }
 
 // Funções auxiliares para o gráfico circular interativo
-function destacarFatia(index, label, percentual) {
+function destacarFatia(index, label, percentual, kg) {
     const fatias = document.querySelectorAll('.fatia-grafico');
     fatias.forEach((fatia, i) => {
         if (i === index) {
@@ -652,10 +653,10 @@ function destacarFatia(index, label, percentual) {
         }
     });
     
-    // Atualizar centro do gráfico
+    // Atualizar centro do gráfico com kg
     const centros = document.querySelectorAll('.grafico-centro');
     centros.forEach(centro => {
-        centro.querySelector('.centro-percentual').textContent = `${percentual}%`;
+        centro.querySelector('.centro-percentual').textContent = `${kg} kg`;
         centro.querySelector('.centro-label').textContent = label;
     });
 }
@@ -686,8 +687,9 @@ function inicializarEventosGraficos() {
         const index = parseInt(fatia.getAttribute('data-index'));
         const label = fatia.getAttribute('data-label');
         const percentual = parseFloat(fatia.getAttribute('data-percentual'));
+        const kg = parseFloat(fatia.getAttribute('data-kg'));
         
-        fatia.addEventListener('mouseenter', () => destacarFatia(index, label, percentual));
+        fatia.addEventListener('mouseenter', () => destacarFatia(index, label, percentual, kg));
         fatia.addEventListener('mouseleave', () => resetarGrafico());
     });
     
@@ -696,8 +698,9 @@ function inicializarEventosGraficos() {
         const index = parseInt(item.getAttribute('data-index'));
         const label = item.getAttribute('data-label');
         const percentual = parseFloat(item.getAttribute('data-percentual'));
+        const kg = parseFloat(item.getAttribute('data-kg'));
         
-        item.addEventListener('mouseenter', () => destacarFatia(index, label, percentual));
+        item.addEventListener('mouseenter', () => destacarFatia(index, label, percentual, kg));
         item.addEventListener('mouseleave', () => resetarGrafico());
     });
 }
