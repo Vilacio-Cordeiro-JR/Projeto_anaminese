@@ -1414,10 +1414,11 @@ body {
 
 /* Mapa Corporal - Grid 2 Colunas */
 .mapa-grid-2col {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
     margin-bottom: 1.5rem;
+    width: 100%;
 }
 
 .regiao-item {
@@ -1426,9 +1427,10 @@ body {
     padding: 1.5rem;
     border: 2px solid;
     transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     gap: 1rem;
+    min-width: 0;
 }
 
 .regiao-item:hover {
@@ -1447,10 +1449,11 @@ body {
 }
 
 .regiao-medidas-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
     padding: 0.5rem 0;
+    width: 100%;
 }
 
 .medida-col {
