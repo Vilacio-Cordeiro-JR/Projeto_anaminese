@@ -509,20 +509,72 @@ def admin_database():
     if not is_admin():
         return jsonify({'erro': 'Acesso negado'}), 403
     
+    table = request.args.get('table', 'all')  # all, contas, usuarios, avaliacoes
+    
     try:
         if USE_DATABASE:
-            # TODO: Implementar consulta ao PostgreSQL
-            return jsonify({'erro': 'Visualização de PostgreSQL não implementada ainda'}), 501
+            # Implementar consulta ao PostgreSQL por tabela
+            with db.get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    result = {}
+                    
+                    if table == 'all' or table == 'contas':
+                        cur.execute("SELECT id, nome, email FROM contas ORDER BY id")
+                        result['contas'] = cur.fetchall()
+                    
+                    if table == 'all' or table == 'usuarios':
+                        cur.execute("""
+                            SELECT u.*, c.nome 
+                            FROM usuarios u 
+                            JOIN contas c ON u.conta_id = c.id 
+                            ORDER BY u.id
+                        """)
+                        result['usuarios'] = cur.fetchall()
+                    
+                    if table == 'all' or table == 'avaliacoes':
+                        cur.execute("""
+                            SELECT a.*, c.nome 
+                            FROM avaliacoes a 
+                            JOIN usuarios u ON a.usuario_id = u.id 
+                            JOIN contas c ON u.conta_id = c.id 
+                            ORDER BY a.data DESC 
+                            LIMIT 100
+                        """)
+                        result['avaliacoes'] = cur.fetchall()
+                    
+                    # Se for tabela específica, retornar array direto
+                    if table != 'all':
+                        return jsonify(result.get(table, []))
+                    
+                    return jsonify(result)
         else:
             dados = carregar_dados()
-            # Remover senhas para segurança
-            dados_safe = dados.copy()
-            if 'contas' in dados_safe:
-                for nome, conta in dados_safe['contas'].items():
-                    if 'senha_hash' in conta:
-                        conta['senha_hash'] = '***HIDDEN***'
             
-            return jsonify(dados_safe)
+            # Filtrar por tabela se necessário
+            if table == 'contas':
+                contas_safe = {}
+                for nome, conta in dados.get('contas', {}).items():
+                    conta_copy = conta.copy()
+                    if 'senha_hash' in conta_copy:
+                        conta_copy['senha_hash'] = '***HIDDEN***'
+                    contas_safe[nome] = conta_copy
+                return jsonify(contas_safe)
+            
+            elif table == 'usuarios':
+                return jsonify(dados.get('usuarios', {}))
+            
+            elif table == 'avaliacoes':
+                return jsonify(dados.get('avaliacoes', {}))
+            
+            else:  # all
+                dados_safe = dados.copy()
+                if 'contas' in dados_safe:
+                    for nome, conta in dados_safe['contas'].items():
+                        if 'senha_hash' in conta:
+                            conta['senha_hash'] = '***HIDDEN***'
+                
+                return jsonify(dados_safe)
+                
     except Exception as e:
         print(f"Erro ao carregar database: {e}")
         print(traceback.format_exc())
@@ -538,8 +590,26 @@ def admin_stats():
     
     try:
         if USE_DATABASE:
-            # TODO: Implementar estatísticas do PostgreSQL
-            return jsonify({'erro': 'Estatísticas de PostgreSQL não implementadas ainda'}), 501
+            with db.get_db_connection() as conn:
+                with conn.cursor() as cur:
+                    # Contar contas
+                    cur.execute("SELECT COUNT(*) FROM contas")
+                    total_contas = cur.fetchone()['count']
+                    
+                    # Contar usuários
+                    cur.execute("SELECT COUNT(*) FROM usuarios")
+                    total_usuarios = cur.fetchone()['count']
+                    
+                    # Contar avaliações
+                    cur.execute("SELECT COUNT(*) FROM avaliacoes")
+                    total_avaliacoes = cur.fetchone()['count']
+                    
+                    return jsonify({
+                        'total_contas': total_contas,
+                        'total_usuarios': total_usuarios,
+                        'total_avaliacoes': total_avaliacoes,
+                        'modo': 'PostgreSQL'
+                    })
         else:
             dados = carregar_dados()
             total_contas = len(dados.get('contas', {}))

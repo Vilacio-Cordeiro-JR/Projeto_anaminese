@@ -314,8 +314,21 @@
                 <!-- Tab Content: Database -->
                 <div id="databaseTab" class="admin-tab-content">
                     <h3>Visualização do Banco de Dados</h3>
-                    <button id="loadDbBtn" class="save-btn" style="margin-bottom: 1rem;">Carregar Dados</button>
-                    <pre id="databaseContent" style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; max-height: 500px; overflow: auto; font-size: 0.85rem;">Clique em "Carregar Dados" para visualizar</pre>
+                    
+                    <!-- Navegação por Tabelas -->
+                    <div class="db-navigation" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <button class="db-table-btn active" data-table="all" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">📊 Todos</button>
+                        <button class="db-table-btn" data-table="contas" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">👤 Contas</button>
+                        <button class="db-table-btn" data-table="usuarios" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">👥 Usuários</button>
+                        <button class="db-table-btn" data-table="avaliacoes" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">📈 Avaliações</button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button id="loadDbBtn" class="save-btn" style="flex: 1;">🔄 Carregar Dados</button>
+                        <span id="dbRecordCount" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+                    </div>
+                    
+                    <pre id="databaseContent" style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; max-height: 500px; overflow: auto; font-size: 0.85rem;">Selecione uma tabela e clique em "Carregar Dados"</pre>
                 </div>
             </div>
         </div>

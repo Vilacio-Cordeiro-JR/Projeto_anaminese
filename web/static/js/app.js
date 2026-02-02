@@ -1267,6 +1267,28 @@ function inicializarEventos() {
         loadDbBtn.addEventListener('click', carregarDatabase);
     }
     
+    // Navegação por tabelas do BD
+    const dbTableBtns = document.querySelectorAll('.db-table-btn');
+    dbTableBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active de todos
+            dbTableBtns.forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'var(--bg-secondary)';
+                b.style.color = 'var(--text-primary)';
+            });
+            
+            // Adiciona active no clicado
+            this.classList.add('active');
+            this.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            this.style.color = 'white';
+            
+            // Limpar conteúdo anterior
+            document.getElementById('databaseContent').textContent = 'Clique em "Carregar Dados" para visualizar';
+            document.getElementById('dbRecordCount').textContent = '';
+        });
+    });
+    
     // Setup admin tabs
     if (adminModal) {
         setupAdminTabs();
@@ -1593,13 +1615,32 @@ async function carregarEstatisticas() {
 
 async function carregarDatabase() {
     const container = document.getElementById('databaseContent');
+    const countSpan = document.getElementById('dbRecordCount');
+    const activeBtn = document.querySelector('.db-table-btn.active');
+    const table = activeBtn ? activeBtn.dataset.table : 'all';
+    
     container.textContent = 'Carregando...';
+    countSpan.textContent = '';
     
     try {
-        const response = await fetch('/api/admin/database');
+        const url = table === 'all' ? '/api/admin/database' : `/api/admin/database?table=${table}`;
+        const response = await fetch(url);
+        
         if (response.ok) {
             const data = await response.json();
             container.textContent = JSON.stringify(data, null, 2);
+            
+            // Contar registros
+            let count = 0;
+            if (table === 'all') {
+                count = Object.values(data).reduce((sum, arr) => {
+                    return sum + (Array.isArray(arr) ? arr.length : 0);
+                }, 0);
+                countSpan.textContent = `${count} registros no total`;
+            } else {
+                count = Array.isArray(data) ? data.length : 0;
+                countSpan.textContent = `${count} registro${count !== 1 ? 's' : ''}`;
+            }
         } else {
             const erro = await response.json();
             container.textContent = `Erro: ${erro.erro}`;
