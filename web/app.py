@@ -285,7 +285,7 @@ def avaliacoes_api():
                 braco_relaxado=medidas_dict.get('braco_relaxado'),
                 braco_contraido=medidas_dict.get('braco_contraido'),
                 antebraco=medidas_dict.get('antebraco'),
-                coxa_proximal=medidas_dict.get('coxa'),
+                coxa=medidas_dict.get('coxa'),
                 panturrilha=medidas_dict.get('panturrilha')
             )
             
