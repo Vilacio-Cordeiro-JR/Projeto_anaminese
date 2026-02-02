@@ -10,17 +10,47 @@ const app = {
 };
 
 // ========================================
+// LOADING SCREEN
+// ========================================
+
+function showLoading() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        loadingScreen.classList.remove('hidden');
+    }
+}
+
+function hideLoading() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+    }
+}
+
+// ========================================
 // INICIALIZAÇÃO
 // ========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkSystemStatus();
-    await checkAdmin();
-    await carregarUsuario();
-    await carregarAvaliacoes();
-    inicializarEventos();
-    inicializarMapaInterativo();
-    aplicarTema();
+    showLoading();
+    
+    try {
+        await checkSystemStatus();
+        await checkAdmin();
+        await carregarUsuario();
+        await carregarAvaliacoes();
+        inicializarEventos();
+        inicializarMapaInterativo();
+        aplicarTema();
+    } catch (error) {
+        console.error('Erro na inicialização:', error);
+        mostrarToast('Erro ao carregar aplicação', 'error');
+    } finally {
+        // Aguardar um pouco para garantir que a página renderizou
+        setTimeout(() => {
+            hideLoading();
+        }, 800);
+    }
 });
 
 // ========================================
@@ -205,6 +235,7 @@ async function salvarAvaliacao() {
     const objetivo = document.getElementById('objetivo').value;
 
     try {
+        showLoading();
         mostrarToast('Processando avaliação...', 'info');
         
         const response = await fetch('/api/avaliacoes', {
@@ -247,6 +278,8 @@ async function salvarAvaliacao() {
     } catch (error) {
         console.error('Erro ao salvar avaliação:', error);
         mostrarToast('Erro ao salvar avaliação: ' + error.message, 'error');
+    } finally {
+        hideLoading();
     }
 }
 
@@ -256,6 +289,7 @@ async function deletarAvaliacao(id) {
     }
 
     try {
+        showLoading();
         const response = await fetch(`/api/avaliacoes/${id}`, {
             method: 'DELETE'
         });
@@ -268,6 +302,8 @@ async function deletarAvaliacao(id) {
     } catch (error) {
         console.error('Erro ao deletar avaliação:', error);
         mostrarToast('Erro ao deletar avaliação', 'error');
+    } finally {
+        hideLoading();
     }
 }
 

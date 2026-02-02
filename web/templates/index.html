@@ -10,6 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme">
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="BodyXP" class="loading-logo-img">
+            </div>
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <div class="loading-text">Carregando BodyXP...</div>
+            <div class="loading-subtext">Preparando sua experiência</div>
+        </div>
+    </div>
+
     <!-- HEADER -->
     <header class="header">
         <div class="header-container">
