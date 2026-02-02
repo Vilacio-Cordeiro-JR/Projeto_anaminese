@@ -1412,129 +1412,130 @@ body {
     margin-top: 0.25rem;
 }
 
-/* Mapa Corporal - Grid 2 Colunas */
-.grid-item-full .mapa-grid-2col {
+/* ==========================================
+   MAPA CORPORAL - CSS ISOLADO E LIMPO
+   ========================================== */
+
+/* Container principal do grid */
+div.mapa-grid-2col {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-    margin-bottom: 1.5rem;
-    width: 100%;
+    gap: 1.5rem !important;
+    margin: 1.5rem 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
-/* Fallback caso não esteja em .grid-item-full */
-.mapa-grid-2col {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-    margin-bottom: 1.5rem;
-    width: 100%;
-}
-
-.grid-item-full .regiao-item,
-.mapa-grid-2col .regiao-item {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 2px solid;
-    transition: all 0.3s ease;
+/* Card individual de região */
+div.mapa-grid-2col > div.regiao-item {
+    background: var(--surface) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    border-width: 2px !important;
+    border-style: solid !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 1rem;
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
+    gap: 1rem !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-.regiao-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+div.regiao-item:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
 }
 
-.regiao-titulo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    text-transform: capitalize;
-    color: var(--text-primary);
-    text-align: center;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--border-color);
+/* Título da região */
+div.regiao-item > div.regiao-titulo {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    text-transform: capitalize !important;
+    color: var(--text-primary) !important;
+    text-align: center !important;
+    padding-bottom: 0.75rem !important;
+    border-bottom: 2px solid var(--border-color) !important;
+    margin: 0 !important;
 }
 
-.regiao-medidas-row {
+/* Row com 3 medidas */
+div.regiao-item > div.regiao-medidas-row {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 1rem !important;
-    padding: 0.5rem 0;
-    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-.medida-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    transition: all 0.2s ease;
+/* Coluna individual de medida */
+div.regiao-medidas-row > div.medida-col {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    padding: 1rem !important;
+    background: var(--bg-secondary) !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease !important;
 }
 
-.medida-col:hover {
-    background: var(--primary-color);
-    transform: scale(1.05);
+div.medida-col:hover {
+    background: var(--primary-color) !important;
+    transform: scale(1.05) !important;
 }
 
-.medida-col:hover .medida-label {
-    color: white;
+/* Labels e valores */
+span.medida-label {
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
 }
 
-.medida-col:hover .medida-valor-destaque {
+div.medida-col:hover span.medida-label {
     color: white !important;
 }
 
-.medida-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    font-weight: 600;
+span.medida-valor-destaque {
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    color: var(--text-primary) !important;
 }
 
-.medida-valor-destaque {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text-primary);
+div.medida-col:hover span.medida-valor-destaque {
+    color: white !important;
 }
 
-.medida-valor-destaque.positivo {
-    color: #51cf66;
+span.medida-valor-destaque.positivo {
+    color: #51cf66 !important;
 }
 
-.medida-valor-destaque.negativo {
-    color: #ff6b6b;
+span.medida-valor-destaque.negativo {
+    color: #ff6b6b !important;
 }
 
-.regiao-status-final {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    border-radius: 12px;
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+/* Status final */
+div.regiao-item > div.regiao-status-final {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 12px !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
-.status-emoji {
-    font-size: 1.5rem;
+span.status-emoji {
+    font-size: 1.5rem !important;
 }
 
-.status-texto {
-    font-size: 1rem;
+span.status-texto {
+    font-size: 1rem !important;
 }
 
 /* Gordura Central */
