@@ -336,7 +336,73 @@ function criarCardAvaliacao(avaliacao) {
         </div>
     `;
     
-    // Avaliação básica (sem botão delete)
+    // Avaliação básica - versão horizontal (minimizada)
+    const avaliacaoBasicaMinimizadaHTML = `
+        <div class="avaliacao-basica-minimizada" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1.5rem; background: var(--surface); border-radius: 12px;">
+            ${medidas.peso ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Peso</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${medidas.peso} kg</div>
+            </div>
+            ` : ''}
+            ${resultados && resultados.imc ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">IMC</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.imc}</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.imc_descricao || ''}</div>
+            </div>
+            ` : ''}
+            ${resultados && resultados.percentual_gordura ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">% Gordura</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.percentual_gordura}%</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.classificacao_gordura || ''}</div>
+            </div>
+            ` : ''}
+            ${resultados && resultados.massa_magra_kg ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Massa Magra</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.massa_magra_kg} kg</div>
+            </div>
+            ` : ''}
+            ${resultados && resultados.rcq ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">RCQ</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.rcq}</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.rcq_descricao || ''}</div>
+            </div>
+            ` : ''}
+            ${resultados && resultados.rca ? `
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">RCA</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.rca}</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.rca_descricao || ''}</div>
+            </div>
+            ` : ''}
+        </div>
+    `;
+    
+    // Score minimizado
+    const scoreMinimizado = resultados.score_estetico_avancado ? `
+        <div class="score-minimizado" style="display: flex; align-items: center; justify-content: center; gap: 2rem; padding: 1.5rem; background: var(--surface); border-radius: 12px; margin-top: 1rem;">
+            <div style="position: relative; width: 150px; height: 150px;">
+                <svg width="150" height="150" viewBox="0 0 200 200">
+                    <path d="M 30 170 A 90 90 0 0 1 170 170" fill="none" stroke="#e9ecef" stroke-width="25" stroke-linecap="round"/>
+                    <path d="M 30 170 A 90 90 0 0 1 170 170" fill="none" stroke="${resultados.score_estetico_avancado.cor}" stroke-width="25" stroke-linecap="round" stroke-dasharray="${(resultados.score_estetico_avancado.score_total / 100) * 283} 283" style="transition: stroke-dasharray 1s ease;"/>
+                </svg>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: ${resultados.score_estetico_avancado.cor};">${resultados.score_estetico_avancado.score_total}</div>
+                    <div style="font-size: 1rem; color: var(--text-secondary);">/100</div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Score Estético</div>
+                <div style="display: inline-block; padding: 0.5rem 1.5rem; background: ${resultados.score_estetico_avancado.cor}; color: white; border-radius: 20px; font-weight: 600;">${resultados.score_estetico_avancado.classificacao}</div>
+            </div>
+        </div>
+    ` : '';
+    
+    // Avaliação básica expandida (completa)
     let avaliacaoBasicaHTML = `
         <div class="grid-item">
             <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-primary);">📊 Avaliação Básica</h3>
@@ -390,13 +456,32 @@ function criarCardAvaliacao(avaliacao) {
         </div>
     `;
     
+    // Footer com botão de expandir/minimizar
+    const footerHTML = `
+        <div class="avaliacao-footer" style="padding: 1rem 1.5rem; background: var(--surface); border-radius: 0 0 16px 16px; border-top: 2px solid var(--border-color); margin-top: 1.5rem;">
+            <button onclick="toggleAvaliacaoExpansao('${avaliacao.id}')" style="width: 100%; padding: 0.75rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <span id="toggle-text-${avaliacao.id}">Expandir Detalhes</span>
+                <svg id="toggle-icon-${avaliacao.id}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+        </div>
+    `;
+    
     return `
-        <div class="avaliacao-card" id="avaliacao-${avaliacao.id}" style="background: var(--surface); border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div class="avaliacao-card" id="avaliacao-${avaliacao.id}" data-expanded="false" style="background: var(--surface); border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             ${headerHTML}
-            <div class="avaliacoes-grid" style="padding: 0 1.5rem 1.5rem 1.5rem;">
-                ${avaliacaoBasicaHTML}
-                ${renderModulosAvancados(avaliacao)}
+            <div class="avaliacao-content-minimizado" id="content-min-${avaliacao.id}" style="padding: 0 1.5rem;">
+                ${avaliacaoBasicaMinimizadaHTML}
+                ${scoreMinimizado}
             </div>
+            <div class="avaliacao-content-expandido" id="content-exp-${avaliacao.id}" style="display: none; padding: 0 1.5rem;">
+                <div class="avaliacoes-grid">
+                    ${avaliacaoBasicaHTML}
+                    ${renderModulosAvancados(avaliacao)}
+                </div>
+            </div>
+            ${footerHTML}
         </div>
     `;
 }
@@ -803,6 +888,39 @@ function alternarTema() {
 // ========================================
 // FUNÇÕES DE AVALIAÇÃO - HEADER
 // ========================================
+
+// Toggle de expansão da avaliação
+function toggleAvaliacaoExpansao(avaliacaoId) {
+    const card = document.getElementById(`avaliacao-${avaliacaoId}`);
+    const contentMin = document.getElementById(`content-min-${avaliacaoId}`);
+    const contentExp = document.getElementById(`content-exp-${avaliacaoId}`);
+    const toggleText = document.getElementById(`toggle-text-${avaliacaoId}`);
+    const toggleIcon = document.getElementById(`toggle-icon-${avaliacaoId}`);
+    
+    const isExpanded = card.dataset.expanded === 'true';
+    
+    if (isExpanded) {
+        // Minimizar
+        contentMin.style.display = 'block';
+        contentExp.style.display = 'none';
+        card.dataset.expanded = 'false';
+        toggleText.textContent = 'Expandir Detalhes';
+        toggleIcon.style.transform = 'rotate(0deg)';
+        
+        // Salvar preferência
+        localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'false');
+    } else {
+        // Expandir
+        contentMin.style.display = 'none';
+        contentExp.style.display = 'block';
+        card.dataset.expanded = 'true';
+        toggleText.textContent = 'Minimizar';
+        toggleIcon.style.transform = 'rotate(180deg)';
+        
+        // Salvar preferência
+        localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'true');
+    }
+}
 
 function togglePublico(avaliacaoId, toggleElement) {
     const checkbox = document.getElementById(`publico-${avaliacaoId}`);
