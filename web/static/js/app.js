@@ -14,6 +14,7 @@ const app = {
 // ========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await checkSystemStatus();
     await checkAdmin();
     await carregarUsuario();
     await carregarAvaliacoes();
@@ -21,6 +22,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarMapaInterativo();
     aplicarTema();
 });
+
+// ========================================
+// VERIFICAÇÃO DE STATUS DO SISTEMA
+// ========================================
+
+async function checkSystemStatus() {
+    try {
+        const response = await fetch('/api/status');
+        if (response.ok) {
+            const status = await response.json();
+            
+            // Se não estiver usando banco persistente, mostrar aviso
+            if (!status.database.persistent && status.environment === 'production') {
+                mostrarAvisoBancoDados();
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao verificar status:', error);
+    }
+}
+
+function mostrarAvisoBancoDados() {
+    const aviso = document.createElement('div');
+    aviso.className = 'database-warning';
+    aviso.innerHTML = `
+        <div class="warning-content">
+            <span class="warning-icon">⚠️</span>
+            <div class="warning-text">
+                <strong>Banco de dados não configurado</strong>
+                <p>Suas avaliações serão perdidas ao recarregar a página. Configure o PostgreSQL no Vercel.</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="warning-close">✕</button>
+        </div>
+    `;
+    document.body.insertBefore(aviso, document.body.firstChild);
+}
 
 // ========================================
 // GERENCIAMENTO DE USUÁRIO

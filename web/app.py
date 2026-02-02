@@ -26,11 +26,16 @@ USE_DATABASE = os.environ.get('POSTGRES_URL') or os.environ.get('DATABASE_URL')
 if USE_DATABASE:
     try:
         from web import db
-    except:
+        print("✅ Usando PostgreSQL - dados serão persistidos")
+    except Exception as e:
+        print(f"⚠️ Erro ao conectar PostgreSQL: {e}")
+        print("⚠️ Voltando para modo JSON (dados não persistem no Vercel!)")
         USE_DATABASE = False
         import json
         DATA_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'usuarios.json')
 else:
+    print("⚠️ DATABASE_URL não configurada - usando JSON local")
+    print("⚠️ ATENÇÃO: No Vercel, os dados serão perdidos após cada deploy/restart!")
     import json
     DATA_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'usuarios.json')
 
@@ -171,6 +176,20 @@ def index():
     if 'conta_id' not in session:
         return redirect(url_for('login_page'))
     return render_template('index.html', is_admin=is_admin())
+
+
+@app.route('/api/status')
+def status():
+    """Retorna status do sistema e configuração do banco"""
+    return jsonify({
+        'status': 'online',
+        'database': {
+            'type': 'PostgreSQL' if USE_DATABASE else 'JSON (Local File)',
+            'persistent': USE_DATABASE,
+            'warning': None if USE_DATABASE else 'Dados serão perdidos no Vercel sem banco configurado'
+        },
+        'environment': 'production' if os.environ.get('VERCEL') else 'development'
+    })
 
 
 @app.route('/api/usuario', methods=['GET', 'POST', 'PUT'])
