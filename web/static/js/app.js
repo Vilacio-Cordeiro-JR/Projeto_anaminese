@@ -1168,6 +1168,15 @@ function esconderModal() {
     document.getElementById('userModal').classList.remove('active');
 }
 
+function mostrarModalSenha() {
+    document.getElementById('passwordModal').classList.add('active');
+}
+
+function esconderModalSenha() {
+    document.getElementById('passwordModal').classList.remove('active');
+    document.getElementById('passwordForm').reset();
+}
+
 // ========================================
 // TOAST NOTIFICATIONS
 // ========================================
@@ -1219,6 +1228,9 @@ function inicializarEventos() {
     // Fechar modal
     document.getElementById('closeModal').addEventListener('click', esconderModal);
     
+    // Fechar modal de senha
+    document.getElementById('closePasswordModal').addEventListener('click', esconderModalSenha);
+    
     // Fechar modal admin
     const closeAdminModal = document.getElementById('closeAdminModal');
     if (closeAdminModal) {
@@ -1229,6 +1241,13 @@ function inicializarEventos() {
     document.getElementById('userModal').addEventListener('click', (e) => {
         if (e.target.id === 'userModal') {
             esconderModal();
+        }
+    });
+    
+    // Clique fora do modal de senha
+    document.getElementById('passwordModal').addEventListener('click', (e) => {
+        if (e.target.id === 'passwordModal') {
+            esconderModalSenha();
         }
     });
     
@@ -1266,6 +1285,28 @@ function inicializarEventos() {
         };
         
         await salvarUsuario(dados);
+    });
+    
+    // Formulário de mudança de senha
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const senhaAtual = document.getElementById('currentPassword').value;
+        const novaSenha = document.getElementById('newPassword').value;
+        const confirmarSenha = document.getElementById('confirmPassword').value;
+        
+        // Validar senhas
+        if (novaSenha !== confirmarSenha) {
+            mostrarToast('As senhas não coincidem', 'error');
+            return;
+        }
+        
+        if (novaSenha.length < 6) {
+            mostrarToast('A senha deve ter pelo menos 6 caracteres', 'error');
+            return;
+        }
+        
+        await mudarSenha(senhaAtual, novaSenha);
     });
     
     // Calcular idade automaticamente
@@ -1376,6 +1417,42 @@ function toggleAllHighlights() {
     
     // Atualizar texto do botão
     btn.textContent = isAnyVisible ? 'Mostrar grupamentos' : 'Ocultar grupamentos';
+}
+
+// ========================================
+// MUDANÇA DE SENHA
+// ========================================
+
+async function mudarSenha(senhaAtual, novaSenha) {
+    try {
+        showLoading();
+        
+        const response = await fetch('/api/mudar-senha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                senha_atual: senhaAtual,
+                nova_senha: novaSenha
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            mostrarToast('Senha alterada com sucesso!', 'success');
+            esconderModalSenha();
+            document.getElementById('passwordForm').reset();
+        } else {
+            mostrarToast(data.erro || 'Erro ao mudar senha', 'error');
+        }
+    } catch (error) {
+        console.error('Erro ao mudar senha:', error);
+        mostrarToast('Erro ao mudar senha', 'error');
+    } finally {
+        hideLoading();
+    }
 }
 
 // ========================================

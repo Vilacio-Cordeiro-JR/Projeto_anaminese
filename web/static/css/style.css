@@ -799,6 +799,62 @@ body {
     transform: translateY(0);
 }
 
+.change-password-btn {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.change-password-btn:hover {
+    background: linear-gradient(135deg, #1976D2, #1565C0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+}
+
+.change-password-btn:active {
+    transform: translateY(0);
+}
+
+.cancel-btn {
+    background: linear-gradient(135deg, #757575, #616161);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #616161, #424242);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(97, 97, 97, 0.3);
+}
+
+.cancel-btn:active {
+    transform: translateY(0);
+}
+
 /* ========================================
    AVALIAÇÕES
    ======================================== */

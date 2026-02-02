@@ -233,7 +233,38 @@
                 </div>
 
                 <button type="submit" class="save-btn">Salvar Configurações</button>
+                <button type="button" class="change-password-btn" onclick="mostrarModalSenha()">🔐 Mudar Senha</button>
                 <button type="button" class="logout-btn" onclick="fazerLogout()">Sair da Conta</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP DE MUDANÇA DE SENHA -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>🔐 Mudar Senha</h2>
+                <button class="close-btn" id="closePasswordModal">&times;</button>
+            </div>
+            <form id="passwordForm" class="user-form">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual *</label>
+                    <input type="password" id="currentPassword" required placeholder="Digite sua senha atual">
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha *</label>
+                    <input type="password" id="newPassword" required placeholder="Digite a nova senha" minlength="6">
+                    <small style="color: var(--text-secondary); font-size: 0.85rem;">Mínimo 6 caracteres</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha *</label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirme a nova senha" minlength="6">
+                </div>
+
+                <button type="submit" class="save-btn">Alterar Senha</button>
+                <button type="button" class="cancel-btn" onclick="esconderModalSenha()">Cancelar</button>
             </form>
         </div>
     </div>

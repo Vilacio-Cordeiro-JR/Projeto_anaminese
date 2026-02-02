@@ -159,6 +159,61 @@ def logout():
     return jsonify({'sucesso': True})
 
 
+@app.route('/api/mudar-senha', methods=['POST'])
+def mudar_senha():
+    """Muda a senha do usuário logado"""
+    if 'conta_id' not in session:
+        return jsonify({'erro': 'Não autorizado'}), 401
+    
+    data = request.json
+    senha_atual = data.get('senha_atual')
+    nova_senha = data.get('nova_senha')
+    
+    if not senha_atual or not nova_senha:
+        return jsonify({'erro': 'Senha atual e nova senha são obrigatórias'}), 400
+    
+    if len(nova_senha) < 6:
+        return jsonify({'erro': 'A senha deve ter pelo menos 6 caracteres'}), 400
+    
+    try:
+        nome = session.get('nome')
+        
+        if USE_DATABASE:
+            # Verificar senha atual e atualizar no PostgreSQL
+            if not db.autenticar(nome, senha_atual):
+                return jsonify({'erro': 'Senha atual incorreta'}), 401
+            
+            # Atualizar senha
+            nova_senha_hash = db.hash_senha(nova_senha)
+            conn = db.get_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE contas SET senha_hash = %s WHERE nome = %s",
+                (nova_senha_hash, nome)
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+        else:
+            # Usar JSON
+            dados = carregar_dados()
+            conta = dados['contas'].get(nome)
+            
+            if not conta or conta.get('senha_hash') != hash_senha(senha_atual):
+                return jsonify({'erro': 'Senha atual incorreta'}), 401
+            
+            # Atualizar senha
+            conta['senha_hash'] = hash_senha(nova_senha)
+            salvar_dados(dados)
+        
+        return jsonify({'sucesso': True, 'mensagem': 'Senha alterada com sucesso'})
+    
+    except Exception as e:
+        print(f"Erro ao mudar senha: {e}")
+        traceback.print_exc()
+        return jsonify({'erro': 'Erro ao mudar senha'}), 500
+
+
 # ===== ROTAS PROTEGIDAS =====
 def requer_login(f):
     """Decorator para rotas que requerem autenticação"""
