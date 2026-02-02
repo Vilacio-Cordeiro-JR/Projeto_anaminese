@@ -349,6 +349,222 @@ function criarCardAvaliacao(avaliacao) {
                     `).join('')}
                 </div>
             ` : ''}
+            
+            ${renderModulosAvancados(avaliacao)}
+        </div>
+    `;
+}
+
+// ========================================
+// MÓDULOS AVANÇADOS
+// ========================================
+
+function renderModulosAvancados(avaliacao) {
+    const resultados = avaliacao.resultados || {};
+    let html = '';
+    
+    // Composição Tecidual
+    if (resultados.composicao_tecidual) {
+        html += renderComposicaoTecidual(resultados.composicao_tecidual);
+    }
+    
+    // Mapa Corporal
+    if (resultados.mapa_corporal) {
+        html += renderMapaCorporal(resultados.mapa_corporal);
+    }
+    
+    // Score Estético Avançado
+    if (resultados.score_estetico_avancado) {
+        html += renderScoreEstetico(resultados.score_estetico_avancado);
+    }
+    
+    return html;
+}
+
+function renderComposicaoTecidual(composicao) {
+    const cores = {
+        gordura: '#ff6b6b',
+        muscular: '#51cf66',
+        ossea: '#4dabf7',
+        outros: '#868e96'
+    };
+    
+    return `
+        <div class="modulo-avancado">
+            <div class="modulo-titulo">
+                💪 Composição Tecidual
+            </div>
+            <div class="composicao-chart">
+                <div class="composicao-legenda">
+                    <div class="legenda-item">
+                        <div class="legenda-cor" style="background: ${cores.muscular}"></div>
+                        <div class="legenda-info">
+                            <span class="legenda-label">Massa Muscular</span>
+                            <span class="legenda-valor">${composicao.massa_muscular_kg} kg (${composicao.percentual_muscular}%)</span>
+                        </div>
+                    </div>
+                    <div class="legenda-item">
+                        <div class="legenda-cor" style="background: ${cores.gordura}"></div>
+                        <div class="legenda-info">
+                            <span class="legenda-label">Gordura Corporal</span>
+                            <span class="legenda-valor">${composicao.massa_gorda_kg} kg (${composicao.percentual_gordura}%)</span>
+                        </div>
+                    </div>
+                    <div class="legenda-item">
+                        <div class="legenda-cor" style="background: ${cores.ossea}"></div>
+                        <div class="legenda-info">
+                            <span class="legenda-label">Massa Óssea</span>
+                            <span class="legenda-valor">${composicao.massa_ossea_kg} kg (${composicao.percentual_osseo}%)</span>
+                        </div>
+                    </div>
+                    <div class="legenda-item">
+                        <div class="legenda-cor" style="background: ${cores.outros}"></div>
+                        <div class="legenda-info">
+                            <span class="legenda-label">Outros Tecidos</span>
+                            <span class="legenda-valor">${composicao.outros_tecidos_kg} kg (${composicao.percentual_outros}%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderMapaCorporal(mapa) {
+    const regioes = mapa.regioes || {};
+    const gordura = mapa.gordura_central;
+    
+    let html = `
+        <div class="modulo-avancado">
+            <div class="modulo-titulo">
+                🗺️ Mapa Corporal de Distribuição
+            </div>
+            <div class="mapa-regioes">
+    `;
+    
+    for (const [nome, dados] of Object.entries(regioes)) {
+        if (dados.real) {
+            html += `
+                <div class="regiao-card" style="border-color: ${dados.cor}">
+                    <div class="regiao-header">
+                        <span class="regiao-nome">${nome}</span>
+                        <span class="regiao-badge" style="background: ${dados.cor}">
+                            ${dados.descricao}
+                        </span>
+                    </div>
+                    <div class="regiao-medidas">
+                        <div class="medida-info">
+                            <span class="medida-label">Real</span>
+                            <span class="medida-valor">${dados.real} cm</span>
+                        </div>
+                        <div class="medida-info">
+                            <span class="medida-label">Ideal</span>
+                            <span class="medida-valor">${dados.ideal} cm</span>
+                        </div>
+                        <div class="medida-info">
+                            <span class="medida-label">Diferença</span>
+                            <span class="medida-valor">${dados.diferenca_cm > 0 ? '+' : ''}${dados.diferenca_cm} cm</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Gordura Central
+    if (gordura) {
+        html += `
+            <div class="gordura-central-card">
+                <h4 style="margin-bottom: 1rem;">📊 Análise de Gordura Central</h4>
+                <div class="gordura-central-grid">
+                    <div class="indice-item">
+                        <div class="medida-label">RCA (Cintura/Altura)</div>
+                        <div class="indice-valor">${gordura.rca}</div>
+                        <span class="indice-status" style="background: ${gordura.rca_cor}">
+                            ${gordura.rca_descricao}
+                        </span>
+                    </div>
+                    <div class="indice-item">
+                        <div class="medida-label">RCQ (Cintura/Quadril)</div>
+                        <div class="indice-valor">${gordura.rcq}</div>
+                        <span class="indice-status" style="background: ${gordura.rcq_cor}">
+                            ${gordura.rcq_descricao}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `
+            </div>
+        </div>
+    `;
+    
+    return html;
+}
+
+function renderScoreEstetico(score) {
+    const breakdown = score.breakdown || {};
+    const pesos = score.pesos || {};
+    
+    return `
+        <div class="modulo-avancado">
+            <div class="modulo-titulo">
+                ⭐ Score Estético Corporal
+            </div>
+            <div class="score-container">
+                <div class="score-gauge">
+                    <svg width="300" height="200" viewBox="0 0 300 200">
+                        <!-- Background arc -->
+                        <path d="M 30 170 A 120 120 0 0 1 270 170" 
+                              fill="none" 
+                              stroke="#e9ecef" 
+                              stroke-width="30"
+                              stroke-linecap="round"/>
+                        <!-- Progress arc -->
+                        <path d="M 30 170 A 120 120 0 0 1 270 170" 
+                              fill="none" 
+                              stroke="${score.cor}" 
+                              stroke-width="30"
+                              stroke-linecap="round"
+                              stroke-dasharray="${(score.score_total / 100) * 377} 377"
+                              style="transition: stroke-dasharray 1s ease;"/>
+                    </svg>
+                    <div class="score-display">
+                        <div class="score-numero" style="color: ${score.cor}">${score.score_total}</div>
+                        <div class="score-classificacao">${score.classificacao}</div>
+                    </div>
+                </div>
+                
+                <div class="score-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">% Gordura</div>
+                        <div class="breakdown-valor">${breakdown.gordura}</div>
+                        <div class="breakdown-peso">${pesos.gordura}</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Ombro/Cintura</div>
+                        <div class="breakdown-valor">${breakdown.ombro_cintura}</div>
+                        <div class="breakdown-peso">${pesos.ombro_cintura}</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Peitoral/Cintura</div>
+                        <div class="breakdown-valor">${breakdown.peitoral_cintura}</div>
+                        <div class="breakdown-peso">${pesos.peitoral_cintura}</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Simetria</div>
+                        <div class="breakdown-valor">${breakdown.simetria}</div>
+                        <div class="breakdown-peso">${pesos.simetria}</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Gordura Central</div>
+                        <div class="breakdown-valor">${breakdown.gordura_central}</div>
+                        <div class="breakdown-peso">${pesos.gordura_central}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 }

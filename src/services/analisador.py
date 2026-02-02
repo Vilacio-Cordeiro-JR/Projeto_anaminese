@@ -16,6 +16,9 @@ from ..calculations import (
 from ..calculations.gordura import calcular_massa_gorda, calcular_massa_magra
 from ..calculations.somatotipo import classificar_somatotipo, obter_recomendacoes_somatotipo
 from ..calculations.proporcoes import calcular_pontuacao_estetica
+from ..calculations.composicao_tecidual import calcular_composicao_tecidual
+from ..calculations.mapa_corporal import gerar_mapa_corporal
+from ..calculations.score_estetico import calcular_score_estetico
 
 
 class AnalisadorAvaliacao:
@@ -118,6 +121,44 @@ class AnalisadorAvaliacao:
             pontuacao, classificacao_est = calcular_pontuacao_estetica(proporcoes)
             resultados['pontuacao_estetica'] = pontuacao
             resultados['classificacao_estetica'] = classificacao_est
+        
+        # === MÓDULOS AVANÇADOS ===
+        
+        # Composição Tecidual
+        if 'percentual_gordura' in resultados:
+            composicao = calcular_composicao_tecidual(
+                peso=medidas.peso,
+                percentual_gordura=resultados['percentual_gordura'],
+                sexo=sexo_str
+            )
+            resultados['composicao_tecidual'] = composicao
+        
+        # Mapa Corporal de Distribuição
+        if medidas.cintura:
+            medidas_dict_completo = {
+                'cintura': medidas.cintura,
+                'ombros': medidas.ombros,
+                'peitoral': medidas.peitoral,
+                'quadril': medidas.quadril,
+                'braco_relaxado': medidas.braco_relaxado,
+                'braco_contraido': medidas.braco_contraido,
+                'antebraco': medidas.antebraco,
+                'coxa': medidas.coxa,
+                'panturrilha': medidas.panturrilha
+            }
+            mapa = gerar_mapa_corporal(medidas_dict_completo, medidas.altura, sexo_str)
+            resultados['mapa_corporal'] = mapa
+            
+            # Score Estético Avançado
+            if 'percentual_gordura' in resultados and 'mapa_corporal' in resultados:
+                score = calcular_score_estetico(
+                    percentual_gordura=resultados['percentual_gordura'],
+                    medidas=medidas_dict_completo,
+                    altura=medidas.altura,
+                    sexo=sexo_str,
+                    mapa_corporal=mapa
+                )
+                resultados['score_estetico_avancado'] = score
         
         # === SOMATOTIPO ===
         

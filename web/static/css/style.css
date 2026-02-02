@@ -1174,6 +1174,276 @@ body {
     color: var(--text-primary);
 }
 
+/* ========================================
+   MÓDULOS AVANÇADOS DE AVALIAÇÃO
+   ======================================== */
+
+.modulo-avancado {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.modulo-titulo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Composição Tecidual - Gráfico de Donut */
+.composicao-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.donut-chart {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.donut-chart svg {
+    transform: rotate(-90deg);
+}
+
+.donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.donut-center-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.donut-center-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.composicao-legenda {
+    display: grid;
+    gap: 1rem;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.legenda-cor {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.legenda-info {
+    flex: 1;
+}
+
+.legenda-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+
+.legenda-valor {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Mapa Corporal */
+.mapa-corporal-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.mapa-regioes {
+    display: grid;
+    gap: 1rem;
+}
+
+.regiao-card {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+}
+
+.regiao-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.regiao-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.regiao-nome {
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+
+.regiao-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.regiao-medidas {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.medida-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.medida-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.medida-valor {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.gordura-central-card {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.gordura-central-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.indice-item {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.indice-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.indice-status {
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+/* Score Estético */
+.score-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.score-gauge {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: 0 auto 2rem;
+}
+
+.score-gauge svg {
+    transform: rotate(-90deg);
+}
+
+.score-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    text-align: center;
+}
+
+.score-numero {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.score-classificacao {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.score-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.breakdown-item {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.breakdown-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.breakdown-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.breakdown-peso {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
 .auth-toggle {
     margin-top: 1.5rem;
     text-align: center;
@@ -1188,6 +1458,7 @@ body {
 
 .auth-toggle a:hover {
     text-decoration: underline;
+}
 }
 
 .toast.show {
