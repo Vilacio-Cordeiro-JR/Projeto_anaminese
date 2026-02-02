@@ -319,14 +319,14 @@ function criarCardAvaliacao(avaliacao) {
                     </div>
                     <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">Público</span>
                 </label>
-                <button class="btn-icon" onclick="downloadAvaliacaoPNG('${avaliacao.id}')" title="Baixar como PNG" style="padding: 0.5rem; background: var(--primary-color); border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <button class="btn-icon" onclick="downloadAvaliacaoPNG('${avaliacao.id}')" title="Baixar como PNG" style="padding: 0.5rem; background: var(--primary-color); border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; transform: scale(1);" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(99, 102, 241, 0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';" onmousedown="this.style.transform='scale(0.95)';" onmouseup="this.style.transform='scale(1.1)';">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
                 </button>
-                <button class="btn-icon" onclick="deletarAvaliacao('${avaliacao.id}')" title="Deletar" style="padding: 0.5rem; background: #ff6b6b; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <button class="btn-icon" onclick="deletarAvaliacao('${avaliacao.id}')" title="Deletar" style="padding: 0.5rem; background: #ff6b6b; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; transform: scale(1);" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(255, 107, 107, 0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';" onmousedown="this.style.transform='scale(0.95)';" onmouseup="this.style.transform='scale(1.1)';">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"></polyline>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -340,40 +340,40 @@ function criarCardAvaliacao(avaliacao) {
     const avaliacaoBasicaMinimizadaHTML = `
         <div class="avaliacao-basica-minimizada" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1.5rem; background: var(--surface); border-radius: 12px;">
             ${medidas.peso ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Peso</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${medidas.peso} kg</div>
             </div>
             ` : ''}
             ${resultados && resultados.imc ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">IMC</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.imc}</div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.imc_descricao || ''}</div>
             </div>
             ` : ''}
             ${resultados && resultados.percentual_gordura ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">% Gordura</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.percentual_gordura}%</div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.classificacao_gordura || ''}</div>
             </div>
             ` : ''}
             ${resultados && resultados.massa_magra_kg ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Massa Magra</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.massa_magra_kg} kg</div>
             </div>
             ` : ''}
             ${resultados && resultados.rcq ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">RCQ</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.rcq}</div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.rcq_descricao || ''}</div>
             </div>
             ` : ''}
             ${resultados && resultados.rca ? `
-            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div class="result-item-mini" style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">RCA</div>
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${resultados.rca}</div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${resultados.rca_descricao || ''}</div>
@@ -384,7 +384,7 @@ function criarCardAvaliacao(avaliacao) {
     
     // Score minimizado
     const scoreMinimizado = resultados.score_estetico_avancado ? `
-        <div class="score-minimizado" style="display: flex; align-items: center; justify-content: center; gap: 2rem; padding: 1.5rem; background: var(--surface); border-radius: 12px; margin-top: 1rem;">
+        <div class="score-minimizado" style="display: flex; align-items: center; justify-content: center; gap: 2rem; padding: 1.5rem; background: var(--surface); border-radius: 12px; margin-top: 1rem; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
             <div style="position: relative; width: 150px; height: 150px;">
                 <svg width="150" height="150" viewBox="0 0 200 200">
                     <path d="M 30 170 A 90 90 0 0 1 170 170" fill="none" stroke="#e9ecef" stroke-width="25" stroke-linecap="round"/>
@@ -459,9 +459,9 @@ function criarCardAvaliacao(avaliacao) {
     // Footer com botão de expandir/minimizar
     const footerHTML = `
         <div class="avaliacao-footer" style="padding: 1rem 1.5rem; background: var(--surface); border-radius: 0 0 16px 16px; border-top: 2px solid var(--border-color); margin-top: 1.5rem;">
-            <button onclick="toggleAvaliacaoExpansao('${avaliacao.id}')" style="width: 100%; padding: 0.75rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <button onclick="toggleAvaliacaoExpansao('${avaliacao.id}')" style="width: 100%; padding: 0.75rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transform: scale(1);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 20px rgba(99, 102, 241, 0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
                 <span id="toggle-text-${avaliacao.id}">Expandir Detalhes</span>
-                <svg id="toggle-icon-${avaliacao.id}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg id="toggle-icon-${avaliacao.id}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition: transform 0.3s ease;">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
             </button>
@@ -469,13 +469,13 @@ function criarCardAvaliacao(avaliacao) {
     `;
     
     return `
-        <div class="avaliacao-card" id="avaliacao-${avaliacao.id}" data-expanded="false" style="background: var(--surface); border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div class="avaliacao-card" id="avaliacao-${avaliacao.id}" data-expanded="false" style="background: var(--surface); border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: fadeInUp 0.5s ease-out; opacity: 0; animation-fill-mode: forwards;">
             ${headerHTML}
-            <div class="avaliacao-content-minimizado" id="content-min-${avaliacao.id}" style="padding: 0 1.5rem;">
+            <div class="avaliacao-content-minimizado" id="content-min-${avaliacao.id}" style="padding: 0 1.5rem; transition: opacity 0.4s ease-in-out; opacity: 1;">
                 ${avaliacaoBasicaMinimizadaHTML}
                 ${scoreMinimizado}
             </div>
-            <div class="avaliacao-content-expandido" id="content-exp-${avaliacao.id}" style="display: none; padding: 0 1.5rem;">
+            <div class="avaliacao-content-expandido" id="content-exp-${avaliacao.id}" style="display: none; padding: 0 1.5rem; transition: opacity 0.4s ease-in-out; opacity: 0;">
                 <div class="avaliacoes-grid">
                     ${avaliacaoBasicaHTML}
                     ${renderModulosAvancados(avaliacao)}
@@ -900,9 +900,16 @@ function toggleAvaliacaoExpansao(avaliacaoId) {
     const isExpanded = card.dataset.expanded === 'true';
     
     if (isExpanded) {
-        // Minimizar
-        contentMin.style.display = 'block';
-        contentExp.style.display = 'none';
+        // Minimizar com fade out/in
+        contentExp.style.opacity = '0';
+        setTimeout(() => {
+            contentExp.style.display = 'none';
+            contentMin.style.display = 'block';
+            setTimeout(() => {
+                contentMin.style.opacity = '1';
+            }, 50);
+        }, 300);
+        
         card.dataset.expanded = 'false';
         toggleText.textContent = 'Expandir Detalhes';
         toggleIcon.style.transform = 'rotate(0deg)';
@@ -910,9 +917,16 @@ function toggleAvaliacaoExpansao(avaliacaoId) {
         // Salvar preferência
         localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'false');
     } else {
-        // Expandir
-        contentMin.style.display = 'none';
-        contentExp.style.display = 'block';
+        // Expandir com fade out/in
+        contentMin.style.opacity = '0';
+        setTimeout(() => {
+            contentMin.style.display = 'none';
+            contentExp.style.display = 'block';
+            setTimeout(() => {
+                contentExp.style.opacity = '1';
+            }, 50);
+        }, 300);
+        
         card.dataset.expanded = 'true';
         toggleText.textContent = 'Minimizar';
         toggleIcon.style.transform = 'rotate(180deg)';
