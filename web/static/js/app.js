@@ -422,9 +422,9 @@ function criarCardAvaliacao(avaliacao) {
     const scoreMinimizado = resultados.score_estetico_avancado ? `
         <div class="score-minimizado" style="display: flex; align-items: center; justify-content: center; gap: 2rem; padding: 1.5rem; background: var(--surface); border-radius: 12px; margin-top: 1rem; transition: all 0.3s ease; cursor: default;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
             <div style="position: relative; width: 150px; height: 150px;">
-                <svg width="150" height="150" viewBox="0 0 200 200">
-                    <path d="M 30 170 A 90 90 0 0 1 170 170" fill="none" stroke="#e9ecef" stroke-width="25" stroke-linecap="round"/>
-                    <path d="M 30 170 A 90 90 0 0 1 170 170" fill="none" stroke="${resultados.score_estetico_avancado.cor}" stroke-width="25" stroke-linecap="round" stroke-dasharray="${(resultados.score_estetico_avancado.score_total / 100) * 283} 283" style="transition: stroke-dasharray 1s ease;"/>
+                <svg width="150" height="150" viewBox="0 0 150 150">
+                    <circle cx="75" cy="75" r="65" fill="none" stroke="#e9ecef" stroke-width="16"/>
+                    <circle cx="75" cy="75" r="65" fill="none" stroke="${resultados.score_estetico_avancado.cor}" stroke-width="16" stroke-dasharray="${(resultados.score_estetico_avancado.score_total / 100) * 408.41} 408.41" stroke-linecap="round" transform="rotate(-90 75 75)" style="transition: stroke-dasharray 1s ease;"/>
                 </svg>
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
                     <div style="font-size: 2.5rem; font-weight: 900; color: ${resultados.score_estetico_avancado.cor};">${resultados.score_estetico_avancado.score_total}</div>
