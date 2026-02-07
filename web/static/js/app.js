@@ -730,10 +730,27 @@ function renderMapaCorporal(mapa) {
         'Excesso': { emoji: '🔴', cor: '#ffa94d', bg: '#ffa94d' }
     };
     
+    // Ordem de exibição das regiões (de cima para baixo do corpo)
+    const ordemRegioes = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'quadril', 'coxa', 'panturrilha'];
+    
+    // Tradução dos nomes das regiões
+    const nomesRegioes = {
+        'pescoco': 'Pescoço',
+        'ombros': 'Ombros',
+        'peitoral': 'Peitoral',
+        'braco': 'Braço',
+        'antebraco': 'Antebraço',
+        'quadril': 'Quadril',
+        'coxa': 'Coxa',
+        'panturrilha': 'Panturrilha'
+    };
+    
     let regioesHTML = '';
     let regioesRenderizadas = 0;
     
-    for (const [nome, dados] of Object.entries(regioes)) {
+    // Renderizar na ordem definida
+    for (const nome of ordemRegioes) {
+        const dados = regioes[nome];
         console.log(`Processando região ${nome}:`, dados);
         
         if (dados && (dados.real || dados.atual)) {
@@ -743,9 +760,11 @@ function renderMapaCorporal(mapa) {
             const descricao = dados.descricao || dados.status || 'Normal';
             
             const config = statusConfig[descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
+            const nomeExibicao = nomesRegioes[nome] || nome;
+            
             regioesHTML += `
                 <div class="regiao-item" style="border-color: ${config.cor}; background: var(--surface); border-radius: 16px; padding: 1.5rem; border-width: 2px; border-style: solid; display: flex !important; flex-direction: column !important; gap: 1rem;">
-                    <div class="regiao-titulo" style="font-size: 1.3rem; font-weight: 700; text-align: center; padding-bottom: 0.75rem; border-bottom: 2px solid var(--border-color); margin: 0;">${nome}</div>
+                    <div class="regiao-titulo" style="font-size: 1.3rem; font-weight: 700; text-align: center; padding-bottom: 0.75rem; border-bottom: 2px solid var(--border-color); margin: 0;">${nomeExibicao}</div>
                     
                     <div class="regiao-medidas-row" style="display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 1rem !important;">
                         <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">

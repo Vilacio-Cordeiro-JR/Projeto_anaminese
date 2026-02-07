@@ -20,10 +20,12 @@ def calcular_proporcoes_ideais(cintura: float, sexo: str) -> Dict[str, float]:
     if sexo == 'M':
         # Proporções masculinas
         return {
+            'pescoco': round(cintura * 0.42, 1),
             'ombros': round(cintura * 1.60, 1),
             'peitoral': round(cintura * 1.40, 1),
             'braco': round(cintura * 0.36, 1),
             'antebraco': round(cintura * 0.36 * 0.85, 1),
+            'quadril': round(cintura * 1.12, 1),
             'coxa': round(cintura * 0.75, 1),
             'panturrilha': round(cintura * 0.36, 1)  # Igual ao braço
         }
@@ -31,10 +33,12 @@ def calcular_proporcoes_ideais(cintura: float, sexo: str) -> Dict[str, float]:
         # Proporções femininas
         braco_ideal = cintura * 0.32
         return {
+            'pescoco': round(cintura * 0.38, 1),
             'ombros': round(cintura * 1.40, 1),
             'peitoral': round(cintura * 1.30, 1),
             'braco': round(braco_ideal, 1),
             'antebraco': round(braco_ideal * 0.85, 1),
+            'quadril': round(cintura * 1.38, 1),
             'coxa': round(cintura * 0.80, 1),
             'panturrilha': round(braco_ideal * 0.95, 1)
         }
@@ -157,7 +161,9 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
         real = None
         
         # Mapear nomes das medidas
-        if parte == 'ombros':
+        if parte == 'pescoco':
+            real = medidas.get('pescoco')
+        elif parte == 'ombros':
             real = medidas.get('ombros')
         elif parte == 'peitoral':
             real = medidas.get('peitoral')
@@ -165,6 +171,8 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
             real = medidas.get('braco_contraido') or medidas.get('braco_relaxado')
         elif parte == 'antebraco':
             real = medidas.get('antebraco')
+        elif parte == 'quadril':
+            real = medidas.get('quadril')
         elif parte == 'coxa':
             real = medidas.get('coxa')
         elif parte == 'panturrilha':
