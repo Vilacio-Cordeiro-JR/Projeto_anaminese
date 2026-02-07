@@ -1162,6 +1162,7 @@ async function downloadAvaliacaoPNG(avaliacaoId) {
 
 function mostrarModal() {
     document.getElementById('userModal').classList.add('active');
+    scrollToTopOnMobile();
     
     // Sincronizar seletor de idioma com idioma atual
     const langSelector = document.getElementById('userLanguage');
@@ -1176,6 +1177,7 @@ function esconderModal() {
 
 function mostrarModalSenha() {
     document.getElementById('passwordModal').classList.add('active');
+    scrollToTopOnMobile();
 }
 
 function esconderModalSenha() {
@@ -1677,3 +1679,64 @@ function setupAdminTabs() {
         });
     });
 }
+
+// ========================================
+// MOBILE OPTIMIZATION
+// ========================================
+
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
+function isSmallMobile() {
+    return window.innerWidth <= 400;
+}
+
+// Prevenir zoom duplo-toque no iOS
+document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
+
+// Scroll suave para top ao abrir modal em mobile
+function scrollToTopOnMobile() {
+    if (isMobile()) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Adicionar listener para redimensionamento
+window.addEventListener('resize', () => {
+    adjustForMobile();
+});
+
+function adjustForMobile() {
+    const body = document.body;
+    
+    if (isMobile()) {
+        body.classList.add('mobile-view');
+    } else {
+        body.classList.remove('mobile-view');
+    }
+    
+    if (isSmallMobile()) {
+        body.classList.add('small-mobile-view');
+    } else {
+        body.classList.remove('small-mobile-view');
+    }
+}
+
+// Chamar no carregamento
+document.addEventListener('DOMContentLoaded', () => {
+    adjustForMobile();
+});

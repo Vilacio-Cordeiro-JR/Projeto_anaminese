@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1976d2">
     <title>BodyXP - Sistema de Análise Corporal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,73 +74,110 @@
                 <div class="form-card">
                     <h2 class="section-title">Nova Avaliação</h2>
                     
-                    <div class="measures-form-list">
-                        <!-- Grid de Circunferências em 2 Colunas -->
-                        <div class="measures-grid">
-                            <div class="form-group">
-                                <label for="pescoco">Pescoço (cm)</label>
-                                <input type="number" id="pescoco" step="0.1" placeholder="Ex: 38" data-body-part="pescoco">
+                    <!-- Container com Flip Animation -->
+                    <div class="flip-container" id="measurementFlipContainer">
+                        <!-- Lado Frente: Circunferências -->
+                        <div class="flip-card flip-card-front">
+                            <!-- Header com título e switch -->
+                            <div class="measurement-header">
+                                <h3 class="measurement-title">Circunferências</h3>
+                                <div class="measurement-switch" onclick="flipMeasurementCard()">
+                                    <div class="switch-line"></div>
+                                    <span class="switch-label">Dobras</span>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="ombros">Ombros (cm)</label>
-                                <input type="number" id="ombros" step="0.1" placeholder="Ex: 120" data-body-part="ombros">
-                            </div>
-                            <div class="form-group">
-                                <label for="peitoral">Peitoral (cm)</label>
-                                <input type="number" id="peitoral" step="0.1" placeholder="Ex: 105" data-body-part="peitoral">
-                            </div>
-                            <div class="form-group">
-                                <label for="cintura">Cintura (cm) *</label>
-                                <input type="number" id="cintura" step="0.1" placeholder="Ex: 85" required data-body-part="cintura">
-                            </div>
-                            <div class="form-group">
-                                <label for="abdomen">Abdômen (cm)</label>
-                                <input type="number" id="abdomen" step="0.1" placeholder="Ex: 88" data-body-part="abdomen">
-                            </div>
-                            <div class="form-group">
-                                <label for="quadril">Quadril (cm) *</label>
-                                <input type="number" id="quadril" step="0.1" placeholder="Ex: 100" required data-body-part="quadril">
-                            </div>
-                            <div class="form-group">
-                                <label for="braco_relaxado">Braço Relaxado (cm)</label>
-                                <input type="number" id="braco_relaxado" step="0.1" placeholder="Ex: 35" data-body-part="braco">
-                            </div>
-                            <div class="form-group">
-                                <label for="braco_contraido">Braço Contraído (cm)</label>
-                                <input type="number" id="braco_contraido" step="0.1" placeholder="Ex: 38" data-body-part="braco">
-                            </div>
-                            <div class="form-group">
-                                <label for="antebraco">Antebraço (cm)</label>
-                                <input type="number" id="antebraco" step="0.1" placeholder="Ex: 30" data-body-part="antebraco">
-                            </div>
-                            <div class="form-group">
-                                <label for="coxa">Coxa (cm)</label>
-                                <input type="number" id="coxa" step="0.1" placeholder="Ex: 58" data-body-part="coxa">
-                            </div>
-                            <div class="form-group">
-                                <label for="panturrilha">Panturrilha (cm)</label>
-                                <input type="number" id="panturrilha" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
-                            </div>
-                        </div>
+                            
+                            <div class="measures-form-list">
+                                <!-- Grid de Circunferências em 2 Colunas -->
+                                <div class="measures-grid">
+                                    <div class="form-group">
+                                        <label for="pescoco">Pescoço (cm)</label>
+                                        <input type="number" id="pescoco" step="0.1" placeholder="Ex: 38" data-body-part="pescoco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ombros">Ombros (cm)</label>
+                                        <input type="number" id="ombros" step="0.1" placeholder="Ex: 120" data-body-part="ombros">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="peitoral">Peitoral (cm)</label>
+                                        <input type="number" id="peitoral" step="0.1" placeholder="Ex: 105" data-body-part="peitoral">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cintura">Cintura (cm) *</label>
+                                        <input type="number" id="cintura" step="0.1" placeholder="Ex: 85" required data-body-part="cintura">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abdomen">Abdômen (cm)</label>
+                                        <input type="number" id="abdomen" step="0.1" placeholder="Ex: 88" data-body-part="abdomen">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quadril">Quadril (cm) *</label>
+                                        <input type="number" id="quadril" step="0.1" placeholder="Ex: 100" required data-body-part="quadril">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="braco_relaxado">Braço Relaxado (cm)</label>
+                                        <input type="number" id="braco_relaxado" step="0.1" placeholder="Ex: 35" data-body-part="braco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="braco_contraido">Braço Contraído (cm)</label>
+                                        <input type="number" id="braco_contraido" step="0.1" placeholder="Ex: 38" data-body-part="braco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="antebraco">Antebraço (cm)</label>
+                                        <input type="number" id="antebraco" step="0.1" placeholder="Ex: 30" data-body-part="antebraco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="coxa">Coxa (cm)</label>
+                                        <input type="number" id="coxa" step="0.1" placeholder="Ex: 58" data-body-part="coxa">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="panturrilha">Panturrilha (cm)</label>
+                                        <input type="number" id="panturrilha" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
+                                    </div>
+                                </div>
 
-                        <!-- Peso e Objetivo Abaixo -->
-                        <div class="form-group">
-                            <label for="peso">Peso (kg) *</label>
-                            <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="objetivo">Objetivo (opcional)</label>
-                            <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
-                        </div>
+                                <!-- Peso e Objetivo Abaixo -->
+                                <div class="form-group">
+                                    <label for="peso">Peso (kg) *</label>
+                                    <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="objetivo">Objetivo (opcional)</label>
+                                    <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
+                                </div>
 
-                        <button id="saveBtn" class="save-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                <polyline points="7 3 7 8 15 8"></polyline>
-                            </svg>
-                            Salvar Avaliação
-                        </button>
+                                <button id="saveBtn" class="save-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Salvar Avaliação
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Lado Trás: Dobras (W.I.P) -->
+                        <div class="flip-card flip-card-back">
+                            <!-- Header com título e switch -->
+                            <div class="measurement-header">
+                                <h3 class="measurement-title">Dobras Cutâneas</h3>
+                                <div class="measurement-switch" onclick="flipMeasurementCard()">
+                                    <div class="switch-line"></div>
+                                    <span class="switch-label">Circunferências</span>
+                                </div>
+                            </div>
+                            
+                            <div class="wip-container">
+                                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                <h3>W.I.P</h3>
+                                <p>Avaliação por dobras cutâneas em desenvolvimento</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
