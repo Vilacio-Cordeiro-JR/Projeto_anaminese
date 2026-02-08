@@ -1866,11 +1866,16 @@ async function renderDistributionMap() {
     const canvas = document.getElementById('distributionCanvas');
     const mapImg = document.querySelector('.body-map-base');
     
-    if (!canvas || !mapImg) return;
+    if (!canvas || !mapImg) {
+        console.error('Canvas ou imagem base não encontrados');
+        return;
+    }
     
     // Ajustar canvas ao tamanho da imagem
     canvas.width = mapImg.naturalWidth;
     canvas.height = mapImg.naturalHeight;
+    
+    console.log('Canvas configurado:', canvas.width, 'x', canvas.height);
     
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1883,16 +1888,35 @@ async function renderDistributionMap() {
     };
     
     const regioes = distributionData.regioes || {};
+    console.log('Regiões disponíveis:', Object.keys(regioes));
+    console.log('Dados completos das regiões:', regioes);
+    
+    let regioesRenderizadas = 0;
     
     // Renderizar cada região
     for (const [nome, dados] of Object.entries(regioes)) {
-        if (!dados || !dados.real) continue;
+        console.log(`Processando região ${nome}:`, dados);
+        
+        if (!dados) {
+            console.warn(`Dados ausentes para ${nome}`);
+            continue;
+        }
+        
+        if (!dados.real) {
+            console.warn(`Medida real ausente para ${nome}`);
+            continue;
+        }
         
         const mask = maskImages[nome];
-        if (!mask) continue;
+        if (!mask) {
+            console.error(`Máscara não encontrada para ${nome}`);
+            continue;
+        }
         
         const descricao = dados.descricao || 'Normal';
         const color = colorMap[descricao] || 'rgba(134, 142, 150, 0.5)';
+        
+        console.log(`Renderizando ${nome}: ${descricao} com cor ${color}`);
         
         // Criar canvas temporário para aplicar cor à máscara
         const tempCanvas = document.createElement('canvas');
@@ -1910,6 +1934,13 @@ async function renderDistributionMap() {
         
         // Desenhar no canvas principal
         ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+        regioesRenderizadas++;
+    }
+    
+    console.log(`Total de regiões renderizadas: ${regioesRenderizadas}/${Object.keys(regioes).length}`);
+    
+    if (regioesRenderizadas === 0) {
+        mostrarToast('Nenhuma região com dados válidos encontrada', 'warning');
     }
 }
 
