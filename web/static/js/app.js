@@ -234,6 +234,11 @@ async function salvarAvaliacao() {
 
     const objetivo = document.getElementById('objetivo').value;
 
+    // Debug: verificar se os dados foram coletados
+    console.log('📊 Dados coletados do formulário:', medidas);
+    console.log('📏 Pescoço:', medidas.pescoco);
+    console.log('📏 Abdômen:', medidas.abdomen);
+
     try {
         showLoading();
         mostrarToast('Processando avaliação...', 'info');
