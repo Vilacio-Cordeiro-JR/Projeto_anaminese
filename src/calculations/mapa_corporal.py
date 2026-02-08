@@ -149,6 +149,11 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
     Returns:
         Dicionário com análise completa do mapa corporal
     """
+    # Debug: imprimir medidas recebidas
+    print(f"🔍 MAPA CORPORAL - Medidas recebidas: {list(medidas.keys())}")
+    print(f"📏 Valores: pescoco={medidas.get('pescoco')}, ombros={medidas.get('ombros')}, "
+          f"abdomen={medidas.get('abdomen')}, coxa={medidas.get('coxa')}")
+    
     cintura = medidas.get('cintura')
     quadril = medidas.get('quadril')
     
