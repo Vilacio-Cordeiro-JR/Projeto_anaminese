@@ -1991,10 +1991,9 @@ function flipMeasurementCard() {
     const container = document.getElementById('measurementFlipContainer');
     container.classList.toggle('flipped');
     
-    // Feedback sonoro visual
     const isFlipped = container.classList.contains('flipped');
-    const message = isFlipped ? 'Modo: Dobras Cutâneas' : 'Modo: Circunferências';
-    console.log('🔄 ' + message);
+    const message = isFlipped ? '🔄 Modo: Dobras Cutâneas (WIP)' : '🔄 Modo: Circunferências';
+    console.log(message);
 }
 // Chamar ao visualizar uma avaliação
 window.addEventListener('avaliacaoVisualized', (event) => {
