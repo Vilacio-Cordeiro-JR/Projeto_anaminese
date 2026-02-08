@@ -202,7 +202,7 @@ async function salvarAvaliacao() {
     // Coletar dados do formulário
     const medidas = {
         altura: app.usuario.altura,
-        peso: parseFloat(document.getElementById('peso').value),
+        peso: parseFloat(document.getElementById('peso').value) || null,
         pescoco: parseFloat(document.getElementById('pescoco').value) || null,
         ombros: parseFloat(document.getElementById('ombros').value) || null,
         peitoral: parseFloat(document.getElementById('peitoral').value) || null,
@@ -215,6 +215,13 @@ async function salvarAvaliacao() {
         coxa: parseFloat(document.getElementById('coxa').value) || null,
         panturrilha: parseFloat(document.getElementById('panturrilha').value) || null
     };
+    
+    // Filtrar valores NaN e undefined
+    Object.keys(medidas).forEach(key => {
+        if (isNaN(medidas[key]) || medidas[key] === undefined) {
+            medidas[key] = null;
+        }
+    });
 
     // Validar campos obrigatórios
     if (!medidas.peso) {
@@ -236,8 +243,8 @@ async function salvarAvaliacao() {
 
     // Debug: verificar se os dados foram coletados
     console.log('📊 Dados coletados do formulário:', medidas);
-    console.log('📏 Pescoço:', medidas.pescoco);
-    console.log('📏 Abdômen:', medidas.abdomen);
+    console.log('📏 Campos com valor:', Object.entries(medidas).filter(([k, v]) => v !== null).map(([k]) => k));
+    console.log('📏 Campos vazios:', Object.entries(medidas).filter(([k, v]) => v === null).map(([k]) => k));
 
     try {
         showLoading();
