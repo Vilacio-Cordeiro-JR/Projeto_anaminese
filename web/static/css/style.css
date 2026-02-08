@@ -2409,3 +2409,175 @@ span.status-texto {
 .toast.show {
     display: flex;
 }
+
+/* ========================================
+   FLIP CARD ANIMATION - CIRCUNFERÊNCIAS/DOBRAS
+   ======================================== */
+
+.flip-container {
+    perspective: 1000px;
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+}
+
+.flip-container.flipped .flip-card-front {
+    transform: rotateY(180deg);
+}
+
+.flip-container.flipped .flip-card-back {
+    transform: rotateY(0deg);
+}
+
+.flip-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.flip-card-front {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+.flip-card-back {
+    transform: rotateY(-180deg);
+}
+
+/* Header do formulário de medidas */
+.measurement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.measurement-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Switch Toggle Button */
+.measurement-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+}
+
+.measurement-switch:hover {
+    background: var(--primary-light);
+    transform: translateX(3px);
+}
+
+.switch-line {
+    width: 30px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.switch-line::before,
+.switch-line::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.switch-line::before {
+    top: -8px;
+}
+
+.switch-line::after {
+    top: 8px;
+}
+
+.measurement-switch:hover .switch-line,
+.measurement-switch:hover .switch-line::before,
+.measurement-switch:hover .switch-line::after {
+    background: white;
+}
+
+.switch-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.measurement-switch:hover .switch-label {
+    color: white;
+}
+
+/* WIP Container */
+.wip-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    min-height: 500px;
+}
+
+.wip-container svg {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+.wip-container h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.2em;
+}
+
+.wip-container p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 300px;
+}
+
+@media (max-width: 768px) {
+    .measurement-switch {
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .switch-line {
+        width: 24px;
+    }
+    
+    .switch-label {
+        font-size: 0.75rem;
+    }
+    
+    .wip-container {
+        padding: 3rem 1.5rem;
+        min-height: 400px;
+    }
+    
+    .wip-container h3 {
+        font-size: 1.5rem;
+    }
+}
