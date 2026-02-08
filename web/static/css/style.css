@@ -2413,39 +2413,57 @@ span.status-texto {
 .flip-container-wrapper {
     width: 100%;
     position: relative;
+    min-height: 650px;
 }
 
 .flip-card-inner {
     width: 100%;
+    position: relative;
+    min-height: 650px;
 }
 
-/* Estado inicial - mostrar apenas Circunferências */
+/* Ambos os cards sobrepostos */
+.flip-front,
+.flip-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 650px;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: opacity 0.4s ease, transform 0.4s ease, z-index 0s 0.2s;
+}
+
+/* Estado inicial - Circunferências na frente */
 .flip-front {
-    display: block;
-    animation: fadeIn 0.5s;
+    z-index: 2;
+    opacity: 1;
+    transform: scale(1);
 }
 
 .flip-back {
-    display: none;
+    z-index: 1;
+    opacity: 0.3;
+    transform: scale(0.95);
+    pointer-events: none;
 }
 
-/* Estado flipped - mostrar apenas Dobras */
+/* Estado flipped - Dobras na frente */
 .flip-container-wrapper.flipped .flip-front {
-    display: none;
+    z-index: 1;
+    opacity: 0.3;
+    transform: scale(0.95);
+    pointer-events: none;
 }
 
 .flip-container-wrapper.flipped .flip-back {
-    display: block;
-    animation: fadeIn 0.5s;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    z-index: 2;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    transition: opacity 0.4s ease, transform 0.4s ease, z-index 0s;
 }
 
 /* Header do formulário de medidas */

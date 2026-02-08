@@ -162,11 +162,11 @@
                                 </div>
                             </div>
                             
-                            <!-- Lado Trás: Dobras (W.I.P) -->
+                            <!-- Lado Trás: Dobras Cutâneas -->
                             <div class="flip-back">
                                 <!-- Header com título e switch -->
                                 <div class="measurement-header">
-                                    <h3 class="measurement-title">Dobras Cutâneas</h3>
+                                    <h3 class="measurement-title">📏 Dobras Cutâneas</h3>
                                     <button type="button" class="measurement-switch" onclick="flipMeasurementCard()">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="23 4 23 10 17 10"></polyline>
@@ -177,14 +177,52 @@
                                     </button>
                                 </div>
                                 
-                                <div class="wip-container">
-                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    </svg>
-                                    <h3>W.I.P</h3>
-                                    <p>Avaliação por dobras cutâneas em desenvolvimento</p>
+                                <div class="form-grid" style="padding: 1rem 0;">
+                                    <!-- Dobras do Tronco -->
+                                    <div class="input-group">
+                                        <label for="dobra_triceps">Tríceps (mm)</label>
+                                        <input type="number" id="dobra_triceps" name="dobra_triceps" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_subescapular">Subescapular (mm)</label>
+                                        <input type="number" id="dobra_subescapular" name="dobra_subescapular" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_biceps">Bíceps (mm)</label>
+                                        <input type="number" id="dobra_biceps" name="dobra_biceps" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_axilar">Axilar Média (mm)</label>
+                                        <input type="number" id="dobra_axilar" name="dobra_axilar" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_peitoral">Peitoral (mm)</label>
+                                        <input type="number" id="dobra_peitoral" name="dobra_peitoral" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_abdominal">Abdominal (mm)</label>
+                                        <input type="number" id="dobra_abdominal" name="dobra_abdominal" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_suprailiaca">Suprailíaca (mm)</label>
+                                        <input type="number" id="dobra_suprailiaca" name="dobra_suprailiaca" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_coxa">Coxa (mm)</label>
+                                        <input type="number" id="dobra_coxa" name="dobra_coxa" step="0.1" min="0" placeholder="0.0">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="dobra_panturrilha">Panturrilha (mm)</label>
+                                        <input type="number" id="dobra_panturrilha" name="dobra_panturrilha" step="0.1" min="0" placeholder="0.0">
+                                    </div>
                                 </div>
                             </div>
                         </div>
