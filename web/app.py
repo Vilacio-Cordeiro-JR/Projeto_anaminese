@@ -414,6 +414,9 @@ def avaliacoes_api():
             # Criar objeto Medidas (converter valores para float)
             medidas_dict = data['medidas']
             
+            # Debug: log da coxa
+            print(f"🔍 APP.PY - Coxa recebida no medidas_dict: {medidas_dict.get('coxa')}")
+            
             def to_float(value):
                 """Converte valor para float, retorna None se vazio"""
                 if value is None or value == '':
@@ -433,6 +436,10 @@ def avaliacoes_api():
                 braco_contraido=to_float(medidas_dict.get('braco_contraido')),
                 antebraco=to_float(medidas_dict.get('antebraco')),
                 coxa=to_float(medidas_dict.get('coxa')),
+                panturrilha=to_float(medidas_dict.get('panturrilha'))
+            )
+            
+            print(f"🔍 APP.PY - Objeto Medidas criado com coxa: {medidas.coxa}")
                 panturrilha=to_float(medidas_dict.get('panturrilha'))
             )
             

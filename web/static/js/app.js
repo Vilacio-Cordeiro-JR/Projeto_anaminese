@@ -231,6 +231,10 @@ async function salvarAvaliacao() {
             medidas[key] = null;
         }
     });
+    
+    // Debug: Log da coxa especificamente
+    console.log('🔍 Valor da coxa antes de enviar:', medidas.coxa);
+    console.log('🔍 Campo coxa no HTML:', document.getElementById('coxa')?.value);
 
     // Validar campos obrigatórios
     if (!medidas.peso) {
