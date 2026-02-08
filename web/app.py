@@ -379,7 +379,10 @@ def avaliacoes_api():
             return jsonify(avaliacoes_completas)
         else:
             dados = carregar_dados()
+            print(f"🔍 GET Avaliações - conta_id: {conta_id}")
+            print(f"🔍 Chaves em avaliacoes: {list(dados['avaliacoes'].keys())}")
             avaliacoes = dados['avaliacoes'].get(str(conta_id), [])
+            print(f"🔍 Total de avaliações encontradas: {len(avaliacoes)}")
             return jsonify(avaliacoes)
     
     elif request.method == 'POST':
