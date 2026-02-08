@@ -2282,16 +2282,6 @@ span.status-texto {
         font-size: 1.1rem;
     }
     
-    /* Switch de medidas maior */
-    .measurement-switch {
-        padding: 0.5rem 1rem;
-        min-height: 40px;
-    }
-    
-    .switch-label {
-        font-size: 0.85rem;
-    }
-    
     /* Modal full-screen no mobile */
     .modal-content {
         width: 100%;
@@ -2406,66 +2396,6 @@ span.status-texto {
     display: flex;
 }
 
-/* ========================================
-   FLIP CARD ANIMATION - CIRCUNFERÊNCIAS/DOBRAS
-   ======================================== */
-
-.flip-container-wrapper {
-    width: 100%;
-    position: relative;
-    min-height: 650px;
-}
-
-.flip-card-inner {
-    width: 100%;
-    position: relative;
-    min-height: 650px;
-}
-
-/* Ambos os cards sobrepostos */
-.flip-front,
-.flip-back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 650px;
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 1.5rem;
-    transition: opacity 0.4s ease, transform 0.4s ease, z-index 0s 0.2s;
-}
-
-/* Estado inicial - Circunferências na frente */
-.flip-front {
-    z-index: 2;
-    opacity: 1;
-    transform: scale(1);
-}
-
-.flip-back {
-    z-index: 1;
-    opacity: 0.3;
-    transform: scale(0.95);
-    pointer-events: none;
-}
-
-/* Estado flipped - Dobras na frente */
-.flip-container-wrapper.flipped .flip-front {
-    z-index: 1;
-    opacity: 0.3;
-    transform: scale(0.95);
-    pointer-events: none;
-}
-
-.flip-container-wrapper.flipped .flip-back {
-    z-index: 2;
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-    transition: opacity 0.4s ease, transform 0.4s ease, z-index 0s;
-}
-
 /* Header do formulário de medidas */
 .measurement-header {
     display: flex;
@@ -2481,42 +2411,6 @@ span.status-texto {
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
-}
-
-/* Switch Toggle Button */
-.measurement-switch {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #1976d2, #4791db);
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
-    color: white;
-    border: none;
-    font-family: inherit;
-}
-
-.measurement-switch:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.5);
-    background: linear-gradient(135deg, #115293, #1976d2);
-}
-
-.measurement-switch svg {
-    width: 20px;
-    height: 20px;
-    stroke: white;
-}
-
-.switch-label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 /* WIP Container */
@@ -2551,15 +2445,6 @@ span.status-texto {
 }
 
 @media (max-width: 768px) {
-    .measurement-switch {
-        padding: 0.6rem 1rem;
-        gap: 0.5rem;
-    }
-    
-    .switch-label {
-        font-size: 0.75rem;
-    }
-    
     .wip-container {
         padding: 3rem 1.5rem;
         min-height: 400px;

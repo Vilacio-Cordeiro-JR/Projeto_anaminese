@@ -1983,18 +1983,7 @@ async function renderDistributionMap() {
     }
 }
 
-// ========================================
-// FLIP CARD - CIRCUNFERÊNCIAS / DOBRAS
-// ========================================
 
-function flipMeasurementCard() {
-    const container = document.getElementById('measurementFlipContainer');
-    container.classList.toggle('flipped');
-    
-    const isFlipped = container.classList.contains('flipped');
-    const message = isFlipped ? '🔄 Modo: Dobras Cutâneas (WIP)' : '🔄 Modo: Circunferências';
-    console.log(message);
-}
 // Chamar ao visualizar uma avaliação
 window.addEventListener('avaliacaoVisualized', (event) => {
     if (event.detail && event.detail.mapa_corporal) {
