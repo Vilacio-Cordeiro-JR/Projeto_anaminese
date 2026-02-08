@@ -440,9 +440,8 @@ def avaliacoes_api():
             )
             
             print(f"🔍 APP.PY - Objeto Medidas criado com coxa: {medidas.coxa}")
-                panturrilha=to_float(medidas_dict.get('panturrilha'))
-            )
             
+            # Criar avaliação
             # Criar avaliação
             avaliacao = Avaliacao(
                 data=datetime.strptime(data.get('data', date.today().isoformat()), '%Y-%m-%d').date(),
