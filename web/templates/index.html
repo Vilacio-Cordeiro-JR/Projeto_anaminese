@@ -186,10 +186,14 @@
             <div class="map-section">
                 <div class="form-card">
                     <h2 class="section-title">Mapa Anatômico</h2>
-                    <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
+                        <button id="toggle-distribution-btn" class="btn-toggle-highlights" onclick="toggleDistributionMap()" style="display: none;">Ver Distribuição</button>
+                    </div>
                     <div class="anatomic-map-wrapper">
                         <div class="map-container">
                             <img src="{{ url_for('static', filename='img/Map.png') }}" alt="Mapa Anatômico" class="body-map-base">
+                            <!-- Overlays de destaque (grupamentos) -->
                             <img data-highlight="pescoco" src="{{ url_for('static', filename='img/pescoco.png') }}" class="body-highlight-overlay">
                             <img data-highlight="ombros" src="{{ url_for('static', filename='img/ombros.png') }}" class="body-highlight-overlay">
                             <img data-highlight="peitoral" src="{{ url_for('static', filename='img/peitoral.png') }}" class="body-highlight-overlay">
@@ -200,6 +204,9 @@
                             <img data-highlight="antebraco" src="{{ url_for('static', filename='img/antebraco.png') }}" class="body-highlight-overlay">
                             <img data-highlight="coxa" src="{{ url_for('static', filename='img/coxa.png') }}" class="body-highlight-overlay">
                             <img data-highlight="panturrilha" src="{{ url_for('static', filename='img/panturrilha.png') }}" class="body-highlight-overlay">
+                            
+                            <!-- Canvas para distribuição corporal (máscaras coloridas) -->
+                            <canvas id="distributionCanvas" class="distribution-canvas" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>

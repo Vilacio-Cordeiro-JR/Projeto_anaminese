@@ -626,6 +626,21 @@ body.mobile-view * {
     opacity: 0.6;
 }
 
+.distribution-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.distribution-canvas.active {
+    opacity: 0.7;
+}
+
 .body-highlight,
 .body-highlight-line,
 .body-highlight-img {

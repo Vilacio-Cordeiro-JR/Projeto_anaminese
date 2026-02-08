@@ -1006,6 +1006,16 @@ function toggleAvaliacaoExpansao(avaliacaoId) {
         
         // Salvar preferência
         localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'false');
+        
+        // Limpar mapa de distribuição
+        updateDistributionMap(null);
+        const btn = document.getElementById('toggle-distribution-btn');
+        if (btn) btn.style.display = 'none';
+        const canvas = document.getElementById('distributionCanvas');
+        if (canvas) {
+            canvas.classList.remove('active');
+            canvas.style.display = 'none';
+        }
     } else {
         // Expandir com fade out/in
         contentMin.style.opacity = '0';
@@ -1023,6 +1033,12 @@ function toggleAvaliacaoExpansao(avaliacaoId) {
         
         // Salvar preferência
         localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'true');
+        
+        // Atualizar mapa de distribuição com dados desta avaliação
+        const avaliacao = app.avaliacoes.find(a => a.id === avaliacaoId);
+        if (avaliacao && avaliacao.resultados && avaliacao.resultados.mapa_corporal) {
+            updateDistributionMap(avaliacao.resultados.mapa_corporal);
+        }
     }
 }
 
@@ -1758,4 +1774,148 @@ function adjustForMobile() {
 // Chamar no carregamento
 document.addEventListener('DOMContentLoaded', () => {
     adjustForMobile();
+});
+
+// ========================================
+// MAPA DE DISTRIBUIÇÃO CORPORAL
+// ========================================
+
+let distributionData = null;
+let masksLoaded = false;
+const maskImages = {};
+
+// Carregar máscaras
+async function loadMasks() {
+    if (masksLoaded) return;
+    
+    const maskNames = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'quadril', 'coxa', 'panturrilha'];
+    const baseUrl = '/static/img/';
+    
+    const loadPromises = maskNames.map(name => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                maskImages[name] = img;
+                resolve();
+            };
+            img.onerror = reject;
+            img.src = `${baseUrl}${name}_mask.png`;
+        });
+    });
+    
+    try {
+        await Promise.all(loadPromises);
+        masksLoaded = true;
+        console.log('Máscaras carregadas com sucesso:', Object.keys(maskImages));
+    } catch (error) {
+        console.error('Erro ao carregar máscaras:', error);
+    }
+}
+
+// Atualizar distribuição com dados da avaliação
+function updateDistributionMap(mapaData) {
+    distributionData = mapaData;
+    
+    // Mostrar botão de distribuição se houver dados
+    const btn = document.getElementById('toggle-distribution-btn');
+    if (btn && mapaData && mapaData.regioes) {
+        btn.style.display = 'inline-block';
+    }
+}
+
+// Toggle do mapa de distribuição
+async function toggleDistributionMap() {
+    if (!distributionData) {
+        mostrarToast('Nenhuma avaliação selecionada', 'warning');
+        return;
+    }
+    
+    // Carregar máscaras se ainda não foram carregadas
+    if (!masksLoaded) {
+        showLoading();
+        await loadMasks();
+        hideLoading();
+    }
+    
+    const canvas = document.getElementById('distributionCanvas');
+    const btn = document.getElementById('toggle-distribution-btn');
+    const highlightsBtn = document.getElementById('toggle-highlights-btn');
+    
+    if (canvas.classList.contains('active')) {
+        // Esconder distribuição
+        canvas.classList.remove('active');
+        canvas.style.display = 'none';
+        btn.textContent = 'Ver Distribuição';
+        highlightsBtn.style.display = 'inline-block';
+    } else {
+        // Mostrar distribuição
+        await renderDistributionMap();
+        canvas.style.display = 'block';
+        setTimeout(() => canvas.classList.add('active'), 10);
+        btn.textContent = 'Ocultar Distribuição';
+        
+        // Esconder grupamentos
+        const allHighlights = document.querySelectorAll('.body-highlight-overlay');
+        allHighlights.forEach(h => h.classList.remove('active'));
+        highlightsBtn.style.display = 'none';
+    }
+}
+
+// Renderizar mapa de distribuição
+async function renderDistributionMap() {
+    const canvas = document.getElementById('distributionCanvas');
+    const mapImg = document.querySelector('.body-map-base');
+    
+    if (!canvas || !mapImg) return;
+    
+    // Ajustar canvas ao tamanho da imagem
+    canvas.width = mapImg.naturalWidth;
+    canvas.height = mapImg.naturalHeight;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Cores baseadas na classificação
+    const colorMap = {
+        'Equilibrado': 'rgba(81, 207, 102, 0.7)',      // Verde
+        'Subdesenvolvido': 'rgba(255, 107, 107, 0.7)', // Vermelho
+        'Excesso': 'rgba(255, 169, 77, 0.7)'           // Laranja
+    };
+    
+    const regioes = distributionData.regioes || {};
+    
+    // Renderizar cada região
+    for (const [nome, dados] of Object.entries(regioes)) {
+        if (!dados || !dados.real) continue;
+        
+        const mask = maskImages[nome];
+        if (!mask) continue;
+        
+        const descricao = dados.descricao || 'Normal';
+        const color = colorMap[descricao] || 'rgba(134, 142, 150, 0.5)';
+        
+        // Criar canvas temporário para aplicar cor à máscara
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = mask.width;
+        tempCanvas.height = mask.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Desenhar máscara
+        tempCtx.drawImage(mask, 0, 0);
+        
+        // Aplicar cor
+        tempCtx.globalCompositeOperation = 'source-in';
+        tempCtx.fillStyle = color;
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // Desenhar no canvas principal
+        ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+    }
+}
+
+// Chamar ao visualizar uma avaliação
+window.addEventListener('avaliacaoVisualized', (event) => {
+    if (event.detail && event.detail.mapa_corporal) {
+        updateDistributionMap(event.detail.mapa_corporal);
+    }
 });
