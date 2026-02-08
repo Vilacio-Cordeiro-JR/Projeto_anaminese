@@ -2413,13 +2413,14 @@ span.status-texto {
 .flip-container-wrapper {
     perspective: 1000px;
     width: 100%;
-    min-height: 600px;
+    height: 600px;
+    overflow: visible;
 }
 
 .flip-card-inner {
     position: relative;
     width: 100%;
-    min-height: 600px;
+    height: 100%;
     transition: transform 0.8s;
     transform-style: preserve-3d;
 }
@@ -2434,9 +2435,10 @@ span.status-texto {
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 600px;
+    height: 100%;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    overflow-y: auto;
 }
 
 .flip-front {
