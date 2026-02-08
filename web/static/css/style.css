@@ -2431,6 +2431,8 @@ span.status-texto {
 .flip-front,
 .flip-back {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     min-height: 600px;
     backface-visibility: hidden;
