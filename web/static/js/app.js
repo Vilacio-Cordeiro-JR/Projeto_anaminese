@@ -1877,51 +1877,16 @@ async function loadMasks() {
 }
 
 // Atualizar distribuição com dados da avaliação
-function updateDistributionMap(mapaData) {
+async function updateDistributionMap(mapaData) {
     distributionData = mapaData;
     
-    // Mostrar botão de distribuição se houver dados
-    const btn = document.getElementById('toggle-distribution-btn');
-    if (btn && mapaData && mapaData.regioes) {
-        btn.style.display = 'inline-block';
-    }
-}
-
-// Toggle do mapa de distribuição
-async function toggleDistributionMap() {
-    if (!distributionData) {
-        mostrarToast('Nenhuma avaliação selecionada', 'warning');
-        return;
-    }
-    
-    // Carregar máscaras se ainda não foram carregadas
-    if (!masksLoaded) {
-        showLoading();
-        await loadMasks();
-        hideLoading();
-    }
-    
-    const canvas = document.getElementById('distributionCanvas');
-    const btn = document.getElementById('toggle-distribution-btn');
-    const highlightsBtn = document.getElementById('toggle-highlights-btn');
-    
-    if (canvas.classList.contains('active')) {
-        // Esconder distribuição
-        canvas.classList.remove('active');
-        canvas.style.display = 'none';
-        btn.textContent = 'Ver Distribuição';
-        highlightsBtn.style.display = 'inline-block';
-    } else {
-        // Mostrar distribuição
+    // Renderizar automaticamente se houver dados
+    if (mapaData && mapaData.regioes) {
+        // Carregar máscaras se ainda não foram carregadas
+        if (!masksLoaded) {
+            await loadMasks();
+        }
         await renderDistributionMap();
-        canvas.style.display = 'block';
-        setTimeout(() => canvas.classList.add('active'), 10);
-        btn.textContent = 'Ocultar Distribuição';
-        
-        // Esconder grupamentos
-        const allHighlights = document.querySelectorAll('.body-highlight-overlay');
-        allHighlights.forEach(h => h.classList.remove('active'));
-        highlightsBtn.style.display = 'none';
     }
 }
 
@@ -1932,6 +1897,11 @@ async function renderDistributionMap() {
     
     if (!canvas || !mapImg) {
         console.error('Canvas ou imagem base não encontrados');
+        return;
+    }
+    
+    if (!distributionData || !distributionData.regioes) {
+        console.warn('Sem dados de distribuição para renderizar');
         return;
     }
     

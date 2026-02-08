@@ -188,7 +188,6 @@
                     <h2 class="section-title">Mapa Anatômico</h2>
                     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
                         <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
-                        <button id="toggle-distribution-btn" class="btn-toggle-highlights" onclick="toggleDistributionMap()" style="display: none;">Ver Distribuição</button>
                     </div>
                     <div class="anatomic-map-wrapper">
                         <div class="map-container">
@@ -206,7 +205,7 @@
                             <img data-highlight="panturrilha" src="{{ url_for('static', filename='img/panturrilha.png') }}" class="body-highlight-overlay">
                             
                             <!-- Canvas para distribuição corporal (máscaras coloridas) -->
-                            <canvas id="distributionCanvas" class="distribution-canvas" style="display: none;"></canvas>
+                            <canvas id="distributionCanvas" class="distribution-canvas"></canvas>
                         </div>
                     </div>
                 </div>
