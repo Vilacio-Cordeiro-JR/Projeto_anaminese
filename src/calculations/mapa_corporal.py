@@ -23,6 +23,8 @@ def calcular_proporcoes_ideais(cintura: float, sexo: str) -> Dict[str, float]:
             'pescoco': round(cintura * 0.42, 1),
             'ombros': round(cintura * 1.60, 1),
             'peitoral': round(cintura * 1.40, 1),
+            'cintura': round(cintura, 1),  # Referência base
+            'abdomen': round(cintura * 1.05, 1),  # Abdômen ligeiramente maior
             'braco': round(cintura * 0.36, 1),
             'antebraco': round(cintura * 0.36 * 0.85, 1),
             'quadril': round(cintura * 1.12, 1),
@@ -36,6 +38,8 @@ def calcular_proporcoes_ideais(cintura: float, sexo: str) -> Dict[str, float]:
             'pescoco': round(cintura * 0.38, 1),
             'ombros': round(cintura * 1.40, 1),
             'peitoral': round(cintura * 1.30, 1),
+            'cintura': round(cintura, 1),  # Referência base
+            'abdomen': round(cintura * 1.03, 1),  # Abdômen próximo à cintura
             'braco': round(braco_ideal, 1),
             'antebraco': round(braco_ideal * 0.85, 1),
             'quadril': round(cintura * 1.38, 1),
@@ -167,6 +171,10 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
             real = medidas.get('ombros')
         elif parte == 'peitoral':
             real = medidas.get('peitoral')
+        elif parte == 'cintura':
+            real = medidas.get('cintura')
+        elif parte == 'abdomen':
+            real = medidas.get('abdomen')
         elif parte == 'braco':
             real = medidas.get('braco_contraido') or medidas.get('braco_relaxado')
         elif parte == 'antebraco':

@@ -731,7 +731,7 @@ function renderMapaCorporal(mapa) {
     };
     
     // Ordem de exibição das regiões (de cima para baixo do corpo)
-    const ordemRegioes = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'quadril', 'coxa', 'panturrilha'];
+    const ordemRegioes = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'cintura', 'abdomen', 'quadril', 'coxa', 'panturrilha'];
     
     // Tradução dos nomes das regiões
     const nomesRegioes = {
@@ -740,6 +740,8 @@ function renderMapaCorporal(mapa) {
         'peitoral': 'Peitoral',
         'braco': 'Braço',
         'antebraco': 'Antebraço',
+        'cintura': 'Cintura',
+        'abdomen': 'Abdômen',
         'quadril': 'Quadril',
         'coxa': 'Coxa',
         'panturrilha': 'Panturrilha'
@@ -1788,7 +1790,7 @@ const maskImages = {};
 async function loadMasks() {
     if (masksLoaded) return;
     
-    const maskNames = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'quadril', 'coxa', 'panturrilha'];
+    const maskNames = ['pescoco', 'ombros', 'peitoral', 'braco', 'antebraco', 'cintura', 'abdomen', 'quadril', 'coxa', 'panturrilha'];
     const baseUrl = '/static/img/';
     
     const loadPromises = maskNames.map(name => {
@@ -1798,7 +1800,10 @@ async function loadMasks() {
                 maskImages[name] = img;
                 resolve();
             };
-            img.onerror = reject;
+            img.onerror = (error) => {
+                console.warn(`Máscara ${name}_mask.png não encontrada, continuando...`);
+                resolve(); // Resolve mesmo com erro para não bloquear
+            };
             img.src = `${baseUrl}${name}_mask.png`;
         });
     });
