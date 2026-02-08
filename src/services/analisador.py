@@ -136,9 +136,11 @@ class AnalisadorAvaliacao:
         # Mapa Corporal de Distribuição
         if medidas.cintura:
             medidas_dict_completo = {
-                'cintura': medidas.cintura,
+                'pescoco': medidas.pescoco,
                 'ombros': medidas.ombros,
                 'peitoral': medidas.peitoral,
+                'cintura': medidas.cintura,
+                'abdomen': medidas.abdomen,
                 'quadril': medidas.quadril,
                 'braco_relaxado': medidas.braco_relaxado,
                 'braco_contraido': medidas.braco_contraido,
