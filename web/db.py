@@ -110,7 +110,8 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                 (usuario_id, data, peso, medidas.get('pescoco'), medidas.get('ombros'),
                  medidas.get('peitoral'), medidas.get('cintura'), medidas.get('abdomen'),
                  medidas.get('quadril'), medidas.get('braco_relaxado'), medidas.get('braco_contraido'),
-                 medidas.get('antebraco'), medidas.get('punho'), medidas.get('coxa_proximal'),
+                 medidas.get('antebraco'), medidas.get('punho'), 
+                 medidas.get('coxa') or medidas.get('coxa_proximal'),  # Aceitar ambos nomes
                  medidas.get('coxa_medial'), medidas.get('coxa_distal'), medidas.get('panturrilha'),
                  medidas.get('tornozelo'))
             )
