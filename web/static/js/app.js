@@ -184,6 +184,15 @@ async function carregarAvaliacoes() {
         if (response.ok) {
             app.avaliacoes = await response.json();
             renderizarAvaliacoes();
+            
+            // Atualizar mapa anatômico com a última avaliação
+            if (app.avaliacoes.length > 0) {
+                const ultimaAvaliacao = app.avaliacoes[0];
+                if (ultimaAvaliacao.resultados && ultimaAvaliacao.resultados.mapa_corporal) {
+                    console.log('🗺️ Atualizando mapa anatômico com última avaliação');
+                    updateDistributionMap(ultimaAvaliacao.resultados.mapa_corporal);
+                }
+            }
         }
     } catch (error) {
         console.error('Erro ao carregar avaliações:', error);
@@ -281,6 +290,13 @@ async function salvarAvaliacao() {
             
             // Renderizar
             renderizarAvaliacoes();
+            
+            // Atualizar mapa anatômico com a nova avaliação
+            if (avaliacao.resultados && avaliacao.resultados.mapa_corporal) {
+                console.log('🗺️ Atualizando mapa anatômico com nova avaliação');
+                updateDistributionMap(avaliacao.resultados.mapa_corporal);
+            }
+            
             limparFormulario();
         } else {
             const erro = await response.json();
