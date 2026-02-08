@@ -2462,21 +2462,23 @@ span.status-texto {
 
 /* Switch Toggle Button */
 .measurement-switch {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
-    color: white;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    cursor: pointer !important;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #1976d2, #4791db) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3) !important;
+    color: white !important;
+    border: 2px solid #1976d2 !important;
 }
 
 .measurement-switch:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.5);
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.5) !important;
+    background: linear-gradient(135deg, #115293, #1976d2) !important;
 }
 
 .switch-line {
@@ -2516,12 +2518,12 @@ span.status-texto {
 }
 
 .switch-label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.3s ease !important;
 }
 
 /* WIP Container */
