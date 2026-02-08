@@ -1936,8 +1936,9 @@ async function renderDistributionMap() {
             continue;
         }
         
-        if (!dados.real) {
-            console.warn(`Medida real ausente para ${nome}`);
+        // Verificar se a medida real existe e não é null/undefined
+        if (dados.real === null || dados.real === undefined) {
+            console.warn(`Medida real ausente para ${nome} (valor: ${dados.real})`);
             continue;
         }
         
