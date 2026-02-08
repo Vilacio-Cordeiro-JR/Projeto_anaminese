@@ -343,7 +343,7 @@ def avaliacoes_api():
                     braco_relaxado=float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
                     braco_contraido=float(av['braco_contraido']) if av.get('braco_contraido') else None,
                     antebraco=float(av['antebraco']) if av.get('antebraco') else None,
-                    coxa=float(av['coxa_proximal']) if av.get('coxa_proximal') else None,
+                    coxa=float(av.get('coxa') or av.get('coxa_proximal')) if (av.get('coxa') or av.get('coxa_proximal')) else None,
                     panturrilha=float(av['panturrilha']) if av.get('panturrilha') else None
                 )
                 
@@ -370,7 +370,7 @@ def avaliacoes_api():
                         'braco_relaxado': float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
                         'braco_contraido': float(av['braco_contraido']) if av.get('braco_contraido') else None,
                         'antebraco': float(av['antebraco']) if av.get('antebraco') else None,
-                        'coxa': float(av['coxa_proximal']) if av.get('coxa_proximal') else None,
+                        'coxa': float(av.get('coxa') or av.get('coxa_proximal')) if (av.get('coxa') or av.get('coxa_proximal')) else None,
                         'panturrilha': float(av['panturrilha']) if av.get('panturrilha') else None
                     },
                     'resultados': resultados
