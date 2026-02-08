@@ -148,6 +148,7 @@ class AnalisadorAvaliacao:
                 'coxa': medidas.coxa,
                 'panturrilha': medidas.panturrilha
             }
+            print(f"🔍 ANALISADOR - Coxa no dict: {medidas_dict_completo.get('coxa')}")
             mapa = gerar_mapa_corporal(medidas_dict_completo, medidas.altura, sexo_str)
             resultados['mapa_corporal'] = mapa
             

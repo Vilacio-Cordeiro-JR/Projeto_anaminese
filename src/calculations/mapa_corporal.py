@@ -188,6 +188,7 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
             real = medidas.get('quadril')
         elif parte == 'coxa':
             real = medidas.get('coxa')
+            print(f"🔍 COXA - Valor encontrado: {real}")
         elif parte == 'panturrilha':
             real = medidas.get('panturrilha')
         
