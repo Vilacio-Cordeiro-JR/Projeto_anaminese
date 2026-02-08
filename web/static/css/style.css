@@ -2411,43 +2411,49 @@ span.status-texto {
    ======================================== */
 
 .flip-container-wrapper {
-    perspective: 1000px;
     width: 100%;
-    height: 600px;
-    overflow: visible;
+    position: relative;
+    min-height: 600px;
 }
 
 .flip-card-inner {
     position: relative;
     width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-}
-
-.flip-container-wrapper.flipped .flip-card-inner {
-    transform: rotateY(180deg);
 }
 
 .flip-front,
 .flip-back {
+    width: 100%;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.flip-front {
+    opacity: 1;
+    transform: translateX(0);
+    display: block;
+}
+
+.flip-back {
+    opacity: 0;
+    transform: translateX(100%);
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    overflow-y: auto;
 }
 
-.flip-front {
-    z-index: 2;
-    transform: rotateY(0deg);
+/* Quando está flipped */
+.flip-container-wrapper.flipped .flip-front {
+    opacity: 0;
+    transform: translateX(-100%);
+    display: none;
 }
 
-.flip-back {
-    transform: rotateY(180deg);
+.flip-container-wrapper.flipped .flip-back {
+    opacity: 1;
+    transform: translateX(0);
+    display: block;
 }
 
 /* Header do formulário de medidas */
