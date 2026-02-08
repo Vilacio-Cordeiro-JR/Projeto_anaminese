@@ -2411,36 +2411,39 @@ span.status-texto {
    ======================================== */
 
 .flip-container {
-    perspective: 1000px;
-    position: relative;
-    width: 100%;
-    min-height: 600px;
+    perspective: 1000px !important;
+    position: relative !important;
+    width: 100% !important;
+    min-height: 600px !important;
 }
 
 .flip-container.flipped .flip-card-front {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) !important;
 }
 
 .flip-container.flipped .flip-card-back {
-    transform: rotateY(0deg);
+    transform: rotateY(0deg) !important;
 }
 
 .flip-card {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    min-height: 600px !important;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    transform-style: preserve-3d !important;
+    backface-visibility: hidden !important;
 }
 
 .flip-card-front {
-    transform: rotateY(0deg);
-    z-index: 2;
+    transform: rotateY(0deg) !important;
+    z-index: 2 !important;
 }
 
 .flip-card-back {
-    transform: rotateY(-180deg);
+    transform: rotateY(-180deg) !important;
+    z-index: 1 !important;
 }
 
 /* Header do formulário de medidas */
