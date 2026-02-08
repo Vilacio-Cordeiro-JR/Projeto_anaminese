@@ -750,11 +750,14 @@ function renderMapaCorporal(mapa) {
     let regioesHTML = '';
     let regioesRenderizadas = 0;
     
-    // Renderizar na ordem definida
+    // Renderizar TODAS as regiões na ordem definida (sempre 10 cards)
     for (const nome of ordemRegioes) {
         const dados = regioes[nome];
         console.log(`Processando região ${nome}:`, dados);
         
+        const nomeExibicao = nomesRegioes[nome] || nome;
+        
+        // Verificar se há dados reais
         if (dados && (dados.real || dados.atual)) {
             const valorAtual = dados.real || dados.atual;
             const valorIdeal = dados.ideal;
@@ -762,7 +765,6 @@ function renderMapaCorporal(mapa) {
             const descricao = dados.descricao || dados.status || 'Normal';
             
             const config = statusConfig[descricao] || { emoji: '📏', cor: '#868e96', bg: '#868e96' };
-            const nomeExibicao = nomesRegioes[nome] || nome;
             
             regioesHTML += `
                 <div class="regiao-item" style="border-color: ${config.cor}; background: var(--surface); border-radius: 16px; padding: 1.5rem; border-width: 2px; border-style: solid; display: flex !important; flex-direction: column !important; gap: 1rem;">
@@ -790,13 +792,42 @@ function renderMapaCorporal(mapa) {
                 </div>
             `;
             regioesRenderizadas++;
+        } else {
+            // Card para região não medida
+            const valorIdeal = dados?.ideal || '-';
+            
+            regioesHTML += `
+                <div class="regiao-item" style="border-color: #495057; background: var(--surface); border-radius: 16px; padding: 1.5rem; border-width: 2px; border-style: dashed; display: flex !important; flex-direction: column !important; gap: 1rem; opacity: 0.6;">
+                    <div class="regiao-titulo" style="font-size: 1.3rem; font-weight: 700; text-align: center; padding-bottom: 0.75rem; border-bottom: 2px solid var(--border-color); margin: 0;">${nomeExibicao}</div>
+                    
+                    <div class="regiao-medidas-row" style="display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 1rem !important;">
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Atual</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: #868e96;">-</span>
+                        </div>
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Ideal</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">${valorIdeal} cm</span>
+                        </div>
+                        <div class="medida-col" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px;">
+                            <span class="medida-label" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Diferença</span>
+                            <span class="medida-valor-destaque" style="font-size: 1.4rem; font-weight: 800; color: #868e96;">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="regiao-status-final" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem; border-radius: 12px; background: #495057; color: white; font-weight: 700; font-size: 1.1rem; text-transform: uppercase;">
+                        <span class="status-emoji">📏</span>
+                        <span class="status-texto">Não Medido</span>
+                    </div>
+                </div>
+            `;
         }
     }
     
-    console.log(`${regioesRenderizadas} regiões renderizadas no layout de cards`);
+    console.log(`${regioesRenderizadas} regiões renderizadas (de ${ordemRegioes.length} total)`);
     
     if (regioesRenderizadas === 0) {
-        return '<div class="grid-item-full"><p style="color: var(--text-secondary); text-align: center; padding: 2rem;">Nenhuma região válida encontrada no mapa corporal.</p></div>';
+        console.warn('Nenhuma região com dados válidos encontrada');
     }
     
     return `
