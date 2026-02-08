@@ -1710,7 +1710,7 @@ body.mobile-view * {
 /* Container principal do grid */
 div.mapa-grid-2col {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 1.5rem !important;
     margin: 1.5rem 0 !important;
     width: 100% !important;
@@ -2211,6 +2211,13 @@ span.status-texto {
         grid-template-columns: 1fr;
     }
     
+    .mapa-grid-2col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablets menores */
+@media (max-width: 900px) {
     .mapa-grid-2col {
         grid-template-columns: repeat(2, 1fr);
     }
