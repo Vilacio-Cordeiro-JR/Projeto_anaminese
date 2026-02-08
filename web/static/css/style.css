@@ -2413,47 +2413,39 @@ span.status-texto {
 .flip-container-wrapper {
     width: 100%;
     position: relative;
-    min-height: 600px;
 }
 
 .flip-card-inner {
-    position: relative;
     width: 100%;
 }
 
-.flip-front,
-.flip-back {
-    width: 100%;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
+/* Estado inicial - mostrar apenas Circunferências */
 .flip-front {
-    opacity: 1;
-    transform: translateX(0);
     display: block;
+    animation: fadeIn 0.5s;
 }
 
 .flip-back {
-    opacity: 0;
-    transform: translateX(100%);
     display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
 }
 
-/* Quando está flipped */
+/* Estado flipped - mostrar apenas Dobras */
 .flip-container-wrapper.flipped .flip-front {
-    opacity: 0;
-    transform: translateX(-100%);
     display: none;
 }
 
 .flip-container-wrapper.flipped .flip-back {
-    opacity: 1;
-    transform: translateX(0);
     display: block;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Header do formulário de medidas */
