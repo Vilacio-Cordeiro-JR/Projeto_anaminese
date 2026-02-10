@@ -67,23 +67,30 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- SEÇÃO SUPERIOR: FORMULÁRIO E MAPA LADO A LADO -->
-        <div class="top-section">
-            <!-- FORMULÁRIOS À ESQUERDA -->
-            <div class="form-section">
-                <div class="form-card">
-                    <h2 class="section-title">Nova Avaliação</h2>
+        <!-- HUD INTEGRADA: FORMULÁRIO E MAPA -->
+        <div class="evaluation-hud">
+            <div class="hud-header">
+                <h2 class="hud-title">Nova Avaliação</h2>
+                <div class="hud-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">Sistema Pronto</span>
+                </div>
+            </div>
+            
+            <div class="hud-content">
+                <!-- PAINEL ESQUERDO: FORMULÁRIO -->
+                <div class="hud-panel hud-form-panel">
+                    <div class="panel-content">
                     
-                    <!-- Circunferências -->
-                    <div>
-                        <!-- Header com título -->
-                        <div class="measurement-header">
-                            <h3 class="measurement-title">📏 Circunferências</h3>
-                        </div>
-                                
-                                <div class="measures-form-list">
-                                    <!-- Grid de Circunferências em 2 Colunas -->
-                                    <div class="measures-grid">
+                        <!-- Circunferências -->
+                        <div class="measurement-section">
+                            <div class="measurement-header">
+                                <h3 class="measurement-title">📏 Circunferências</h3>
+                            </div>
+                            
+                            <div class="measures-form-list">
+                                <!-- Grid de Circunferências -->
+                                <div class="measures-grid">
                                         <div class="form-group">
                                             <label for="pescoco">Pescoço (cm)</label>
                                             <input type="number" id="pescoco" step="0.1" placeholder="Ex: 38" data-body-part="pescoco">
@@ -128,42 +135,40 @@
                                             <label for="panturrilha">Panturrilha (cm)</label>
                                             <input type="number" id="panturrilha" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
                                         </div>
-                                    </div>
-
-                                    <!-- Peso e Objetivo Abaixo -->
-                                    <div class="form-group">
-                                        <label for="peso">Peso (kg) *</label>
-                                        <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="objetivo">Objetivo (opcional)</label>
-                                        <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
-                                    </div>
-
-                                    <button id="saveBtn" class="save-btn">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                            <polyline points="7 3 7 8 15 8"></polyline>
-                                        </svg>
-                                        Salvar Avaliação
-                                    </button>
                                 </div>
+
+                                <!-- Peso e Objetivo -->
+                                <div class="form-group">
+                                    <label for="peso">Peso (kg) *</label>
+                                    <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="objetivo">Objetivo (opcional)</label>
+                                    <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
+                                </div>
+
+                                <button id="saveBtn" class="save-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Salvar Avaliação
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- MAPA À DIREITA -->
-            <div class="map-section">
-                <div class="form-card">
-                    <h2 class="section-title">Mapa Anatômico</h2>
-                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <!-- PAINEL DIREITO: MAPA -->
+                <div class="hud-panel hud-map-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Mapa Anatômico</h3>
                         <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
                     </div>
-                    <div class="anatomic-map-wrapper">
-                        <div class="map-container">
+                    <div class="panel-content">
+                        <div class="anatomic-map-wrapper">
+                            <div class="map-container">
                             <img src="{{ url_for('static', filename='img/Map.png') }}" alt="Mapa Anatômico" class="body-map-base">
                             <!-- Overlays de destaque (grupamentos) -->
                             <img data-highlight="pescoco" src="{{ url_for('static', filename='img/pescoco.png') }}" class="body-highlight-overlay">
@@ -177,8 +182,9 @@
                             <img data-highlight="coxa" src="{{ url_for('static', filename='img/coxa.png') }}" class="body-highlight-overlay">
                             <img data-highlight="panturrilha" src="{{ url_for('static', filename='img/panturrilha.png') }}" class="body-highlight-overlay">
                             
-                            <!-- Canvas para distribuição corporal (máscaras coloridas) -->
-                            <canvas id="distributionCanvas" class="distribution-canvas"></canvas>
+                                <!-- Canvas para distribuição corporal (máscaras coloridas) -->
+                                <canvas id="distributionCanvas" class="distribution-canvas"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>

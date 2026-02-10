@@ -486,50 +486,190 @@ body.mobile-view * {
     width: 100%;
     margin: 0 auto;
     padding: 2rem;
-    overflow-x: auto; /* Permite scroll horizontal se necessário */
+    overflow-x: auto;
 }
 
 /* ========================================
-   TOP SECTION - FORMULÁRIO E MAPA
+   HUD INTEGRADA - AVALIAÇÃO
    ======================================== */
 
-.top-section {
+.evaluation-hud {
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px var(--shadow), 
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Header da HUD */
+.hud-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, 
+                rgba(25, 118, 210, 0.1), 
+                rgba(66, 165, 245, 0.05));
+    border-bottom: 2px solid rgba(25, 118, 210, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.hud-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hud-title::before {
+    content: '🎯';
+    font-size: 1.5rem;
+}
+
+.hud-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--success);
+}
+
+/* Conteúdo da HUD */
+.hud-content {
     display: grid;
     grid-template-columns: minmax(380px, 500px) minmax(400px, 1fr);
-    gap: 2rem;
-    margin-bottom: 2rem;
-    align-items: start;
-    min-width: 0; /* Previne overflow */
+    gap: 0;
+    position: relative;
 }
 
-.form-section {
+/* Painéis da HUD */
+.hud-panel {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.hud-panel:hover {
+    background: rgba(25, 118, 210, 0.04);
+}
+
+.hud-form-panel {
+    border-right: 2px solid rgba(25, 118, 210, 0.2);
+    background: rgba(25, 118, 210, 0.02);
+}
+
+.hud-map-panel {
+    background: linear-gradient(135deg, 
+                rgba(25, 118, 210, 0.03), 
+                rgba(66, 165, 245, 0.02));
+}
+
+/* Cabeçalho do painel do mapa */
+.panel-header {
+    padding: 1.5rem 2rem 1rem;
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    max-width: 550px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(25, 118, 210, 0.1);
 }
 
-.map-section {
+.panel-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    flex: 1;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* ========================================
-   MAPA ANATÔMICO
-   ======================================== */
+.panel-title::before {
+    content: '🗺️';
+}
 
+/* Conteúdo dos painéis */
+.panel-content {
+    padding: 2rem;
+}
+
+.hud-form-panel .panel-content {
+    max-height: 800px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+}
+
+.hud-form-panel .panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.hud-form-panel .panel-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.hud-form-panel .panel-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+/* Seção de medição */
+.measurement-section {
+    margin-bottom: 1.5rem;
+}
+
+.measurement-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(25, 118, 210, 0.15);
+}
+
+.measurement-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Wrapper do mapa anatômico na HUD */
 .anatomic-map-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(25, 118, 210, 0.05), rgba(66, 165, 245, 0.05));
-    border-radius: 12px;
-    min-height: 500px;
+    padding: 1.5rem;
+    background: radial-gradient(circle at center, 
+                rgba(25, 118, 210, 0.08), 
+                rgba(66, 165, 245, 0.03));
+    border-radius: 16px;
+    border: 1px solid rgba(25, 118, 210, 0.15);
+    min-height: 600px;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 /* ========================================
@@ -548,22 +688,21 @@ body.mobile-view * {
 }
 
 .btn-toggle-highlights {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
-    margin-bottom: 1rem;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
 .btn-toggle-highlights:hover {
-    background-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
 }
 
 .btn-toggle-highlights:active {
@@ -1177,9 +1316,8 @@ body.mobile-view * {
 
 /* Telas grandes - aproveita melhor o espaço */
 @media (min-width: 1600px) {
-    .top-section {
+    .hud-content {
         grid-template-columns: minmax(400px, 550px) minmax(500px, 1fr);
-        gap: 2.5rem;
     }
     
     .map-container {
@@ -1193,9 +1331,8 @@ body.mobile-view * {
         padding: 1.5rem;
     }
     
-    .top-section {
+    .hud-content {
         grid-template-columns: minmax(360px, 450px) minmax(350px, 1fr);
-        gap: 1.5rem;
     }
     
     .map-container {
@@ -1204,13 +1341,20 @@ body.mobile-view * {
 }
 
 @media (max-width: 1200px) {
-    .top-section {
+    .hud-content {
         grid-template-columns: minmax(340px, 400px) minmax(300px, 1fr);
-        gap: 1.5rem;
     }
     
-    .form-section {
-        max-width: 450px;
+    .hud-header {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .hud-title {
+        font-size: 1.5rem;
+    }
+    
+    .panel-content {
+        padding: 1.5rem;
     }
     
     .map-container {
@@ -1219,17 +1363,18 @@ body.mobile-view * {
 }
 
 @media (max-width: 900px) {
-    .top-section {
-        grid-template-columns: minmax(320px, 380px) minmax(280px, 1fr);
-        gap: 1rem;
+    .hud-content {
+        grid-template-columns: 1fr;
+        gap: 0;
     }
     
-    .form-section {
-        max-width: 400px;
+    .hud-form-panel {
+        border-right: none;
+        border-bottom: 2px solid rgba(25, 118, 210, 0.2);
     }
     
-    .map-container {
-        max-width: 450px;
+    .panel-header {
+        padding: 1rem 1.5rem;
     }
     
     /* Mantém 2 colunas no mobile para o formulário de medidas */
@@ -1245,17 +1390,28 @@ body.mobile-view * {
         max-width: 100%;
     }
     
-    .top-section {
-        grid-template-columns: minmax(300px, 350px) minmax(260px, 1fr);
-        gap: 1rem;
+    .evaluation-hud {
+        border-radius: 16px;
     }
     
-    .form-section {
-        max-width: 360px;
+    .hud-header {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
     }
     
-    .map-container {
-        max-width: 400px;
+    .hud-title {
+        font-size: 1.35rem;
+    }
+    
+    .panel-content {
+        padding: 1.25rem;
+    }
+    
+    .anatomic-map-wrapper {
+        min-height: 500px;
+        padding: 1rem;
     }
     
     .form-card {
@@ -1351,27 +1507,46 @@ body.mobile-view * {
 }
 
 @media (max-width: 600px) {
-    .top-section {
-        grid-template-columns: minmax(280px, 320px) minmax(240px, 1fr);
-        gap: 0.75rem;
-        min-width: 600px; /* Força scroll horizontal em telas muito pequenas */
+    .evaluation-hud {
+        border-radius: 12px;
+        margin: 0.5rem;
     }
     
-    .form-section {
-        max-width: 330px;
+    .hud-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .hud-title {
+        font-size: 1.2rem;
+    }
+    
+    .hud-status {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .panel-header {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .panel-content {
+        padding: 1rem;
+    }
+    
+    .anatomic-map-wrapper {
+        padding: 0.75rem;
+        min-height: 400px;
     }
     
     .map-container {
         max-width: 350px;
     }
     
-    .form-card {
-        padding: 0.75rem;
-    }
-    
-    .anatomic-map-wrapper {
-        padding: 1rem;
-        min-height: 350px;
+    .measures-grid {
+        gap: 0.5rem;
     }
 }
 
