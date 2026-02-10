@@ -1072,15 +1072,7 @@ function toggleAvaliacaoExpansao(avaliacaoId) {
         // Salvar preferência
         localStorage.setItem(`avaliacao-${avaliacaoId}-expanded`, 'false');
         
-        // Limpar mapa de distribuição
-        updateDistributionMap(null);
-        const btn = document.getElementById('toggle-distribution-btn');
-        if (btn) btn.style.display = 'none';
-        const canvas = document.getElementById('distributionCanvas');
-        if (canvas) {
-            canvas.classList.remove('active');
-            canvas.style.display = 'none';
-        }
+        // Mantém o mapa de distribuição ao minimizar (não limpa mais)
     } else {
         // Expandir com fade out/in
         contentMin.style.opacity = '0';
