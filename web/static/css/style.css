@@ -485,6 +485,7 @@ body.mobile-view * {
     width: 100%;
     margin: 0 auto;
     padding: 2rem;
+    overflow-x: auto; /* Permite scroll horizontal se necessário */
 }
 
 /* ========================================
@@ -493,10 +494,11 @@ body.mobile-view * {
 
 .top-section {
     display: grid;
-    grid-template-columns: 450px 1fr;
+    grid-template-columns: minmax(400px, 450px) 1fr;
     gap: 2rem;
     margin-bottom: 2rem;
     align-items: start;
+    min-width: 0; /* Previne overflow */
 }
 
 .form-section {
@@ -1167,11 +1169,8 @@ body.mobile-view * {
 
 @media (max-width: 1200px) {
     .top-section {
-        grid-template-columns: 1fr;
-    }
-    
-    .map-section {
-        order: -1;
+        grid-template-columns: minmax(350px, 400px) 1fr;
+        gap: 1.5rem;
     }
 }
 
@@ -1189,12 +1188,8 @@ body.mobile-view * {
     }
     
     .top-section {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(320px, 350px) 1fr;
         gap: 1rem;
-    }
-    
-    .map-section {
-        order: -1;
     }
     
     .form-card {
@@ -1286,6 +1281,23 @@ body.mobile-view * {
     
     .logo {
         font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .top-section {
+        grid-template-columns: minmax(280px, 320px) 1fr;
+        gap: 0.75rem;
+        min-width: 600px; /* Força scroll horizontal em telas muito pequenas */
+    }
+    
+    .form-card {
+        padding: 0.75rem;
+    }
+    
+    .anatomic-map-wrapper {
+        padding: 1rem;
+        min-height: 400px;
     }
 }
 
