@@ -482,7 +482,7 @@ body.mobile-view * {
 
 .main-content {
     flex: 1;
-    max-width: 1400px;
+    max-width: 1800px;
     width: 100%;
     margin: 0 auto;
     padding: 2rem;
@@ -495,7 +495,7 @@ body.mobile-view * {
 
 .top-section {
     display: grid;
-    grid-template-columns: minmax(400px, 450px) 1fr;
+    grid-template-columns: minmax(380px, 500px) minmax(400px, 1fr);
     gap: 2rem;
     margin-bottom: 2rem;
     align-items: start;
@@ -505,11 +505,15 @@ body.mobile-view * {
 .form-section {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    max-width: 550px;
 }
 
 .map-section {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    flex: 1;
 }
 
 /* ========================================
@@ -523,8 +527,9 @@ body.mobile-view * {
     padding: 2rem;
     background: linear-gradient(135deg, rgba(25, 118, 210, 0.05), rgba(66, 165, 245, 0.05));
     border-radius: 12px;
-    min-height: 600px;
+    min-height: 500px;
     height: 100%;
+    width: 100%;
 }
 
 /* ========================================
@@ -574,8 +579,9 @@ body.mobile-view * {
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 2px 12px var(--shadow);
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     height: 100%;
+    min-width: 0;
 }
 
 .measures-form-list {
@@ -602,8 +608,9 @@ body.mobile-view * {
 .map-container {
     position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
+    transition: all 0.3s ease;
 }
 
 .body-map-base {
@@ -1168,14 +1175,63 @@ body.mobile-view * {
    RESPONSIVE
    ======================================== */
 
+/* Telas grandes - aproveita melhor o espaço */
+@media (min-width: 1600px) {
+    .top-section {
+        grid-template-columns: minmax(400px, 550px) minmax(500px, 1fr);
+        gap: 2.5rem;
+    }
+    
+    .map-container {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .main-content {
+        max-width: 100%;
+        padding: 1.5rem;
+    }
+    
+    .top-section {
+        grid-template-columns: minmax(360px, 450px) minmax(350px, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .map-container {
+        max-width: 600px;
+    }
+}
+
 @media (max-width: 1200px) {
     .top-section {
-        grid-template-columns: minmax(350px, 400px) 1fr;
+        grid-template-columns: minmax(340px, 400px) minmax(300px, 1fr);
         gap: 1.5rem;
+    }
+    
+    .form-section {
+        max-width: 450px;
+    }
+    
+    .map-container {
+        max-width: 500px;
     }
 }
 
 @media (max-width: 900px) {
+    .top-section {
+        grid-template-columns: minmax(320px, 380px) minmax(280px, 1fr);
+        gap: 1rem;
+    }
+    
+    .form-section {
+        max-width: 400px;
+    }
+    
+    .map-container {
+        max-width: 450px;
+    }
+    
     /* Mantém 2 colunas no mobile para o formulário de medidas */
     .measures-grid {
         grid-template-columns: 1fr 1fr;
@@ -1186,11 +1242,20 @@ body.mobile-view * {
 @media (max-width: 768px) {
     .main-content {
         padding: 0.75rem;
+        max-width: 100%;
     }
     
     .top-section {
-        grid-template-columns: minmax(320px, 350px) 1fr;
+        grid-template-columns: minmax(300px, 350px) minmax(260px, 1fr);
         gap: 1rem;
+    }
+    
+    .form-section {
+        max-width: 360px;
+    }
+    
+    .map-container {
+        max-width: 400px;
     }
     
     .form-card {
@@ -1287,9 +1352,17 @@ body.mobile-view * {
 
 @media (max-width: 600px) {
     .top-section {
-        grid-template-columns: minmax(280px, 320px) 1fr;
+        grid-template-columns: minmax(280px, 320px) minmax(240px, 1fr);
         gap: 0.75rem;
         min-width: 600px; /* Força scroll horizontal em telas muito pequenas */
+    }
+    
+    .form-section {
+        max-width: 330px;
+    }
+    
+    .map-container {
+        max-width: 350px;
     }
     
     .form-card {
@@ -1298,7 +1371,7 @@ body.mobile-view * {
     
     .anatomic-map-wrapper {
         padding: 1rem;
-        min-height: 400px;
+        min-height: 350px;
     }
 }
 
