@@ -363,7 +363,18 @@ def avaliacoes_api():
                     coxa_esquerda=obter_medida_lateral(av, 'coxa') or obter_medida_lateral(av, 'coxa_esquerda') or (float(av['coxa_proximal']) if av.get('coxa_proximal') else None),
                     coxa_direita=obter_medida_lateral(av, 'coxa_direita'),
                     panturrilha_esquerda=obter_medida_lateral(av, 'panturrilha') or obter_medida_lateral(av, 'panturrilha_esquerda'),
-                    panturrilha_direita=obter_medida_lateral(av, 'panturrilha_direita')
+                    panturrilha_direita=obter_medida_lateral(av, 'panturrilha_direita'),
+                    # Larguras ósseas
+                    largura_ombros=float(av['largura_ombros']) if av.get('largura_ombros') else None,
+                    largura_quadril=float(av['largura_quadril']) if av.get('largura_quadril') else None,
+                    largura_punho_esquerdo=float(av['largura_punho_esquerdo']) if av.get('largura_punho_esquerdo') else None,
+                    largura_punho_direito=float(av['largura_punho_direito']) if av.get('largura_punho_direito') else None,
+                    largura_cotovelo_esquerdo=float(av['largura_cotovelo_esquerdo']) if av.get('largura_cotovelo_esquerdo') else None,
+                    largura_cotovelo_direito=float(av['largura_cotovelo_direito']) if av.get('largura_cotovelo_direito') else None,
+                    largura_joelho_esquerdo=float(av['largura_joelho_esquerdo']) if av.get('largura_joelho_esquerdo') else None,
+                    largura_joelho_direito=float(av['largura_joelho_direito']) if av.get('largura_joelho_direito') else None,
+                    largura_tornozelo_esquerdo=float(av['largura_tornozelo_esquerdo']) if av.get('largura_tornozelo_esquerdo') else None,
+                    largura_tornozelo_direito=float(av['largura_tornozelo_direito']) if av.get('largura_tornozelo_direito') else None
                 )
                 
                 avaliacao = Avaliacao(

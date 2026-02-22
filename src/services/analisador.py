@@ -351,14 +351,18 @@ class AnalisadorAvaliacao:
             relatorio.append(f"  Abdômen: {m.abdomen}")
         if m.quadril:
             relatorio.append(f"  Quadril: {m.quadril}")
-        if m.braco_relaxado:
-            relatorio.append(f"  Braço (relaxado): {m.braco_relaxado}")
-        if m.braco_contraido:
-            relatorio.append(f"  Braço (contraído): {m.braco_contraido}")
-        if m.coxa:
-            relatorio.append(f"  Coxa: {m.coxa}")
-        if m.panturrilha:
-            relatorio.append(f"  Panturrilha: {m.panturrilha}")
+        
+        # Usar médias bilaterais calculadas
+        medias = r.get('medias_bilaterais')
+        if medias:
+            if medias.braco_relaxado:
+                relatorio.append(f"  Braço (relaxado): {medias.braco_relaxado}")
+            if medias.braco_contraido:
+                relatorio.append(f"  Braço (contraído): {medias.braco_contraido}")
+            if medias.coxa:
+                relatorio.append(f"  Coxa: {medias.coxa}")
+            if medias.panturrilha:
+                relatorio.append(f"  Panturrilha: {medias.panturrilha}")
         relatorio.append("")
         
         # Índices calculados
