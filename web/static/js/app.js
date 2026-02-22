@@ -213,7 +213,7 @@ async function salvarAvaliacao() {
         altura: app.usuario.altura,
         peso: parseFloat(document.getElementById('peso').value) || null,
         pescoco: parseFloat(document.getElementById('pescoco').value) || null,
-        ombros: parseFloat(document.getElementById('ombros').value) || null,
+        ombros: parseFloat(document.getElementById('ombros')?.value) || null,
         peitoral: parseFloat(document.getElementById('peitoral').value) || null,
         cintura: parseFloat(document.getElementById('cintura').value) || null,
         abdomen: parseFloat(document.getElementById('abdomen').value) || null,
@@ -227,7 +227,18 @@ async function salvarAvaliacao() {
         coxa_esquerda: parseFloat(document.getElementById('coxa_esquerda').value) || null,
         coxa_direita: parseFloat(document.getElementById('coxa_direita').value) || null,
         panturrilha_esquerda: parseFloat(document.getElementById('panturrilha_esquerda').value) || null,
-        panturrilha_direita: parseFloat(document.getElementById('panturrilha_direita').value) || null
+        panturrilha_direita: parseFloat(document.getElementById('panturrilha_direita').value) || null,
+        // Larguras (Diâmetros Ósseos)
+        largura_ombros: parseFloat(document.getElementById('largura_ombros')?.value) || null,
+        largura_quadril: parseFloat(document.getElementById('largura_quadril')?.value) || null,
+        largura_punho_esquerdo: parseFloat(document.getElementById('largura_punho_esquerdo')?.value) || null,
+        largura_punho_direito: parseFloat(document.getElementById('largura_punho_direito')?.value) || null,
+        largura_cotovelo_esquerdo: parseFloat(document.getElementById('largura_cotovelo_esquerdo')?.value) || null,
+        largura_cotovelo_direito: parseFloat(document.getElementById('largura_cotovelo_direito')?.value) || null,
+        largura_joelho_esquerdo: parseFloat(document.getElementById('largura_joelho_esquerdo')?.value) || null,
+        largura_joelho_direito: parseFloat(document.getElementById('largura_joelho_direito')?.value) || null,
+        largura_tornozelo_esquerdo: parseFloat(document.getElementById('largura_tornozelo_esquerdo')?.value) || null,
+        largura_tornozelo_direito: parseFloat(document.getElementById('largura_tornozelo_direito')?.value) || null
     };
     
     // Filtrar valores NaN e undefined
@@ -1021,6 +1032,17 @@ function limparFormulario() {
     document.getElementById('coxa_direita').value = '';
     document.getElementById('panturrilha_esquerda').value = '';
     document.getElementById('panturrilha_direita').value = '';
+    // Larguras
+    if(document.getElementById('largura_ombros')) document.getElementById('largura_ombros').value = '';
+    if(document.getElementById('largura_quadril')) document.getElementById('largura_quadril').value = '';
+    if(document.getElementById('largura_punho_esquerdo')) document.getElementById('largura_punho_esquerdo').value = '';
+    if(document.getElementById('largura_punho_direito')) document.getElementById('largura_punho_direito').value = '';
+    if(document.getElementById('largura_cotovelo_esquerdo')) document.getElementById('largura_cotovelo_esquerdo').value = '';
+    if(document.getElementById('largura_cotovelo_direito')) document.getElementById('largura_cotovelo_direito').value = '';
+    if(document.getElementById('largura_joelho_esquerdo')) document.getElementById('largura_joelho_esquerdo').value = '';
+    if(document.getElementById('largura_joelho_direito')) document.getElementById('largura_joelho_direito').value = '';
+    if(document.getElementById('largura_tornozelo_esquerdo')) document.getElementById('largura_tornozelo_esquerdo').value = '';
+    if(document.getElementById('largura_tornozelo_direito')) document.getElementById('largura_tornozelo_direito').value = '';
     document.getElementById('objetivo').value = '';
 }
 
@@ -1622,13 +1644,18 @@ async function fazerLogout() {
 function setupEnterNavigation() {
     // Formulário de medidas (avaliação)
     const medidasInputs = [
-        'pescoco', 'ombros', 'peitoral', 'cintura', 
+        'pescoco', 'peitoral', 'cintura', 
         'abdomen', 'quadril', 
         'braco_relaxado_esquerdo', 'braco_relaxado_direito',
         'braco_contraido_esquerdo', 'braco_contraido_direito',
         'antebraco_esquerdo', 'antebraco_direito',
         'coxa_esquerda', 'coxa_direita',
         'panturrilha_esquerda', 'panturrilha_direita',
+        'largura_ombros', 'largura_quadril',
+        'largura_punho_esquerdo', 'largura_punho_direito',
+        'largura_cotovelo_esquerdo', 'largura_cotovelo_direito',
+        'largura_joelho_esquerdo', 'largura_joelho_direito',
+        'largura_tornozelo_esquerdo', 'largura_tornozelo_direito',
         'peso', 'objetivo'
     ];
     
