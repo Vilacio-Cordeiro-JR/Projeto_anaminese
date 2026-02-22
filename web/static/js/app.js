@@ -1011,11 +1011,16 @@ function limparFormulario() {
     document.getElementById('cintura').value = '';
     document.getElementById('abdomen').value = '';
     document.getElementById('quadril').value = '';
-    document.getElementById('braco_relaxado').value = '';
-    document.getElementById('braco_contraido').value = '';
-    document.getElementById('antebraco').value = '';
-    document.getElementById('coxa').value = '';
-    document.getElementById('panturrilha').value = '';
+    document.getElementById('braco_relaxado_esquerdo').value = '';
+    document.getElementById('braco_relaxado_direito').value = '';
+    document.getElementById('braco_contraido_esquerdo').value = '';
+    document.getElementById('braco_contraido_direito').value = '';
+    document.getElementById('antebraco_esquerdo').value = '';
+    document.getElementById('antebraco_direito').value = '';
+    document.getElementById('coxa_esquerda').value = '';
+    document.getElementById('coxa_direita').value = '';
+    document.getElementById('panturrilha_esquerda').value = '';
+    document.getElementById('panturrilha_direita').value = '';
     document.getElementById('objetivo').value = '';
 }
 
@@ -1618,8 +1623,13 @@ function setupEnterNavigation() {
     // Formulário de medidas (avaliação)
     const medidasInputs = [
         'pescoco', 'ombros', 'peitoral', 'cintura', 
-        'abdomen', 'quadril', 'braco_relaxado', 'braco_contraido',
-        'antebraco', 'coxa', 'panturrilha', 'peso', 'objetivo'
+        'abdomen', 'quadril', 
+        'braco_relaxado_esquerdo', 'braco_relaxado_direito',
+        'braco_contraido_esquerdo', 'braco_contraido_direito',
+        'antebraco_esquerdo', 'antebraco_direito',
+        'coxa_esquerda', 'coxa_direita',
+        'panturrilha_esquerda', 'panturrilha_direita',
+        'peso', 'objetivo'
     ];
     
     medidasInputs.forEach((id, index) => {
