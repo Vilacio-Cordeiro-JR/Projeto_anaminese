@@ -1,0 +1,78 @@
+{
+  "contas": {
+    "Vilacio": {
+      "id": 1,
+      "senha_hash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "created_at": "2026-02-01T10:00:00"
+    }
+  },
+  "usuarios": {
+    "1": {
+      "conta_id": 1,
+      "nome": "Vilacio",
+      "sexo": "M",
+      "data_nascimento": "2006-11-14",
+      "altura": 185,
+      "idade": 19,
+      "email": "",
+      "tema": "dark",
+      "created_at": "2026-02-01T10:00:00"
+    }
+  },
+  "avaliacoes": {
+    "1": [
+      {
+        "id": "2026-01-29T23:11:34.886963",
+        "data": "2026-01-29",
+        "medidas": {
+          "altura": 185,
+          "peso": 98,
+          "pescoco": 41,
+          "ombros": 125,
+          "peitoral": 105,
+          "cintura": 92.5,
+          "abdomen": 90,
+          "quadril": 115,
+          "braco_relaxado": 35.5,
+          "braco_contraido": 39.5,
+          "antebraco": 30,
+          "coxa": 70,
+          "panturrilha": 43,
+          "punho": null,
+          "joelho": null,
+          "tornozelo": null
+        },
+        "objetivo": "",
+        "resultados": {
+          "imc": 28.63,
+          "imc_descricao": "Sobrepeso (pré-obesidade)",
+          "percentual_gordura": 25.2,
+          "classificacao_gordura": "Obesidade",
+          "massa_gorda_kg": 24.7,
+          "massa_magra_kg": 73.3,
+          "rcq": 0.804,
+          "rcq_descricao": "Risco baixo",
+          "rca": 0.5,
+          "rca_descricao": "Sobrepeso - risco aumentado",
+          "somatotipo": "meso-endomorfo",
+          "somatotipo_descricao": "Meso-Endomorfo: estrutura forte com tendência a ganhar gordura",
+          "pontuacao_estetica": 16.4,
+          "classificacao_estetica": "A Desenvolver",
+          "proporcoes": {
+            "ombro_cintura": 1.35,
+            "peitoral_cintura": 1.14,
+            "braco_panturrilha": 0.92
+          },
+          "analise_simetria": {
+            "ombro_cintura": "Desenvolver ombros ou reduzir cintura",
+            "peitoral_cintura": "Desenvolver peitoral",
+            "braco_panturrilha": "Boa simetria",
+            "cintura_altura": "Reduzir gordura abdominal",
+            "peitoral_altura": "Proporção ideal",
+            "simetria_bracos": "Contração normal (11.0%)"
+          }
+        }
+      }
+    ]
+  }
+}

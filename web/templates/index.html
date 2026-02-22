@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1976d2">
+    <title>BodyXP - Sistema de Análise Corporal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="BodyXP" class="loading-logo-img">
+            </div>
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <div class="loading-text">Carregando BodyXP...</div>
+            <div class="loading-subtext">Preparando sua experiência</div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="BodyXP" style="height: 32px; margin-right: 8px; vertical-align: middle; border-radius: 50%;">
+                BodyXP
+            </h1>
+            <div class="user-menu">
+                <!-- Admin Button (visible only for admins) -->
+                {% if is_admin %}
+                <button id="adminBtn" class="admin-btn" title="Painel Admin">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                {% endif %}
+                
+                <!-- Theme Toggle Switch -->
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider">
+                        <span class="icon sun">☀️</span>
+                        <span class="icon moon">🌙</span>
+                    </span>
+                </label>
+                <button id="userBtn" class="user-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HUD INTEGRADA: FORMULÁRIO E MAPA -->
+        <div class="evaluation-hud">
+            <div class="hud-header">
+                <h2 class="hud-title">Nova Avaliação</h2>
+                <div class="hud-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">Sistema Pronto</span>
+                </div>
+            </div>
+            
+            <div class="hud-content">
+                <!-- PAINEL ESQUERDO: FORMULÁRIO -->
+                <div class="hud-panel hud-form-panel">
+                    <div class="panel-content">
+                    
+                        <!-- Circunferências -->
+                        <div class="measurement-section">
+                            <div class="measurement-header">
+                                <h3 class="measurement-title">📏 Circunferências</h3>
+                            </div>
+                            
+                            <div class="measures-form-list">
+                                <!-- Grid de Circunferências -->
+                                <div class="measures-grid">
+                                        <div class="form-group">
+                                            <label for="pescoco">Pescoço (cm)</label>
+                                            <input type="number" id="pescoco" step="0.1" placeholder="Ex: 38" data-body-part="pescoco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ombros">Ombros (cm)</label>
+                                            <input type="number" id="ombros" step="0.1" placeholder="Ex: 120" data-body-part="ombros">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="peitoral">Peitoral (cm)</label>
+                                            <input type="number" id="peitoral" step="0.1" placeholder="Ex: 105" data-body-part="peitoral">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cintura">Cintura (cm) *</label>
+                                            <input type="number" id="cintura" step="0.1" placeholder="Ex: 85" required data-body-part="cintura">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="abdomen">Abdômen (cm)</label>
+                                            <input type="number" id="abdomen" step="0.1" placeholder="Ex: 88" data-body-part="abdomen">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="quadril">Quadril (cm) *</label>
+                                            <input type="number" id="quadril" step="0.1" placeholder="Ex: 100" required data-body-part="quadril">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="braco_relaxado_esquerdo">Braço Relaxado Esquerdo (cm)</label>
+                                            <input type="number" id="braco_relaxado_esquerdo" step="0.1" placeholder="Ex: 35" data-body-part="braco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="braco_relaxado_direito">Braço Relaxado Direito (cm)</label>
+                                            <input type="number" id="braco_relaxado_direito" step="0.1" placeholder="Ex: 35" data-body-part="braco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="braco_contraido_esquerdo">Braço Contraído Esquerdo (cm)</label>
+                                            <input type="number" id="braco_contraido_esquerdo" step="0.1" placeholder="Ex: 38" data-body-part="braco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="braco_contraido_direito">Braço Contraído Direito (cm)</label>
+                                            <input type="number" id="braco_contraido_direito" step="0.1" placeholder="Ex: 38" data-body-part="braco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="antebraco_esquerdo">Antebraço Esquerdo (cm)</label>
+                                            <input type="number" id="antebraco_esquerdo" step="0.1" placeholder="Ex: 30" data-body-part="antebraco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="antebraco_direito">Antebraço Direito (cm)</label>
+                                            <input type="number" id="antebraco_direito" step="0.1" placeholder="Ex: 30" data-body-part="antebraco">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="coxa_esquerda">Coxa Esquerda (cm)</label>
+                                            <input type="number" id="coxa_esquerda" step="0.1" placeholder="Ex: 58" data-body-part="coxa">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="coxa_direita">Coxa Direita (cm)</label>
+                                            <input type="number" id="coxa_direita" step="0.1" placeholder="Ex: 58" data-body-part="coxa">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="panturrilha_esquerda">Panturrilha Esquerda (cm)</label>
+                                            <input type="number" id="panturrilha_esquerda" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="panturrilha_direita">Panturrilha Direita (cm)</label>
+                                            <input type="number" id="panturrilha_direita" step="0.1" placeholder="Ex: 38" data-body-part="panturrilha">
+                                        </div>
+                                </div>
+
+                                <!-- Peso e Objetivo -->
+                                <div class="form-group">
+                                    <label for="peso">Peso (kg) *</label>
+                                    <input type="number" id="peso" step="0.1" placeholder="Ex: 75.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="objetivo">Objetivo (opcional)</label>
+                                    <input type="text" id="objetivo" placeholder="Ex: Hipertrofia e definição">
+                                </div>
+
+                                <button id="saveBtn" class="save-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Salvar Avaliação
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL DIREITO: MAPA -->
+                <div class="hud-panel hud-map-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Mapa Anatômico</h3>
+                        <button id="toggle-highlights-btn" class="btn-toggle-highlights" onclick="toggleAllHighlights()">Mostrar grupamentos</button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="anatomic-map-wrapper">
+                            <div class="map-container">
+                            <img src="{{ url_for('static', filename='img/Map.png') }}" alt="Mapa Anatômico" class="body-map-base">
+                            <!-- Overlays de destaque (grupamentos) -->
+                            <img data-highlight="pescoco" src="{{ url_for('static', filename='img/pescoco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="ombros" src="{{ url_for('static', filename='img/ombros.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="peitoral" src="{{ url_for('static', filename='img/peitoral.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="cintura" src="{{ url_for('static', filename='img/cintura.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="abdomen" src="{{ url_for('static', filename='img/abdomen.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="quadril" src="{{ url_for('static', filename='img/quadril.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="braco" src="{{ url_for('static', filename='img/braco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="antebraco" src="{{ url_for('static', filename='img/antebraco.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="coxa" src="{{ url_for('static', filename='img/coxa.png') }}" class="body-highlight-overlay">
+                            <img data-highlight="panturrilha" src="{{ url_for('static', filename='img/panturrilha.png') }}" class="body-highlight-overlay">
+                            
+                                <!-- Canvas para distribuição corporal (máscaras coloridas) -->
+                                <canvas id="distributionCanvas" class="distribution-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO INFERIOR: AVALIAÇÕES -->
+        <div class="bottom-section">
+            <div class="form-card">
+                <h2 class="section-title">Suas Avaliações</h2>
+                <div id="avaliacoesContainer" class="avaliacoes-container">
+                    <div class="empty-state">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="9"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <h3>Nenhuma avaliação ainda</h3>
+                        <p>Faça a sua primeira avaliação preenchendo os dados acima</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2026 Medidas Fit - Sistema de Análise Corporal | Desenvolvido com ❤️</p>
+    </footer>
+
+    <!-- POPUP DE USUÁRIO -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configurações de Usuário</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="userForm" class="user-form">
+                <div class="form-group">
+                    <label for="userName" data-i18n="user.name">Nome Completo</label>
+                    <input type="text" id="userName" required placeholder="Seu nome">
+                </div>
+
+                <div class="form-group">
+                    <label for="userBirthdate" data-i18n="user.birthdate">Data de Nascimento</label>
+                    <input type="date" id="userBirthdate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userAge" data-i18n="user.age">Idade</label>
+                    <input type="text" id="userAge" readonly placeholder="Calculada automaticamente">
+                </div>
+
+                <div class="form-group">
+                    <label for="userSex" data-i18n="user.sex">Sexo</label>
+                    <select id="userSex" required>
+                        <option value="">Selecione</option>
+                        <option value="M" data-i18n-value="user.male">Masculino</option>
+                        <option value="F" data-i18n-value="user.female">Feminino</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail" data-i18n="user.email">Email</label>
+                    <input type="email" id="userEmail" placeholder="seu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="userHeight" data-i18n="user.height">Altura (cm)</label>
+                    <input type="number" id="userHeight" step="0.1" required placeholder="Ex: 175">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userLanguage" data-i18n="language.label">Idioma</label>
+                    <select id="userLanguage" onchange="i18n.setLanguage(this.value)" style="padding: 0.75rem 1rem; border: 2px solid var(--border-color); border-radius: 12px; background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; width: 100%;">
+                        <option value="pt-BR">🇧🇷 Português (BR)</option>
+                        <option value="pt-PT">🇵🇹 Português (PT)</option>
+                        <option value="en">🇺🇸 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="save-btn" data-i18n="user.saveSettings">Salvar Configurações</button>
+                <button type="button" class="change-password-btn" onclick="mostrarModalSenha()"><span data-i18n="user.changePassword">🔐 Mudar Senha</span></button>
+                <button type="button" class="logout-btn" onclick="fazerLogout()" data-i18n="user.logout">Sair da Conta</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP DE MUDANÇA DE SENHA -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>🔐 Mudar Senha</h2>
+                <button class="close-btn" id="closePasswordModal">&times;</button>
+            </div>
+            <form id="passwordForm" class="user-form">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual *</label>
+                    <input type="password" id="currentPassword" required placeholder="Digite sua senha atual">
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha *</label>
+                    <input type="password" id="newPassword" required placeholder="Digite a nova senha" minlength="6">
+                    <small style="color: var(--text-secondary); font-size: 0.85rem;">Mínimo 6 caracteres</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha *</label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirme a nova senha" minlength="6">
+                </div>
+
+                <button type="submit" class="save-btn">Alterar Senha</button>
+                <button type="button" class="cancel-btn" onclick="esconderModalSenha()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- POPUP DE ADMIN -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2>🔧 Painel de Administração</h2>
+                <button class="close-btn" id="closeAdminModal">&times;</button>
+            </div>
+            <div class="admin-content">
+                <!-- Tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="stats">Estatísticas</button>
+                    <button class="admin-tab" data-tab="database">Banco de Dados</button>
+                </div>
+
+                <!-- Tab Content: Estatísticas -->
+                <div id="statsTab" class="admin-tab-content active">
+                    <h3>Estatísticas do Sistema</h3>
+                    <div id="statsContainer" class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total de Contas</span>
+                                <span class="stat-value" id="statContas">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total de Avaliações</span>
+                                <span class="stat-value" id="statAvaliacoes">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💾</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Modo de Armazenamento</span>
+                                <span class="stat-value" id="statModo">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Database -->
+                <div id="databaseTab" class="admin-tab-content">
+                    <h3>Visualização do Banco de Dados</h3>
+                    
+                    <!-- Navegação por Tabelas -->
+                    <div class="db-navigation" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <button class="db-table-btn active" data-table="all" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">📊 Todos</button>
+                        <button class="db-table-btn" data-table="contas" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">👤 Contas</button>
+                        <button class="db-table-btn" data-table="usuarios" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">👥 Usuários</button>
+                        <button class="db-table-btn" data-table="avaliacoes" style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-weight: 600; transition: all 0.3s ease;">📈 Avaliações</button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button id="loadDbBtn" class="save-btn" style="flex: 1;">🔄 Carregar Dados</button>
+                        <span id="dbRecordCount" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+                    </div>
+                    
+                    <pre id="databaseContent" style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; max-height: 500px; overflow: auto; font-size: 0.85rem;">Selecione uma tabela e clique em "Carregar Dados"</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
