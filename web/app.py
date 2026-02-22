@@ -465,7 +465,18 @@ def avaliacoes_api():
                 coxa_esquerda=to_float(medidas_dict.get('coxa_esquerda')),
                 coxa_direita=to_float(medidas_dict.get('coxa_direita')),
                 panturrilha_esquerda=to_float(medidas_dict.get('panturrilha_esquerda')),
-                panturrilha_direita=to_float(medidas_dict.get('panturrilha_direita'))
+                panturrilha_direita=to_float(medidas_dict.get('panturrilha_direita')),
+                # Larguras ósseas
+                largura_ombros=to_float(medidas_dict.get('largura_ombros')),
+                largura_quadril=to_float(medidas_dict.get('largura_quadril')),
+                largura_punho_esquerdo=to_float(medidas_dict.get('largura_punho_esquerdo')),
+                largura_punho_direito=to_float(medidas_dict.get('largura_punho_direito')),
+                largura_cotovelo_esquerdo=to_float(medidas_dict.get('largura_cotovelo_esquerdo')),
+                largura_cotovelo_direito=to_float(medidas_dict.get('largura_cotovelo_direito')),
+                largura_joelho_esquerdo=to_float(medidas_dict.get('largura_joelho_esquerdo')),
+                largura_joelho_direito=to_float(medidas_dict.get('largura_joelho_direito')),
+                largura_tornozelo_esquerdo=to_float(medidas_dict.get('largura_tornozelo_esquerdo')),
+                largura_tornozelo_direito=to_float(medidas_dict.get('largura_tornozelo_direito'))
             )
             
             print(f"🔍 APP.PY - Objeto Medidas criado com coxas: E={medidas.coxa_esquerda}, D={medidas.coxa_direita}")

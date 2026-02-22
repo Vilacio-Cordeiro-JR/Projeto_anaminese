@@ -62,10 +62,20 @@ class Medidas:
     # Circunferências complementares
     antebraco_esquerdo: Optional[float] = None     # cm
     antebraco_direito: Optional[float] = None      # cm
-    ombros: Optional[float] = None        # cm
-    punho: Optional[float] = None         # cm
-    joelho: Optional[float] = None        # cm
-    tornozelo: Optional[float] = None     # cm
+    ombros: Optional[float] = None        # cm (circunferência)
+    
+    # === LARGURAS/DIÂMETROS ÓSSEOS (Camada 1 - Estrutura) ===
+    # Medidas da estrutura óssea/esquelética
+    largura_ombros: Optional[float] = None        # cm - largura biacromial
+    largura_quadril: Optional[float] = None       # cm - largura bi-ilíaca
+    largura_punho_esquerdo: Optional[float] = None    # cm
+    largura_punho_direito: Optional[float] = None     # cm
+    largura_cotovelo_esquerdo: Optional[float] = None # cm
+    largura_cotovelo_direito: Optional[float] = None  # cm
+    largura_joelho_esquerdo: Optional[float] = None   # cm
+    largura_joelho_direito: Optional[float] = None    # cm
+    largura_tornozelo_esquerdo: Optional[float] = None # cm
+    largura_tornozelo_direito: Optional[float] = None  # cm
     
     def __post_init__(self):
         """Validações após inicialização"""
@@ -97,9 +107,17 @@ class Medidas:
             'antebraco_esquerdo': self.antebraco_esquerdo,
             'antebraco_direito': self.antebraco_direito,
             'ombros': self.ombros,
-            'punho': self.punho,
-            'joelho': self.joelho,
-            'tornozelo': self.tornozelo
+            # Larguras ósseas
+            'largura_ombros': self.largura_ombros,
+            'largura_quadril': self.largura_quadril,
+            'largura_punho_esquerdo': self.largura_punho_esquerdo,
+            'largura_punho_direito': self.largura_punho_direito,
+            'largura_cotovelo_esquerdo': self.largura_cotovelo_esquerdo,
+            'largura_cotovelo_direito': self.largura_cotovelo_direito,
+            'largura_joelho_esquerdo': self.largura_joelho_esquerdo,
+            'largura_joelho_direito': self.largura_joelho_direito,
+            'largura_tornozelo_esquerdo': self.largura_tornozelo_esquerdo,
+            'largura_tornozelo_direito': self.largura_tornozelo_direito,
         }
         
         for nome, valor in medidas.items():

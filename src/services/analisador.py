@@ -1,6 +1,15 @@
 """
 Serviço de Análise de Avaliações
 Processa avaliações e calcula todos os índices corporais.
+Hierarquia de processamento:
+1. Validar inputs
+2. Calcular médias bilaterais
+3. Calcular índices estruturais
+4. Ajustar ideais musculares
+5. Calcular proporções
+6. Calcular simetria
+7. Calcular scores modulares
+8. Calcular score geral
 """
 
 from typing import Dict, Any, Optional
@@ -18,7 +27,20 @@ from ..calculations.somatotipo import classificar_somatotipo, obter_recomendacoe
 from ..calculations.proporcoes import calcular_pontuacao_estetica
 from ..calculations.composicao_tecidual import calcular_composicao_tecidual
 from ..calculations.mapa_corporal import gerar_mapa_corporal
-from ..calculations.score_estetico import calcular_score_estetico
+
+# Novos imports do sistema renovado
+from ..calculations.medias_bilaterais import calcular_todas_medias
+from ..calculations.indices_estruturais import calcular_todos_indices_estruturais
+from ..calculations.ideais_musculares import calcular_todos_ideais
+from ..calculations.simetria import calcular_todas_simetrias, calcular_score_simetria_geral
+from ..calculations.score_estetico import (
+    calcular_score_superior,
+    calcular_score_inferior,
+    calcular_score_posterior,
+    calcular_score_proporcional,
+    calcular_score_composicao,
+    calcular_score_geral
+)
 
 
 class AnalisadorAvaliacao:
@@ -28,6 +50,7 @@ class AnalisadorAvaliacao:
     def processar_avaliacao(avaliacao: Avaliacao, usuario: Usuario) -> Dict[str, Any]:
         """
         Processa uma avaliação completa e calcula todos os índices possíveis.
+        Segue hierarquia de processamento estrita.
         
         Args:
             avaliacao: Objeto Avaliacao a ser processado
@@ -38,8 +61,9 @@ class AnalisadorAvaliacao:
         """
         medidas = avaliacao.medidas
         resultados = {}
+        sexo_str = usuario.sexo.value
         
-        # === CÁLCULOS BÁSICOS ===
+        # === ETAPA 1: CÁLCULOS BÁSICOS ===
         
         # IMC
         imc = calcular_imc(medidas.peso, medidas.altura)
@@ -49,9 +73,7 @@ class AnalisadorAvaliacao:
         resultados['imc_classificacao'] = classificacao_imc
         resultados['imc_descricao'] = descricao_imc
         
-        # === PERCENTUAL DE GORDURA (US Navy) ===
-        sexo_str = usuario.sexo.value
-        
+        # Percentual de Gordura (US Navy)
         if medidas.tem_medidas_minimas_us_navy(sexo_str):
             try:
                 percentual_gordura = calcular_gordura_us_navy(
@@ -77,9 +99,7 @@ class AnalisadorAvaliacao:
             except ValueError as e:
                 resultados['erro_gordura'] = str(e)
         
-        # === ÍNDICES CORPORAIS ===
-        
-        # RCQ
+        # RCQ e RCA
         if medidas.cintura and medidas.quadril:
             rcq = calcular_rcq(medidas.cintura, medidas.quadril)
             classificacao_rcq, desc_rcq = classificar_rcq(rcq, sexo_str)
@@ -88,7 +108,6 @@ class AnalisadorAvaliacao:
             resultados['rcq_classificacao'] = classificacao_rcq
             resultados['rcq_descricao'] = desc_rcq
         
-        # RCA
         if medidas.cintura:
             rca = calcular_rca(medidas.cintura, medidas.altura)
             classificacao_rca, desc_rca = classificar_rca(rca)
@@ -97,32 +116,105 @@ class AnalisadorAvaliacao:
             resultados['rca_classificacao'] = classificacao_rca
             resultados['rca_descricao'] = desc_rca
         
-        # === PROPORÇÕES E SIMETRIA ===
+        # === ETAPA 2: MÉDIAS BILATERAIS ===
+        
+        medidas_dict = AnalisadorAvaliacao._medidas_para_dict(medidas)
+        medias_bilaterais = calcular_todas_medias(medidas_dict)
+        resultados['medias_bilaterais'] = medias_bilaterais
+        
+        # === ETAPA 3: ÍNDICES ESTRUTURAIS (Camada 1) ===
+        
+        indices_estruturais = calcular_todos_indices_estruturais(
+            medidas_dict,
+            medias_bilaterais,
+            medidas.altura,
+            sexo_str
+        )
+        resultados['indices_estruturais'] = indices_estruturais
+        
+        # === ETAPA 4: AJUSTAR IDEAIS MUSCULARES ===
+        
+        ideais_musculares = calcular_todos_ideais(
+            altura=medidas.altura,
+            sexo=sexo_str,
+            fator_estrutural=indices_estruturais.fator_estrutural_ombros
+        )
+        resultados['ideais_musculares'] = ideais_musculares
+        
+        # === ETAPA 5: PROPORÇÕES (Legado mantido para compatibilidade) ===
         
         if medidas.tem_medidas_proporcao():
-            medidas_dict = {
-                'altura': medidas.altura,
-                'cintura': medidas.cintura,
-                'peitoral': medidas.peitoral,
-                'ombros': medidas.ombros,
-                'braco_relaxado': medidas.braco_relaxado,
-                'braco_contraido': medidas.braco_contraido,
-                'coxa': medidas.coxa,
-                'panturrilha': medidas.panturrilha
-            }
-            
             proporcoes = calcular_proporcoes(medidas_dict)
             analise = analisar_simetria(proporcoes)
             
             resultados['proporcoes'] = proporcoes
             resultados['analise_simetria'] = analise
             
-            # Pontuação estética
             pontuacao, classificacao_est = calcular_pontuacao_estetica(proporcoes)
             resultados['pontuacao_estetica'] = pontuacao
             resultados['classificacao_estetica'] = classificacao_est
         
-        # === MÓDULOS AVANÇADOS ===
+        # === ETAPA 6: SIMETRIA BILATERAL ===
+        
+        simetrias = calcular_todas_simetrias(medidas_dict)
+        score_simetria_geral = calcular_score_simetria_geral(simetrias)
+        resultados['simetrias'] = simetrias
+        resultados['score_simetria_geral'] = score_simetria_geral
+        
+        # === ETAPA 7: SCORES MODULARES ===
+        
+        scores_modulares = {}
+        
+        # Score Superior
+        scores_modulares['superior'] = calcular_score_superior(
+            medidas=medidas_dict,
+            medias=medias_bilaterais,
+            ideais=ideais_musculares,
+            simetrias=simetrias,
+            largura_ombros=medidas_dict.get('largura_ombros')
+        )
+        
+        # Score Inferior
+        scores_modulares['inferior'] = calcular_score_inferior(
+            medias=medias_bilaterais,
+            ideais=ideais_musculares,
+            simetrias=simetrias,
+            quadril=medidas.quadril
+        )
+        
+        # Score Posterior
+        scores_modulares['posterior'] = calcular_score_posterior(
+            indices_estruturais=indices_estruturais,
+            medidas=medidas_dict
+        )
+        
+        # Score Proporcional
+        scores_modulares['proporcional'] = calcular_score_proporcional(
+            medidas=medidas_dict,
+            altura=medidas.altura
+        )
+        
+        # Score Composição
+        scores_modulares['composicao'] = calcular_score_composicao(
+            percentual_gordura=resultados.get('percentual_gordura'),
+            sexo=sexo_str,
+            imc=imc
+        )
+        
+        resultados['scores_modulares'] = scores_modulares
+        
+        # === ETAPA 8: SCORE GERAL ===
+        
+        score_geral_resultado = calcular_score_geral(
+            score_composicao=scores_modulares['composicao']['score'],
+            score_proporcional=scores_modulares['proporcional']['score'],
+            score_superior=scores_modulares['superior']['score'],
+            score_inferior=scores_modulares['inferior']['score'],
+            score_posterior=scores_modulares['posterior']['score']
+        )
+        resultados['score_geral'] = score_geral_resultado
+        
+        # === MÓDULOS LEGADOS (Mantidos para compatibilidade) ===
         
         # Composição Tecidual
         if 'percentual_gordura' in resultados:
@@ -133,39 +225,12 @@ class AnalisadorAvaliacao:
             )
             resultados['composicao_tecidual'] = composicao
         
-        # Mapa Corporal de Distribuição
+        # Mapa Corporal
         if medidas.cintura:
-            medidas_dict_completo = {
-                'pescoco': medidas.pescoco,
-                'ombros': medidas.ombros,
-                'peitoral': medidas.peitoral,
-                'cintura': medidas.cintura,
-                'abdomen': medidas.abdomen,
-                'quadril': medidas.quadril,
-                'braco_relaxado': medidas.braco_relaxado,
-                'braco_contraido': medidas.braco_contraido,
-                'antebraco': medidas.antebraco,
-                'coxa': medidas.coxa,
-                'panturrilha': medidas.panturrilha
-            }
-            print(f"🔍 ANALISADOR - Coxa no dict: {medidas_dict_completo.get('coxa')}")
-            mapa = gerar_mapa_corporal(medidas_dict_completo, medidas.altura, sexo_str)
+            mapa = gerar_mapa_corporal(medidas_dict, medidas.altura, sexo_str)
             resultados['mapa_corporal'] = mapa
-            
-            # Score Estético Avançado
-            if 'percentual_gordura' in resultados and 'mapa_corporal' in resultados:
-                score = calcular_score_estetico(
-                    percentual_gordura=resultados['percentual_gordura'],
-                    medidas=medidas_dict_completo,
-                    altura=medidas.altura,
-                    sexo=sexo_str,
-                    mapa_corporal=mapa
-                )
-                resultados['score_estetico_avancado'] = score
         
-        # === SOMATOTIPO ===
-        
-        # Precisa de RCQ, RCA e IMC
+        # Somatotipo
         if 'rcq' in resultados and 'rca' in resultados:
             proporcoes_dict = {}
             if 'proporcoes' in resultados:
@@ -186,7 +251,6 @@ class AnalisadorAvaliacao:
             resultados['somatotipo_descricao'] = desc_somato
             resultados['somatotipo_scores'] = scores_somato
             
-            # Recomendações
             recomendacoes = obter_recomendacoes_somatotipo(somatotipo)
             resultados['recomendacoes'] = recomendacoes
         
@@ -194,6 +258,50 @@ class AnalisadorAvaliacao:
         avaliacao.resultados = resultados
         
         return resultados
+    
+    @staticmethod
+    def _medidas_para_dict(medidas: Medidas) -> Dict[str, float]:
+        """
+        Converte objeto Medidas em dicionário.
+        
+        Args:
+            medidas: Objeto Medidas
+            
+        Returns:
+            Dicionário com todas as medidas
+        """
+        return {
+            'altura': medidas.altura,
+            'peso': medidas.peso,
+            'pescoco': medidas.pescoco,
+            'peitoral': medidas.peitoral,
+            'cintura': medidas.cintura,
+            'abdomen': medidas.abdomen,
+            'quadril': medidas.quadril,
+            'ombros': medidas.ombros,
+            # Bilaterais - circunferências
+            'braco_relaxado_esquerdo': medidas.braco_relaxado_esquerdo,
+            'braco_relaxado_direito': medidas.braco_relaxado_direito,
+            'braco_contraido_esquerdo': medidas.braco_contraido_esquerdo,
+            'braco_contraido_direito': medidas.braco_contraido_direito,
+            'antebraco_esquerdo': medidas.antebraco_esquerdo,
+            'antebraco_direito': medidas.antebraco_direito,
+            'coxa_esquerda': medidas.coxa_esquerda,
+            'coxa_direita': medidas.coxa_direita,
+            'panturrilha_esquerda': medidas.panturrilha_esquerda,
+            'panturrilha_direita': medidas.panturrilha_direita,
+            # Larguras ósseas
+            'largura_ombros': medidas.largura_ombros,
+            'largura_quadril': medidas.largura_quadril,
+            'largura_punho_esquerdo': medidas.largura_punho_esquerdo,
+            'largura_punho_direito': medidas.largura_punho_direito,
+            'largura_cotovelo_esquerdo': medidas.largura_cotovelo_esquerdo,
+            'largura_cotovelo_direito': medidas.largura_cotovelo_direito,
+            'largura_joelho_esquerdo': medidas.largura_joelho_esquerdo,
+            'largura_joelho_direito': medidas.largura_joelho_direito,
+            'largura_tornozelo_esquerdo': medidas.largura_tornozelo_esquerdo,
+            'largura_tornozelo_direito': medidas.largura_tornozelo_direito,
+        }
     
     @staticmethod
     def gerar_relatorio_texto(avaliacao: Avaliacao, usuario: Usuario) -> str:

@@ -92,8 +92,17 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                     braco_contraido_esquerdo, braco_contraido_direito,
                     antebraco_esquerdo, antebraco_direito,
                     coxa_esquerda, coxa_direita,
-                    panturrilha_esquerda, panturrilha_direita
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    panturrilha_esquerda, panturrilha_direita,
+                    largura_ombros, largura_quadril,
+                    largura_punho_esquerdo, largura_punho_direito,
+                    largura_cotovelo_esquerdo, largura_cotovelo_direito,
+                    largura_joelho_esquerdo, largura_joelho_direito,
+                    largura_tornozelo_esquerdo, largura_tornozelo_direito
+                ) VALUES (
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                )
                 ON CONFLICT (usuario_id, data) DO UPDATE SET
                     peso = EXCLUDED.peso,
                     pescoco = EXCLUDED.pescoco,
@@ -120,9 +129,20 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                     coxa_esquerda = EXCLUDED.coxa_esquerda,
                     coxa_direita = EXCLUDED.coxa_direita,
                     panturrilha_esquerda = EXCLUDED.panturrilha_esquerda,
-                    panturrilha_direita = EXCLUDED.panturrilha_direita
+                    panturrilha_direita = EXCLUDED.panturrilha_direita,
+                    largura_ombros = EXCLUDED.largura_ombros,
+                    largura_quadril = EXCLUDED.largura_quadril,
+                    largura_punho_esquerdo = EXCLUDED.largura_punho_esquerdo,
+                    largura_punho_direito = EXCLUDED.largura_punho_direito,
+                    largura_cotovelo_esquerdo = EXCLUDED.largura_cotovelo_esquerdo,
+                    largura_cotovelo_direito = EXCLUDED.largura_cotovelo_direito,
+                    largura_joelho_esquerdo = EXCLUDED.largura_joelho_esquerdo,
+                    largura_joelho_direito = EXCLUDED.largura_joelho_direito,
+                    largura_tornozelo_esquerdo = EXCLUDED.largura_tornozelo_esquerdo,
+                    largura_tornozelo_direito = EXCLUDED.largura_tornozelo_direito
                 RETURNING id""",
-                (usuario_id, data, peso, medidas.get('pescoco'), medidas.get('ombros'),
+                (usuario_id, data, peso, 
+                 medidas.get('pescoco'), medidas.get('ombros'),
                  medidas.get('peitoral'), medidas.get('cintura'), medidas.get('abdomen'),
                  medidas.get('quadril'), 
                  medidas.get('braco_relaxado'),  # Compatibilidade
@@ -133,6 +153,7 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                  medidas.get('coxa_medial'), medidas.get('coxa_distal'), 
                  medidas.get('panturrilha'),  # Compatibilidade
                  medidas.get('tornozelo'),
+                 # Bilaterais
                  medidas.get('braco_relaxado_esquerdo'),
                  medidas.get('braco_relaxado_direito'),
                  medidas.get('braco_contraido_esquerdo'),
@@ -142,7 +163,18 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                  medidas.get('coxa_esquerda'),
                  medidas.get('coxa_direita'),
                  medidas.get('panturrilha_esquerda'),
-                 medidas.get('panturrilha_direita'))
+                 medidas.get('panturrilha_direita'),
+                 # Larguras ósseas
+                 medidas.get('largura_ombros'),
+                 medidas.get('largura_quadril'),
+                 medidas.get('largura_punho_esquerdo'),
+                 medidas.get('largura_punho_direito'),
+                 medidas.get('largura_cotovelo_esquerdo'),
+                 medidas.get('largura_cotovelo_direito'),
+                 medidas.get('largura_joelho_esquerdo'),
+                 medidas.get('largura_joelho_direito'),
+                 medidas.get('largura_tornozelo_esquerdo'),
+                 medidas.get('largura_tornozelo_direito'))
             )
             return cur.fetchone()['id']
 

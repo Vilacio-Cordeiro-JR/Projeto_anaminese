@@ -1,189 +1,482 @@
 """
-Módulo de Score Estético Corporal
-Calcula pontuação 0-100 baseada em múltiplos fatores corporais
+Sistema de Scores Modulares
+Avaliação em 5 dimensões independentes com agregação ponderada.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+from .medias_bilaterais import MediasBilaterais
+from .ideais_musculares import IdeaisMusculares, calcular_diferenca_do_ideal
+from .indices_estruturais import IndicesEstruturais
+from .simetria import SimetriaBilateral
 
 
-def calcular_score_gordura(percentual_gordura: float, sexo: str) -> float:
-    """
-    Calcula score baseado no percentual de gordura (30% do total).
-    Faixa ideal: 10-15% homens, 18-23% mulheres
-    """
-    if sexo == 'M':
-        ideal_min, ideal_max = 10, 15
-    else:
-        ideal_min, ideal_max = 18, 23
-    
-    if ideal_min <= percentual_gordura <= ideal_max:
-        return 30.0  # Score máximo
-    elif percentual_gordura < ideal_min:
-        # Penalização por estar muito baixo
-        diferenca = ideal_min - percentual_gordura
-        return max(0, 30 - (diferenca * 2))
-    else:
-        # Penalização por estar acima
-        diferenca = percentual_gordura - ideal_max
-        return max(0, 30 - (diferenca * 1.5))
-
-
-def calcular_score_proporcao(medida_real: float, medida_ideal: float, peso_maximo: float) -> float:
-    """
-    Calcula score de uma proporção específica.
-    """
-    if not medida_real:
-        return 0
-    
-    ratio = medida_real / medida_ideal
-    
-    # Score máximo quando ratio entre 0.95 e 1.05
-    if 0.95 <= ratio <= 1.05:
-        return peso_maximo
-    elif 0.90 <= ratio <= 1.10:
-        return peso_maximo * 0.8
-    elif 0.85 <= ratio <= 1.15:
-        return peso_maximo * 0.6
-    elif 0.80 <= ratio <= 1.20:
-        return peso_maximo * 0.4
-    else:
-        return peso_maximo * 0.2
-
-
-def calcular_score_simetria(regioes: Dict[str, Dict]) -> float:
-    """
-    Calcula score de simetria e equilíbrio (15% do total).
-    Baseado na média das diferenças entre real e ideal.
-    """
-    diferencas = []
-    
-    for regiao, dados in regioes.items():
-        if dados.get('real') and dados.get('ratio'):
-            # Quanto mais próximo de 1.0, melhor
-            diferenca_abs = abs(1.0 - dados['ratio'])
-            diferencas.append(diferenca_abs)
-    
-    if not diferencas:
-        return 0
-    
-    # Média das diferenças
-    media_diferenca = sum(diferencas) / len(diferencas)
-    
-    # Converter para score (0.0 = perfeito, quanto menor melhor)
-    if media_diferenca <= 0.05:
-        return 15.0
-    elif media_diferenca <= 0.10:
-        return 12.0
-    elif media_diferenca <= 0.15:
-        return 9.0
-    elif media_diferenca <= 0.20:
-        return 6.0
-    else:
-        return max(0, 15 - (media_diferenca * 50))
-
-
-def calcular_score_gordura_central(cintura: float, altura: float) -> float:
-    """
-    Calcula score de gordura central (10% do total).
-    Baseado no índice cintura/altura.
-    """
-    rca = cintura / altura
-    
-    if rca <= 0.45:
-        return 10.0
-    elif rca <= 0.49:
-        return 8.0
-    elif rca <= 0.54:
-        return 5.0
-    elif rca <= 0.60:
-        return 2.0
-    else:
-        return 0
-
-
-def calcular_score_estetico(
-    percentual_gordura: float,
+def calcular_score_superior(
     medidas: Dict[str, float],
-    altura: float,
-    sexo: str,
-    mapa_corporal: Dict[str, Any]
+    medias: MediasBilaterais,
+    ideais: IdeaisMusculares,
+    simetrias: Dict[str, Optional[SimetriaBilateral]],
+    largura_ombros: Optional[float]
 ) -> Dict[str, Any]:
     """
-    Calcula score estético corporal completo (0-100).
+    Calcula Score Superior (0-100).
     
-    Componentes:
-    - 30%: Percentual de gordura
-    - 25%: Relação ombro/cintura
-    - 20%: Relação peitoral/cintura
-    - 15%: Simetria e equilíbrio
-    - 10%: Gordura central
+    Base:
+    - Ombros (circunferência): 25%
+    - Peitoral: 25%
+    - Braços (contraído): 25%
+    - Largura Escapular: 15%
+    - Simetria braços: 10%
     
     Args:
-        percentual_gordura: Percentual de gordura corporal
-        medidas: Dicionário com medidas corporais
-        altura: Altura em cm
-        sexo: 'M' ou 'F'
-        mapa_corporal: Dados do mapa corporal
+        medidas: Medidas corporais
+        medias: Médias bilaterais
+        ideais: Ideais musculares ajustados
+        simetrias: Análises de simetria
+        largura_ombros: Largura biacromial
         
     Returns:
-        Dicionário com score total e breakdown
+        Dict com score e breakdown
     """
-    cintura = medidas.get('cintura', 0)
-    ombros = medidas.get('ombros', 0)
-    peitoral = medidas.get('peitoral', 0)
+    componentes = {}
     
-    # 1. Score de Gordura (30%)
-    score_gordura = calcular_score_gordura(percentual_gordura, sexo)
-    
-    # 2. Score Ombro/Cintura (25%)
-    ombro_ideal = cintura * (1.60 if sexo == 'M' else 1.40)
-    score_ombro = calcular_score_proporcao(ombros, ombro_ideal, 25.0) if ombros else 0
-    
-    # 3. Score Peitoral/Cintura (20%)
-    peitoral_ideal = cintura * (1.40 if sexo == 'M' else 1.30)
-    score_peitoral = calcular_score_proporcao(peitoral, peitoral_ideal, 20.0) if peitoral else 0
-    
-    # 4. Score Simetria (15%)
-    regioes = mapa_corporal.get('regioes', {})
-    score_simetria = calcular_score_simetria(regioes)
-    
-    # 5. Score Gordura Central (10%)
-    score_central = calcular_score_gordura_central(cintura, altura) if cintura else 0
-    
-    # Score total
-    score_total = score_gordura + score_ombro + score_peitoral + score_simetria + score_central
-    score_total = min(100, max(0, score_total))  # Limitar entre 0 e 100
-    
-    # Classificação
-    if score_total >= 85:
-        classificacao = 'Atlético'
-        cor = '#20c997'
-    elif score_total >= 61:
-        classificacao = 'Estético'
-        cor = '#51cf66'
-    elif score_total >= 31:
-        classificacao = 'Intermediário'
-        cor = '#ffa94d'
+    # Ombros (circunferência) - 25%
+    if medidas.get('ombros') and ideais.ombros:
+        diff = calcular_diferenca_do_ideal(medidas['ombros'], ideais.ombros)
+        componentes['ombros'] = calcular_score_componente(diff['diferenca_percentual'], 25)
     else:
-        classificacao = 'A Desenvolver'
-        cor = '#ff6b6b'
+        componentes['ombros'] = 0
+    
+    # Peitoral - 25%
+    if medidas.get('peitoral') and ideais.peitoral:
+        diff = calcular_diferenca_do_ideal(medidas['peitoral'], ideais.peitoral)
+        componentes['peitoral'] = calcular_score_componente(diff['diferenca_percentual'], 25)
+    else:
+        componentes['peitoral'] = 0
+    
+    # Braços (contraído) - 25%
+    if medias.braco_contraido and ideais.braco_contraido:
+        diff = calcular_diferenca_do_ideal(medias.braco_contraido, ideais.braco_contraido)
+        componentes['bracos'] = calcular_score_componente(diff['diferenca_percentual'], 25)
+    else:
+        componentes['bracos'] = 0
+    
+    # Largura Escapular - 15%
+    # Avaliar se está na faixa adequada (não penalizar, apenas avaliar desenvolvimento)
+    if largura_ombros:
+        # Considera adequado se > 35cm para homens, >32cm para mulheres (simplificado)
+        if largura_ombros >= 35:
+            componentes['largura'] = 15
+        elif largura_ombros >= 32:
+            componentes['largura'] = 12
+        else:
+            componentes['largura'] = 8
+    else:
+        componentes['largura'] = 0
+    
+    # Simetria braços - 10%
+    sim_braco = simetrias.get('braco_contraido')
+    if sim_braco:
+        if sim_braco.diferenca_percentual < 5:
+            componentes['simetria'] = 10
+        elif sim_braco.diferenca_percentual <= 10:
+            componentes['simetria'] = 7
+        else:
+            componentes['simetria'] = 4
+    else:
+        componentes['simetria'] = 0
+    
+    score_total = sum(componentes.values())
     
     return {
-        'score_total': round(score_total, 1),
-        'classificacao': classificacao,
-        'cor': cor,
+        'score': round(score_total, 1),
+        'componentes': componentes,
+        'classificacao': classificar_score(score_total)
+    }
+
+
+def calcular_score_inferior(
+    medias: MediasBilaterais,
+    ideais: IdeaisMusculares,
+    simetrias: Dict[str, Optional[SimetriaBilateral]],
+    quadril: Optional[float]
+) -> Dict[str, Any]:
+    """
+    Calcula Score Inferior (0-100).
+    
+    Base:
+    - Coxa: 35%
+    - Panturrilha: 35%
+    - Quadril (proporcionalidade): 20%
+    - Simetria inferior: 10%
+    
+    Args:
+        medias: Médias bilaterais
+        ideais: Ideais musculares
+        simetrias: Análises de simetria
+        quadril: Circunferência do quadril
+        
+    Returns:
+        Dict com score e breakdown
+    """
+    componentes = {}
+    
+    # Coxa - 35%
+    if medias.coxa and ideais.coxa:
+        diff = calcular_diferenca_do_ideal(medias.coxa, ideais.coxa)
+        componentes['coxa'] = calcular_score_componente(diff['diferenca_percentual'], 35)
+    else:
+        componentes['coxa'] = 0
+    
+    # Panturrilha - 35%
+    if medias.panturrilha and ideais.panturrilha:
+        diff = calcular_diferenca_do_ideal(medias.panturrilha, ideais.panturrilha)
+        componentes['panturrilha'] = calcular_score_componente(diff['diferenca_percentual'], 35)
+    else:
+        componentes['panturrilha'] = 0
+    
+    # Quadril - 20%
+    if quadril:
+        # Avaliar proporcionalidade (simplificado)
+        if 85 <= quadril <= 110:
+            componentes['quadril'] = 20
+        elif 80 <= quadril <= 115:
+            componentes['quadril'] = 15
+        else:
+            componentes['quadril'] = 10
+    else:
+        componentes['quadril'] = 0
+    
+    # Simetria inferior - 10%
+    scores_simetria = []
+    for regiao in ['coxa', 'panturrilha']:
+        sim = simetrias.get(regiao)
+        if sim:
+            if sim.diferenca_percentual < 5:
+                scores_simetria.append(100)
+            elif sim.diferenca_percentual <= 10:
+                scores_simetria.append(70)
+            else:
+                scores_simetria.append(40)
+    
+    if scores_simetria:
+        componentes['simetria'] = round(sum(scores_simetria) / len(scores_simetria) * 0.10, 1)
+    else:
+        componentes['simetria'] = 0
+    
+    score_total = sum(componentes.values())
+    
+    return {
+        'score': round(score_total, 1),
+        'componentes': componentes,
+        'classificacao': classificar_score(score_total)
+    }
+
+
+def calcular_score_posterior(
+    indices_estruturais: IndicesEstruturais,
+    medidas: Dict[str, float]
+) -> Dict[str, Any]:
+    """
+    Calcula Score Posterior (0-100) - Avaliação das costas.
+    
+    Base:
+    - Índice V (ombros/cintura): 40%
+    - Índice Posterior (circ/largura): 35%
+    - Largura Ombros: 25%
+    
+    Args:
+        indices_estruturais: Índices estruturais calculados
+        medidas: Medidas corporais
+        
+    Returns:
+        Dict com score e breakdown
+    """
+    componentes = {}
+    
+    # Índice V (ombros/cintura) - 40%
+    ombros_circ = medidas.get('ombros')
+    cintura = medidas.get('cintura')
+    if ombros_circ and cintura and cintura > 0:
+        indice_v = ombros_circ / cintura
+        # Ideal: > 1.4 para homens, > 1.3 para mulheres (simplificado para 1.35)
+        if indice_v >= 1.40:
+            componentes['indice_v'] = 40
+        elif indice_v >= 1.30:
+            componentes['indice_v'] = 32
+        elif indice_v >= 1.20:
+            componentes['indice_v'] = 24
+        else:
+            componentes['indice_v'] = 16
+    else:
+        componentes['indice_v'] = 0
+    
+    # Índice Posterior - 35%
+    if indices_estruturais.indice_posterior:
+        if indices_estruturais.classificacao_posterior == "Muito Desenvolvido":
+            componentes['indice_posterior'] = 35
+        elif indices_estruturais.classificacao_posterior == "Equilibrado":
+            componentes['indice_posterior'] = 28
+        else:
+            componentes['indice_posterior'] = 18
+    else:
+        componentes['indice_posterior'] = 0
+    
+    # Largura Ombros - 25%
+    if indices_estruturais.indice_estrutural_superior:
+        # Avaliar desenvolvimento estrutural (não penalizar genética)
+        largura = medidas.get('largura_ombros', 0)
+        if largura >= 40:
+            componentes['largura'] = 25
+        elif largura >= 35:
+            componentes['largura'] = 20
+        else:
+            componentes['largura'] = 15
+    else:
+        componentes['largura'] = 0
+    
+    score_total = sum(componentes.values())
+    
+    return {
+        'score': round(score_total, 1),
+        'componentes': componentes,
+        'classificacao': classificar_score(score_total)
+    }
+
+
+def calcular_score_proporcional(
+    medidas: Dict[str, float],
+    altura: float
+) -> Dict[str, Any]:
+    """
+    Calcula Score Proporcional (0-100).
+    
+    Base:
+    - RCQ (cintura/quadril): 30%
+    - RCA (cintura/altura): 30%
+    - Peitoral/Cintura: 25%
+    - Ombro/Cintura: 15%
+    
+    Args:
+        medidas: Medidas corporais
+        altura: Altura em cm
+        
+    Returns:
+        Dict com score e breakdown
+    """
+    componentes = {}
+    cintura = medidas.get('cintura')
+    quadril = medidas.get('quadril')
+    peitoral = medidas.get('peitoral')
+    ombros = medidas.get('ombros')
+    
+    # RCQ - 30%
+    if cintura and quadril and quadril > 0:
+        rcq = cintura / quadril
+        # Ideal: < 0.90 homens, < 0.85 mulheres (usar 0.87 como médio)
+        if rcq <= 0.85:
+            componentes['rcq'] = 30
+        elif rcq <= 0.90:
+            componentes['rcq'] = 24
+        elif rcq <= 0.95:
+            componentes['rcq'] = 18
+        else:
+            componentes['rcq'] = 12
+    else:
+        componentes['rcq'] = 0
+    
+    # RCA - 30%
+    if cintura and altura > 0:
+        rca = cintura / altura
+        # Ideal: <= 0.50
+        if rca <= 0.50:
+            componentes['rca'] = 30
+        elif rca <= 0.55:
+            componentes['rca'] = 24
+        elif rca <= 0.60:
+            componentes['rca'] = 18
+        else:
+            componentes['rca'] = 12
+    else:
+        componentes['rca'] = 0
+    
+    # Peitoral/Cintura - 25%
+    if peitoral and cintura and cintura > 0:
+        ratio = peitoral / cintura
+        # Ideal: > 1.3
+        if ratio >= 1.40:
+            componentes['peitoral_cintura'] = 25
+        elif ratio >= 1.30:
+            componentes['peitoral_cintura'] = 20
+        elif ratio >= 1.20:
+            componentes['peitoral_cintura'] = 15
+        else:
+            componentes['peitoral_cintura'] = 10
+    else:
+        componentes['peitoral_cintura'] = 0
+    
+    # Ombro/Cintura - 15%
+    if ombros and cintura and cintura > 0:
+        ratio = ombros / cintura
+        # Ideal: > 1.4
+        if ratio >= 1.50:
+            componentes['ombro_cintura'] = 15
+        elif ratio >= 1.40:
+            componentes['ombro_cintura'] = 12
+        elif ratio >= 1.30:
+            componentes['ombro_cintura'] = 9
+        else:
+            componentes['ombro_cintura'] = 6
+    else:
+        componentes['ombro_cintura'] = 0
+    
+    score_total = sum(componentes.values())
+    
+    return {
+        'score': round(score_total, 1),
+        'componentes': componentes,
+        'classificacao': classificar_score(score_total)
+    }
+
+
+def calcular_score_composicao(
+    percentual_gordura: Optional[float],
+    sexo: str,
+    imc: float
+) -> Dict[str, Any]:
+    """
+    Calcula Score de Composição Corporal (0-100).
+    
+    Base:
+    - Percentual de gordura: 70%
+    - IMC: 30%
+    
+    Args:
+        percentual_gordura: % de gordura corporal
+        sexo: 'M' ou 'F'
+        imc: Índice de massa corporal
+        
+    Returns:
+        Dict com score e breakdown
+    """
+    componentes = {}
+    
+    # Percentual de gordura - 70%
+    if percentual_gordura:
+        if sexo.upper() in ['M', 'MASCULINO']:
+            ideal_min, ideal_max = 10, 15
+        else:
+            ideal_min, ideal_max = 18, 23
+        
+        if ideal_min <= percentual_gordura <= ideal_max:
+            componentes['gordura'] = 70
+        elif percentual_gordura < ideal_min:
+            diff = ideal_min - percentual_gordura
+            componentes['gordura'] = max(35, 70 - (diff * 4))
+        else:
+            diff = percentual_gordura - ideal_max
+            componentes['gordura'] = max(20, 70 - (diff * 3))
+    else:
+        componentes['gordura'] = 0
+    
+    # IMC - 30%
+    if 18.5 <= imc <= 24.9:
+        componentes['imc'] = 30
+    elif 17.0 <= imc < 18.5 or 25.0 <= imc <= 27.0:
+        componentes['imc'] = 24
+    elif 16.0 <= imc < 17.0 or 27.0 < imc <= 30.0:
+        componentes['imc'] = 18
+    else:
+        componentes['imc'] = 12
+    
+    score_total = sum(componentes.values())
+    
+    return {
+        'score': round(score_total, 1),
+        'componentes': componentes,
+        'classificacao': classificar_score(score_total)
+    }
+
+
+def calcular_score_geral(
+    score_composicao: float,
+    score_proporcional: float,
+    score_superior: float,
+    score_inferior: float,
+    score_posterior: float
+) -> Dict[str, Any]:
+    """
+    Calcula o Score Geral ponderado.
+    
+    Ponderação:
+    - 30% Composição
+    - 25% Proporção
+    - 20% Superior
+    - 15% Inferior
+    - 10% Posterior
+    
+    Returns:
+        Dict com score geral e breakdown
+    """
+    score_geral = (
+        score_composicao * 0.30 +
+        score_proporcional * 0.25 +
+        score_superior * 0.20 +
+        score_inferior * 0.15 +
+        score_posterior * 0.10
+    )
+    
+    return {
+        'score_geral': round(score_geral, 1),
+        'classificacao': classificar_score(score_geral),
         'breakdown': {
-            'gordura': round(score_gordura, 1),
-            'ombro_cintura': round(score_ombro, 1),
-            'peitoral_cintura': round(score_peitoral, 1),
-            'simetria': round(score_simetria, 1),
-            'gordura_central': round(score_central, 1)
+            'composicao': round(score_composicao, 1),
+            'proporcional': round(score_proporcional, 1),
+            'superior': round(score_superior, 1),
+            'inferior': round(score_inferior, 1),
+            'posterior': round(score_posterior, 1)
         },
         'pesos': {
-            'gordura': '30%',
-            'ombro_cintura': '25%',
-            'peitoral_cintura': '20%',
-            'simetria': '15%',
-            'gordura_central': '10%'
+            'composicao': '30%',
+            'proporcional': '25%',
+            'superior': '20%',
+            'inferior': '15%',
+            'posterior': '10%'
         }
     }
+
+
+def calcular_score_componente(diferenca_percentual: float, peso_maximo: float) -> float:
+    """
+    Calcula score de um componente baseado na diferença percentual do ideal.
+    
+    Args:
+        diferenca_percentual: Diferença % em relação ao ideal
+        peso_maximo: Peso máximo deste componente no score total
+        
+    Returns:
+        Score do componente
+    """
+    if abs(diferenca_percentual) <= 5:
+        return peso_maximo
+    elif abs(diferenca_percentual) <= 10:
+        return peso_maximo * 0.80
+    elif abs(diferenca_percentual) <= 15:
+        return peso_maximo * 0.60
+    elif abs(diferenca_percentual) <= 20:
+        return peso_maximo * 0.40
+    else:
+        return peso_maximo * 0.20
+
+
+def classificar_score(score: float) -> str:
+    """Classifica um score em categorias"""
+    if score >= 85:
+        return 'Atlético'
+    elif score >= 70:
+        return 'Estético'
+    elif score >= 50:
+        return 'Intermediário'
+    elif score >= 30:
+        return 'Em Desenvolvimento'
+    else:
+        return 'Iniciante'
