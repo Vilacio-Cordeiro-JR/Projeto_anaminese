@@ -414,10 +414,7 @@ def avaliacoes_api():
             return jsonify(avaliacoes_completas)
         else:
             dados = carregar_dados()
-            print(f"🔍 GET Avaliações - conta_id: {conta_id}")
-            print(f"🔍 Chaves em avaliacoes: {list(dados['avaliacoes'].keys())}")
             avaliacoes = dados['avaliacoes'].get(str(conta_id), [])
-            print(f"🔍 Total de avaliações encontradas: {len(avaliacoes)}")
             return jsonify(avaliacoes)
     
     elif request.method == 'POST':
@@ -448,9 +445,6 @@ def avaliacoes_api():
             
             # Criar objeto Medidas (converter valores para float)
             medidas_dict = data['medidas']
-            
-            # Debug: log da coxa
-            print(f"🔍 APP.PY - Coxa recebida no medidas_dict: {medidas_dict.get('coxa')}")
             
             def to_float(value):
                 """Converte valor para float, retorna None se vazio"""
@@ -490,9 +484,6 @@ def avaliacoes_api():
                 largura_tornozelo_direito=to_float(medidas_dict.get('largura_tornozelo_direito'))
             )
             
-            print(f"🔍 APP.PY - Objeto Medidas criado com coxas: E={medidas.coxa_esquerda}, D={medidas.coxa_direita}")
-            
-            # Criar avaliação
             # Criar avaliação
             avaliacao = Avaliacao(
                 data=datetime.strptime(data.get('data', date.today().isoformat()), '%Y-%m-%d').date(),

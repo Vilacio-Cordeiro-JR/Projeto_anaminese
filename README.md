@@ -1,53 +1,82 @@
 # Sistema de Gerenciamento e Análise de Medidas Corporais
 
-Sistema completo para registro, análise e acompanhamento de medidas antropométricas corporais, voltado para profissionais de educação física, nutricionistas e acompanhamento estético.
+Sistema completo para registro, análise e acompanhamento de medidas antropométricas corporais com **motor de avaliação em 3 camadas** (Estrutura → Músculos → Métricas) e **5 scores modulares**, voltado para profissionais de educação física, nutricionistas e acompanhamento estético.
+
+## 🆕 Sistema Renovado (v2.0)
+
+### 🎯 Arquitetura em 3 Camadas
+1. **Camada Estrutural** - Avalia estrutura óssea sem penalizar genética
+2. **Camada Muscular** - Ideais adaptativos baseados na estrutura individual
+3. **Camada de Métricas** - 5 scores independentes agregados
+
+### 📊 5 Scores Modulares
+- **Score Superior** (25%) - Ombros, peitoral, braços, largura escapular
+- **Score Inferior** (20%) - Coxa, panturrilha, quadril
+- **Score Posterior** (10%) - Desenvolvimento das costas (Índice V)
+- **Score Proporcional** (25%) - RCQ, RCA, proporções clássicas
+- **Score Composição** (30%) - Gordura corporal e IMC
 
 ## 📋 Funcionalidades
 
-### ✅ Gerenciamento de Usuários
-- Cadastro completo com dados pessoais
-- Histórico de avaliações
-- Cálculo automático de idade
+### ✅ Gerenciamento de Contas
+- Sistema de autenticação seguro (SHA-256)
+- Múltiplos usuários por conta
+- Histórico completo de avaliações
 
-### 📏 Registro de Medidas
-- **Medidas básicas**: altura, peso
-- **Circunferências principais**: pescoço, peitoral, cintura, abdômen, quadril, braços, coxa, panturrilha
-- **Circunferências complementares**: antebraço, ombros, punho, joelho, tornozelo
+### 📏 Medidas Bilaterais
+- **Braços**: relaxado e contraído (esquerdo/direito)
+- **Antebraços**: esquerdo/direito
+- **Coxas**: esquerda/direita
+- **Panturrilhas**: esquerda/direita
+
+### 📐 Larguras Ósseas (Estrutura)
+- Ombros, quadril, punhos, cotovelos, joelhos, tornozelos
 
 ### 🧮 Cálculos Automáticos
-- **IMC** (Índice de Massa Corporal)
-- **% Gordura** (método US Navy)
-- **RCQ** (Relação Cintura-Quadril)
-- **RCA** (Relação Cintura-Altura)
-- **Massa gorda e magra**
-- **Proporções corporais**
-- **Índice de conicidade**
-
-### 📊 Análises Avançadas
-- Classificação de somatotipos (ectomorfo, mesomorfo, endomorfo)
-- Análise de simetria e proporções
-- Pontuação estética baseada em proporções clássicas
-- Comparação entre avaliações
-- Análise de tendências temporais
-- Identificação de ganhos musculares e perda de gordura
-
-### 📈 Relatórios
-- Relatório completo de avaliação individual
-- Relatório comparativo entre avaliações
-- Análise de evolução temporal
-- Recomendações personalizadas de treino e dieta
+- **IMC** + classificação
+- **% Gordura** (US Navy)
+- **RCQ/RCA** + risco cardiovascular
+- **Médias bilaterais** automáticas
+- **Índices estruturais** (4 índices)
+- **Ideais musculares adaptativos**
+- **Análise de simetria bilateral**
 
 ## 🏗️ Arquitetura do Projeto
 
 ```
 Projeto Medidas Fit/
 │
-├── src/
+├── src/                     # Código fonte Python
 │   ├── models/              # Modelos de dados
-│   │   ├── usuario.py       # Classe Usuario
-│   │   ├── medidas.py       # Classe Medidas
-│   │   └── avaliacao.py     # Classe Avaliacao
-│   │
+│   ├── calculations/        # Motor de cálculos
+│   ├── services/            # Serviços de negócio
+│   ├── validators/          # Validadores
+│   └── utils/               # Utilitários
+│
+├── web/                     # Interface web Flask
+│   ├── templates/           # Templates HTML
+│   ├── static/              # CSS, JS, imagens
+│   ├── app.py              # Aplicação Flask
+│   └── db.py               # Camada de dados
+│
+├── migrations/              # Scripts SQL de migração
+│   ├── database.sql         # Schema completo
+│   └── migration_*.sql      # Migrações incrementais
+│
+├── scripts/                 # Scripts utilitários
+│   ├── iniciar_web.bat     # Iniciar servidor (Windows)
+│   ├── iniciar_web.sh      # Iniciar servidor (Linux/Mac)
+│   └── test_*.py           # Scripts de teste
+│
+├── docs/                    # Documentação
+│   ├── SISTEMA_RENOVADO.md  # Doc sistema v2.0
+│   ├── DATABASE_GUIDE.md    # Guia do banco
+│   └── *.md                 # Outros documentos
+│
+├── data/                    # Dados locais (JSON)
+├── api/                     # API Vercel
+└── tests/                   # Testes automatizados
+```
 │   ├── calculations/        # Módulos de cálculo
 │   │   ├── imc.py          # Cálculos de IMC
 │   │   ├── gordura.py      # % de gordura (US Navy)
