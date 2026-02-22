@@ -87,8 +87,13 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                 """INSERT INTO avaliacoes (
                     usuario_id, data, peso, pescoco, ombros, peitoral, cintura, 
                     abdomen, quadril, braco_relaxado, braco_contraido, antebraco, 
-                    punho, coxa_proximal, coxa_medial, coxa_distal, panturrilha, tornozelo
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    punho, coxa_proximal, coxa_medial, coxa_distal, panturrilha, tornozelo,
+                    braco_relaxado_esquerdo, braco_relaxado_direito,
+                    braco_contraido_esquerdo, braco_contraido_direito,
+                    antebraco_esquerdo, antebraco_direito,
+                    coxa_esquerda, coxa_direita,
+                    panturrilha_esquerda, panturrilha_direita
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (usuario_id, data) DO UPDATE SET
                     peso = EXCLUDED.peso,
                     pescoco = EXCLUDED.pescoco,
@@ -105,15 +110,39 @@ def salvar_avaliacao(usuario_id, data, peso, medidas):
                     coxa_medial = EXCLUDED.coxa_medial,
                     coxa_distal = EXCLUDED.coxa_distal,
                     panturrilha = EXCLUDED.panturrilha,
-                    tornozelo = EXCLUDED.tornozelo
+                    tornozelo = EXCLUDED.tornozelo,
+                    braco_relaxado_esquerdo = EXCLUDED.braco_relaxado_esquerdo,
+                    braco_relaxado_direito = EXCLUDED.braco_relaxado_direito,
+                    braco_contraido_esquerdo = EXCLUDED.braco_contraido_esquerdo,
+                    braco_contraido_direito = EXCLUDED.braco_contraido_direito,
+                    antebraco_esquerdo = EXCLUDED.antebraco_esquerdo,
+                    antebraco_direito = EXCLUDED.antebraco_direito,
+                    coxa_esquerda = EXCLUDED.coxa_esquerda,
+                    coxa_direita = EXCLUDED.coxa_direita,
+                    panturrilha_esquerda = EXCLUDED.panturrilha_esquerda,
+                    panturrilha_direita = EXCLUDED.panturrilha_direita
                 RETURNING id""",
                 (usuario_id, data, peso, medidas.get('pescoco'), medidas.get('ombros'),
                  medidas.get('peitoral'), medidas.get('cintura'), medidas.get('abdomen'),
-                 medidas.get('quadril'), medidas.get('braco_relaxado'), medidas.get('braco_contraido'),
-                 medidas.get('antebraco'), medidas.get('punho'), 
-                 medidas.get('coxa') or medidas.get('coxa_proximal'),  # Aceitar ambos nomes
-                 medidas.get('coxa_medial'), medidas.get('coxa_distal'), medidas.get('panturrilha'),
-                 medidas.get('tornozelo'))
+                 medidas.get('quadril'), 
+                 medidas.get('braco_relaxado'),  # Compatibilidade
+                 medidas.get('braco_contraido'),  # Compatibilidade
+                 medidas.get('antebraco'),  # Compatibilidade
+                 medidas.get('punho'), 
+                 medidas.get('coxa') or medidas.get('coxa_proximal'),  # Compatibilidade
+                 medidas.get('coxa_medial'), medidas.get('coxa_distal'), 
+                 medidas.get('panturrilha'),  # Compatibilidade
+                 medidas.get('tornozelo'),
+                 medidas.get('braco_relaxado_esquerdo'),
+                 medidas.get('braco_relaxado_direito'),
+                 medidas.get('braco_contraido_esquerdo'),
+                 medidas.get('braco_contraido_direito'),
+                 medidas.get('antebraco_esquerdo'),
+                 medidas.get('antebraco_direito'),
+                 medidas.get('coxa_esquerda'),
+                 medidas.get('coxa_direita'),
+                 medidas.get('panturrilha_esquerda'),
+                 medidas.get('panturrilha_direita'))
             )
             return cur.fetchone()['id']
 

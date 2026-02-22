@@ -54,11 +54,16 @@ def exemplo_completo():
         cintura=88,
         abdomen=92,
         quadril=100,
-        braco_relaxado=35,
-        braco_contraido=38,
-        antebraco=30,
-        coxa=58,
-        panturrilha=38
+        braco_relaxado_esquerdo=35,
+        braco_relaxado_direito=35.5,
+        braco_contraido_esquerdo=38,
+        braco_contraido_direito=38.5,
+        antebraco_esquerdo=30,
+        antebraco_direito=30.5,
+        coxa_esquerda=58,
+        coxa_direita=58.5,
+        panturrilha_esquerda=38,
+        panturrilha_direita=38
     )
     
     # Validar medidas
@@ -116,11 +121,16 @@ def exemplo_completo():
         cintura=84,  # Reduziu cintura (-4cm!)
         abdomen=88,  # Reduziu abdômen
         quadril=98,  # Reduziu quadril
-        braco_relaxado=36,  # Ganhou braço
-        braco_contraido=40,  # Ganhou braço contraído
-        antebraco=31,
-        coxa=60,  # Ganhou coxa
-        panturrilha=39  # Ganhou panturrilha
+        braco_relaxado_esquerdo=36,  # Ganhou braço
+        braco_relaxado_direito=36,
+        braco_contraido_esquerdo=40,  # Ganhou braço contraído
+        braco_contraido_direito=40,
+        antebraco_esquerdo=31,
+        antebraco_direito=31,
+        coxa_esquerda=60,  # Ganhou coxa
+        coxa_direita=60,
+        panturrilha_esquerda=39,  # Ganhou panturrilha
+        panturrilha_direita=39
     )
     
     avaliacao2 = Avaliacao(
@@ -165,9 +175,15 @@ def exemplo_completo():
         cintura=86,
         abdomen=90,
         quadril=99,
-        braco_relaxado=35.5,
-        braco_contraido=39,
-        coxa=59,
+        braco_relaxado_esquerdo=35.5,
+        braco_relaxado_direito=35.5,
+        braco_contraido_esquerdo=39,
+        braco_contraido_direito=39,
+        coxa_esquerda=59,
+        coxa_direita=59,
+        panturrilha_esquerda=38.5,
+        panturrilha_direita=38.5
+    )
         panturrilha=38.5
     )
     
@@ -263,8 +279,10 @@ def exemplo_basico():
         cintura=68,
         quadril=95,
         peitoral=88,
-        braco_contraido=30,
-        panturrilha=36
+        braco_contraido_esquerdo=30,
+        braco_contraido_direito=30,
+        panturrilha_esquerda=36,
+        panturrilha_direita=36
     )
     
     # Criar avaliação

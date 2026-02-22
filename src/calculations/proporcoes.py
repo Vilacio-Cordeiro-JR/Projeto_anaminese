@@ -25,14 +25,42 @@ class Proporcoes:
     simetria_bracos: Optional[float] = None  # contraído vs relaxado
 
 
+def _obter_media_lateral(medidas: Dict[str, float], nome_base: str) -> Optional[float]:
+    """
+    Obtém a média das medidas laterais (esquerda/direita) ou a medida única se existir.
+    
+    Args:
+        medidas: Dicionário com as medidas
+        nome_base: Nome base da medida (ex: 'braco_relaxado', 'coxa', 'panturrilha')
+    
+    Returns:
+        Média das medidas laterais ou medida única, ou None se não existir
+    """
+    # Tentar obter medidas separadas
+    esquerda = medidas.get(f'{nome_base}_esquerdo') or medidas.get(f'{nome_base}_esquerda')
+    direita = medidas.get(f'{nome_base}_direito') or medidas.get(f'{nome_base}_direita')
+    
+    if esquerda and direita:
+        return round((esquerda + direita) / 2, 1)
+    elif esquerda:
+        return esquerda
+    elif direita:
+        return direita
+    
+    # Fallback para medida única (compatibilidade)
+    return medidas.get(nome_base)
+
+
 def calcular_proporcoes(medidas: Dict[str, float]) -> Proporcoes:
     """
     Calcula todas as proporções corporais possíveis com as medidas disponíveis.
     
     Args:
         medidas: Dicionário com as medidas corporais
-            Chaves esperadas: altura, cintura, peitoral, ombros, braco_relaxado,
-            braco_contraido, coxa, panturrilha, etc.
+            Chaves esperadas: altura, cintura, peitoral, ombros, 
+            braco_relaxado_esquerdo, braco_relaxado_direito,
+            braco_contraido_esquerdo, braco_contraido_direito,
+            coxa_esquerda, coxa_direita, panturrilha_esquerda, panturrilha_direita, etc.
     
     Returns:
         Objeto Proporcoes com todos os cálculos possíveis
@@ -43,10 +71,10 @@ def calcular_proporcoes(medidas: Dict[str, float]) -> Proporcoes:
     cintura = medidas.get('cintura')
     peitoral = medidas.get('peitoral')
     ombros = medidas.get('ombros')
-    braco_rel = medidas.get('braco_relaxado')
-    braco_cont = medidas.get('braco_contraido')
-    coxa = medidas.get('coxa')
-    panturrilha = medidas.get('panturrilha')
+    braco_rel = _obter_media_lateral(medidas, 'braco_relaxado')
+    braco_cont = _obter_media_lateral(medidas, 'braco_contraido')
+    coxa = _obter_media_lateral(medidas, 'coxa')
+    panturrilha = _obter_media_lateral(medidas, 'panturrilha')
     
     # Relações entre circunferências
     if ombros and cintura and cintura > 0:

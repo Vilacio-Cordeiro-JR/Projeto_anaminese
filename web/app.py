@@ -331,6 +331,20 @@ def avaliacoes_api():
             
             avaliacoes_completas = []
             for av in avaliacoes_db:
+                # Compatibilidade com medidas antigas e novas
+                def obter_medida_lateral(dados, nome_base):
+                    """Obtém medidas laterais ou fallback para medida única"""
+                    esquerda = dados.get(f'{nome_base}_esquerdo') or dados.get(f'{nome_base}_esquerda')
+                    direita = dados.get(f'{nome_base}_direito') or dados.get(f'{nome_base}_direita')
+                    if esquerda:
+                        return float(esquerda)
+                    if direita:
+                        return float(direita)
+                    # Fallback para medida única antiga
+                    if dados.get(nome_base):
+                        return float(dados[nome_base])
+                    return None
+                
                 medidas = Medidas(
                     altura=float(usuario['altura']),
                     peso=float(av['peso']),
@@ -340,11 +354,16 @@ def avaliacoes_api():
                     cintura=float(av['cintura']) if av.get('cintura') else None,
                     abdomen=float(av['abdomen']) if av.get('abdomen') else None,
                     quadril=float(av['quadril']) if av.get('quadril') else None,
-                    braco_relaxado=float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
-                    braco_contraido=float(av['braco_contraido']) if av.get('braco_contraido') else None,
-                    antebraco=float(av['antebraco']) if av.get('antebraco') else None,
-                    coxa=float(av.get('coxa') or av.get('coxa_proximal')) if (av.get('coxa') or av.get('coxa_proximal')) else None,
-                    panturrilha=float(av['panturrilha']) if av.get('panturrilha') else None
+                    braco_relaxado_esquerdo=obter_medida_lateral(av, 'braco_relaxado') or obter_medida_lateral(av, 'braco_relaxado_esquerdo'),
+                    braco_relaxado_direito=obter_medida_lateral(av, 'braco_relaxado_direito'),
+                    braco_contraido_esquerdo=obter_medida_lateral(av, 'braco_contraido') or obter_medida_lateral(av, 'braco_contraido_esquerdo'),
+                    braco_contraido_direito=obter_medida_lateral(av, 'braco_contraido_direito'),
+                    antebraco_esquerdo=obter_medida_lateral(av, 'antebraco') or obter_medida_lateral(av, 'antebraco_esquerdo'),
+                    antebraco_direito=obter_medida_lateral(av, 'antebraco_direito'),
+                    coxa_esquerda=obter_medida_lateral(av, 'coxa') or obter_medida_lateral(av, 'coxa_esquerda') or (float(av['coxa_proximal']) if av.get('coxa_proximal') else None),
+                    coxa_direita=obter_medida_lateral(av, 'coxa_direita'),
+                    panturrilha_esquerda=obter_medida_lateral(av, 'panturrilha') or obter_medida_lateral(av, 'panturrilha_esquerda'),
+                    panturrilha_direita=obter_medida_lateral(av, 'panturrilha_direita')
                 )
                 
                 avaliacao = Avaliacao(
@@ -367,11 +386,16 @@ def avaliacoes_api():
                         'cintura': float(av['cintura']) if av.get('cintura') else None,
                         'abdomen': float(av['abdomen']) if av.get('abdomen') else None,
                         'quadril': float(av['quadril']) if av.get('quadril') else None,
-                        'braco_relaxado': float(av['braco_relaxado']) if av.get('braco_relaxado') else None,
-                        'braco_contraido': float(av['braco_contraido']) if av.get('braco_contraido') else None,
-                        'antebraco': float(av['antebraco']) if av.get('antebraco') else None,
-                        'coxa': float(av.get('coxa') or av.get('coxa_proximal')) if (av.get('coxa') or av.get('coxa_proximal')) else None,
-                        'panturrilha': float(av['panturrilha']) if av.get('panturrilha') else None
+                        'braco_relaxado_esquerdo': obter_medida_lateral(av, 'braco_relaxado') or obter_medida_lateral(av, 'braco_relaxado_esquerdo'),
+                        'braco_relaxado_direito': obter_medida_lateral(av, 'braco_relaxado_direito'),
+                        'braco_contraido_esquerdo': obter_medida_lateral(av, 'braco_contraido') or obter_medida_lateral(av, 'braco_contraido_esquerdo'),
+                        'braco_contraido_direito': obter_medida_lateral(av, 'braco_contraido_direito'),
+                        'antebraco_esquerdo': obter_medida_lateral(av, 'antebraco') or obter_medida_lateral(av, 'antebraco_esquerdo'),
+                        'antebraco_direito': obter_medida_lateral(av, 'antebraco_direito'),
+                        'coxa_esquerda': obter_medida_lateral(av, 'coxa') or obter_medida_lateral(av, 'coxa_esquerda') or (float(av['coxa_proximal']) if av.get('coxa_proximal') else None),
+                        'coxa_direita': obter_medida_lateral(av, 'coxa_direita'),
+                        'panturrilha_esquerda': obter_medida_lateral(av, 'panturrilha') or obter_medida_lateral(av, 'panturrilha_esquerda'),
+                        'panturrilha_direita': obter_medida_lateral(av, 'panturrilha_direita')
                     },
                     'resultados': resultados
                 })
@@ -432,14 +456,19 @@ def avaliacoes_api():
                 cintura=to_float(medidas_dict.get('cintura')),
                 abdomen=to_float(medidas_dict.get('abdomen')),
                 quadril=to_float(medidas_dict.get('quadril')),
-                braco_relaxado=to_float(medidas_dict.get('braco_relaxado')),
-                braco_contraido=to_float(medidas_dict.get('braco_contraido')),
-                antebraco=to_float(medidas_dict.get('antebraco')),
-                coxa=to_float(medidas_dict.get('coxa')),
-                panturrilha=to_float(medidas_dict.get('panturrilha'))
+                braco_relaxado_esquerdo=to_float(medidas_dict.get('braco_relaxado_esquerdo')),
+                braco_relaxado_direito=to_float(medidas_dict.get('braco_relaxado_direito')),
+                braco_contraido_esquerdo=to_float(medidas_dict.get('braco_contraido_esquerdo')),
+                braco_contraido_direito=to_float(medidas_dict.get('braco_contraido_direito')),
+                antebraco_esquerdo=to_float(medidas_dict.get('antebraco_esquerdo')),
+                antebraco_direito=to_float(medidas_dict.get('antebraco_direito')),
+                coxa_esquerda=to_float(medidas_dict.get('coxa_esquerda')),
+                coxa_direita=to_float(medidas_dict.get('coxa_direita')),
+                panturrilha_esquerda=to_float(medidas_dict.get('panturrilha_esquerda')),
+                panturrilha_direita=to_float(medidas_dict.get('panturrilha_direita'))
             )
             
-            print(f"🔍 APP.PY - Objeto Medidas criado com coxa: {medidas.coxa}")
+            print(f"🔍 APP.PY - Objeto Medidas criado com coxas: E={medidas.coxa_esquerda}, D={medidas.coxa_direita}")
             
             # Criar avaliação
             # Criar avaliação
