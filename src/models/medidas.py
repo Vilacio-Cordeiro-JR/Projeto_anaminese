@@ -22,13 +22,18 @@ class Medidas:
         cintura: Menor circunferência entre costelas e crista ilíaca
         abdomen: Circunferência na linha do umbigo
         quadril: Maior projeção glútea
-        braco_relaxado: Braço em repouso
-        braco_contraido: Braço contraído (biceps flexionado)
-        coxa: Ponto médio entre virilha e joelho
-        panturrilha: Maior circunferência da panturrilha
+        braco_relaxado_esquerdo: Braço esquerdo em repouso
+        braco_relaxado_direito: Braço direito em repouso
+        braco_contraido_esquerdo: Braço esquerdo contraído (biceps flexionado)
+        braco_contraido_direito: Braço direito contraído (biceps flexionado)
+        coxa_esquerda: Coxa esquerda - ponto médio entre virilha e joelho
+        coxa_direita: Coxa direita - ponto médio entre virilha e joelho
+        panturrilha_esquerda: Maior circunferência da panturrilha esquerda
+        panturrilha_direita: Maior circunferência da panturrilha direita
     
     CIRCUNFERÊNCIAS COMPLEMENTARES (opcionais, em centímetros):
-        antebraco: Maior circunferência do antebraço
+        antebraco_esquerdo: Maior circunferência do antebraço esquerdo
+        antebraco_direito: Maior circunferência do antebraço direito
         ombros: Circunferência dos ombros
         punho: Circunferência do pulso
         joelho: Circunferência do joelho
@@ -45,13 +50,18 @@ class Medidas:
     cintura: Optional[float] = None       # cm
     abdomen: Optional[float] = None       # cm
     quadril: Optional[float] = None       # cm
-    braco_relaxado: Optional[float] = None   # cm
-    braco_contraido: Optional[float] = None  # cm
-    coxa: Optional[float] = None          # cm
-    panturrilha: Optional[float] = None   # cm
+    braco_relaxado_esquerdo: Optional[float] = None   # cm
+    braco_relaxado_direito: Optional[float] = None    # cm
+    braco_contraido_esquerdo: Optional[float] = None  # cm
+    braco_contraido_direito: Optional[float] = None   # cm
+    coxa_esquerda: Optional[float] = None          # cm
+    coxa_direita: Optional[float] = None           # cm
+    panturrilha_esquerda: Optional[float] = None   # cm
+    panturrilha_direita: Optional[float] = None    # cm
     
     # Circunferências complementares
-    antebraco: Optional[float] = None     # cm
+    antebraco_esquerdo: Optional[float] = None     # cm
+    antebraco_direito: Optional[float] = None      # cm
     ombros: Optional[float] = None        # cm
     punho: Optional[float] = None         # cm
     joelho: Optional[float] = None        # cm
@@ -76,11 +86,16 @@ class Medidas:
             'cintura': self.cintura,
             'abdomen': self.abdomen,
             'quadril': self.quadril,
-            'braco_relaxado': self.braco_relaxado,
-            'braco_contraido': self.braco_contraido,
-            'coxa': self.coxa,
-            'panturrilha': self.panturrilha,
-            'antebraco': self.antebraco,
+            'braco_relaxado_esquerdo': self.braco_relaxado_esquerdo,
+            'braco_relaxado_direito': self.braco_relaxado_direito,
+            'braco_contraido_esquerdo': self.braco_contraido_esquerdo,
+            'braco_contraido_direito': self.braco_contraido_direito,
+            'coxa_esquerda': self.coxa_esquerda,
+            'coxa_direita': self.coxa_direita,
+            'panturrilha_esquerda': self.panturrilha_esquerda,
+            'panturrilha_direita': self.panturrilha_direita,
+            'antebraco_esquerdo': self.antebraco_esquerdo,
+            'antebraco_direito': self.antebraco_direito,
             'ombros': self.ombros,
             'punho': self.punho,
             'joelho': self.joelho,
