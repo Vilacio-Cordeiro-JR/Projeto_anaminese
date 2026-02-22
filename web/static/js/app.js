@@ -1,5 +1,6 @@
 // ========================================
 // SISTEMA DE MEDIDAS CORPORAIS - JAVASCRIPT
+// Versão 2.1 - Grid 3 Colunas + Larguras (2026-02-22)
 // ========================================
 
 // Estado da aplicação
