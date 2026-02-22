@@ -218,11 +218,16 @@ async function salvarAvaliacao() {
         cintura: parseFloat(document.getElementById('cintura').value) || null,
         abdomen: parseFloat(document.getElementById('abdomen').value) || null,
         quadril: parseFloat(document.getElementById('quadril').value) || null,
-        braco_relaxado: parseFloat(document.getElementById('braco_relaxado').value) || null,
-        braco_contraido: parseFloat(document.getElementById('braco_contraido').value) || null,
-        antebraco: parseFloat(document.getElementById('antebraco').value) || null,
-        coxa: parseFloat(document.getElementById('coxa').value) || null,
-        panturrilha: parseFloat(document.getElementById('panturrilha').value) || null
+        braco_relaxado_esquerdo: parseFloat(document.getElementById('braco_relaxado_esquerdo').value) || null,
+        braco_relaxado_direito: parseFloat(document.getElementById('braco_relaxado_direito').value) || null,
+        braco_contraido_esquerdo: parseFloat(document.getElementById('braco_contraido_esquerdo').value) || null,
+        braco_contraido_direito: parseFloat(document.getElementById('braco_contraido_direito').value) || null,
+        antebraco_esquerdo: parseFloat(document.getElementById('antebraco_esquerdo').value) || null,
+        antebraco_direito: parseFloat(document.getElementById('antebraco_direito').value) || null,
+        coxa_esquerda: parseFloat(document.getElementById('coxa_esquerda').value) || null,
+        coxa_direita: parseFloat(document.getElementById('coxa_direita').value) || null,
+        panturrilha_esquerda: parseFloat(document.getElementById('panturrilha_esquerda').value) || null,
+        panturrilha_direita: parseFloat(document.getElementById('panturrilha_direita').value) || null
     };
     
     // Filtrar valores NaN e undefined
@@ -232,9 +237,8 @@ async function salvarAvaliacao() {
         }
     });
     
-    // Debug: Log da coxa especificamente
-    console.log('🔍 Valor da coxa antes de enviar:', medidas.coxa);
-    console.log('🔍 Campo coxa no HTML:', document.getElementById('coxa')?.value);
+    // Debug: Log das medidas separadas
+    console.log('🔍 Medidas coletadas:', medidas);
 
     // Validar campos obrigatórios
     if (!medidas.peso) {
