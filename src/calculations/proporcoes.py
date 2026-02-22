@@ -4,6 +4,7 @@ Análise de proporções corporais e simetria
 
 from typing import Dict, Optional, List, Tuple
 from dataclasses import dataclass
+from ..utils import obter_media_lateral
 
 
 @dataclass
@@ -23,32 +24,6 @@ class Proporcoes:
     
     # Simetria (diferença entre lados)
     simetria_bracos: Optional[float] = None  # contraído vs relaxado
-
-
-def _obter_media_lateral(medidas: Dict[str, float], nome_base: str) -> Optional[float]:
-    """
-    Obtém a média das medidas laterais (esquerda/direita) ou a medida única se existir.
-    
-    Args:
-        medidas: Dicionário com as medidas
-        nome_base: Nome base da medida (ex: 'braco_relaxado', 'coxa', 'panturrilha')
-    
-    Returns:
-        Média das medidas laterais ou medida única, ou None se não existir
-    """
-    # Tentar obter medidas separadas
-    esquerda = medidas.get(f'{nome_base}_esquerdo') or medidas.get(f'{nome_base}_esquerda')
-    direita = medidas.get(f'{nome_base}_direito') or medidas.get(f'{nome_base}_direita')
-    
-    if esquerda and direita:
-        return round((esquerda + direita) / 2, 1)
-    elif esquerda:
-        return esquerda
-    elif direita:
-        return direita
-    
-    # Fallback para medida única (compatibilidade)
-    return medidas.get(nome_base)
 
 
 def calcular_proporcoes(medidas: Dict[str, float]) -> Proporcoes:
@@ -71,10 +46,10 @@ def calcular_proporcoes(medidas: Dict[str, float]) -> Proporcoes:
     cintura = medidas.get('cintura')
     peitoral = medidas.get('peitoral')
     ombros = medidas.get('ombros')
-    braco_rel = _obter_media_lateral(medidas, 'braco_relaxado')
-    braco_cont = _obter_media_lateral(medidas, 'braco_contraido')
-    coxa = _obter_media_lateral(medidas, 'coxa')
-    panturrilha = _obter_media_lateral(medidas, 'panturrilha')
+    braco_rel = obter_media_lateral(medidas, 'braco_relaxado')
+    braco_cont = obter_media_lateral(medidas, 'braco_contraido')
+    coxa = obter_media_lateral(medidas, 'coxa')
+    panturrilha = obter_media_lateral(medidas, 'panturrilha')
     
     # Relações entre circunferências
     if ombros and cintura and cintura > 0:

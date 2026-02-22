@@ -4,32 +4,7 @@ Analisa distribuição de gordura e desenvolvimento muscular por região
 """
 
 from typing import Dict, Any, Optional
-
-
-def _obter_media_lateral(medidas: Dict[str, float], nome_base: str) -> Optional[float]:
-    """
-    Obtém a média das medidas laterais (esquerda/direita) ou a medida única se existir.
-    
-    Args:
-        medidas: Dicionário com as medidas
-        nome_base: Nome base da medida (ex: 'braco_relaxado', 'coxa', 'panturrilha')
-    
-    Returns:
-        Média das medidas laterais ou medida única, ou None se não existir
-    """
-    # Tentar obter medidas separadas
-    esquerda = medidas.get(f'{nome_base}_esquerdo') or medidas.get(f'{nome_base}_esquerda')
-    direita = medidas.get(f'{nome_base}_direito') or medidas.get(f'{nome_base}_direita')
-    
-    if esquerda and direita:
-        return round((esquerda + direita) / 2, 1)
-    elif esquerda:
-        return esquerda
-    elif direita:
-        return direita
-    
-    # Fallback para medida única (compatibilidade)
-    return medidas.get(nome_base)
+from ..utils import obter_media_lateral
 
 
 def calcular_proporcoes_ideais(cintura: float, sexo: str) -> Dict[str, float]:
@@ -202,15 +177,15 @@ def gerar_mapa_corporal(medidas: Dict[str, float], altura: float, sexo: str) -> 
         elif parte == 'abdomen':
             real = medidas.get('abdomen')
         elif parte == 'braco':
-            real = _obter_media_lateral(medidas, 'braco_contraido') or _obter_media_lateral(medidas, 'braco_relaxado')
+            real = obter_media_lateral(medidas, 'braco_contraido') or obter_media_lateral(medidas, 'braco_relaxado')
         elif parte == 'antebraco':
-            real = _obter_media_lateral(medidas, 'antebraco')
+            real = obter_media_lateral(medidas, 'antebraco')
         elif parte == 'quadril':
             real = medidas.get('quadril')
         elif parte == 'coxa':
-            real = _obter_media_lateral(medidas, 'coxa')
+            real = obter_media_lateral(medidas, 'coxa')
         elif parte == 'panturrilha':
-            real = _obter_media_lateral(medidas, 'panturrilha')
+            real = obter_media_lateral(medidas, 'panturrilha')
         
         if real:
             regioes[parte] = {
