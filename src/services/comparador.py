@@ -56,10 +56,9 @@ class ComparadorAvaliacoes:
                 'percentual': round(perc_peso, 1)
             }
         
-        # Circunferências
+        # Circunferências - apenas medidas diretas (não bilaterais)
         medidas_comparar = [
-            'pescoco', 'peitoral', 'cintura', 'abdomen', 'quadril',
-            'braco_relaxado', 'braco_contraido', 'coxa', 'panturrilha', 'ombros'
+            'pescoco', 'peitoral', 'cintura', 'abdomen', 'quadril', 'ombros'
         ]
         
         for medida in medidas_comparar:
@@ -75,6 +74,27 @@ class ComparadorAvaliacoes:
                     'diferenca': round(diff, 1),
                     'percentual': round(perc, 1)
                 }
+        
+        # Comparar médias bilaterais (dos resultados calculados)
+        if 'medias_bilaterais' in r_antiga and 'medias_bilaterais' in r_nova:
+            medias_antigas = r_antiga['medias_bilaterais']
+            medias_novas = r_nova['medias_bilaterais']
+            
+            medidas_bilaterais = ['braco_relaxado', 'braco_contraido', 'antebraco', 'coxa', 'panturrilha']
+            
+            for medida in medidas_bilaterais:
+                valor_antigo = getattr(medias_antigas, medida, None)
+                valor_novo = getattr(medias_novas, medida, None)
+                
+                if valor_antigo and valor_novo:
+                    diff = valor_novo - valor_antigo
+                    perc = (diff / valor_antigo) * 100
+                    comparacao['diferencas_medidas'][medida] = {
+                        'anterior': valor_antigo,
+                        'atual': valor_novo,
+                        'diferenca': round(diff, 1),
+                        'percentual': round(perc, 1)
+                    }
         
         # === COMPARAÇÃO DE ÍNDICES ===
         
