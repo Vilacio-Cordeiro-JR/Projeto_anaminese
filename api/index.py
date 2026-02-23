@@ -4,8 +4,9 @@ Entrypoint para Vercel
 import sys
 import os
 
-# Adiciona o diretório raiz ao path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Adiciona o diretório raiz ao path (parent do diretório api/)
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, root_dir)
 
 # Importa o app Flask
 from web.app import app
